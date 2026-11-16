@@ -1,103 +1,85 @@
 import { useEffect, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, Download as DownloadIcon } from 'lucide-react'
 import Logo from './Logo.jsx'
-import ThemeSwitcher from './ThemeSwitcher.jsx'
 import { url } from '../lib/url.js'
 
 const LINKS = [
-  { href: url('/#showcase'), label: 'Découvrir' },
-  { href: url('/#features'), label: 'Fonctions' },
-  { href: url('/#download'), label: 'Télécharger' },
+  { href: url('/#comment'), label: 'Comment ça marche' },
+  { href: url('/#visite'), label: "Visite de l'atelier" },
+  { href: url('/#telecharger'), label: 'Télécharger' },
   { href: url('/#contact'), label: 'Contact' }
 ]
 
+function DownloadIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 3v12" /><path d="m7 10 5 5 5-5" /><path d="M5 21h14" />
+    </svg>
+  )
+}
+
+/** Barre fixe : logo + nom à gauche, bouton Télécharger toujours visible à droite. */
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12)
+    const onScroll = () => setScrolled(window.scrollY > 8)
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50">
-      <div
-        className={`mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 transition-all duration-300 sm:px-6 ${
-          scrolled ? 'mt-2 rounded-2xl glass' : 'bg-transparent'
-        }`}
-      >
-        <a href={url('/')} className="shrink-0" aria-label="Accueil Jema">
+    <header
+      className="fixed inset-x-0 top-0 z-50 transition-colors"
+      style={{
+        paddingTop: 'env(safe-area-inset-top, 0px)',
+        background: scrolled || open ? 'rgba(243, 240, 232, 0.94)' : 'transparent',
+        borderBottom: `1px solid ${scrolled || open ? 'var(--rule)' : 'transparent'}`,
+        backdropFilter: scrolled ? 'blur(10px)' : 'none'
+      }}
+    >
+      <div className="wrap flex h-16 items-center justify-between gap-4">
+        <a href={url('/')} aria-label="Jema, accueil" className="no-underline">
           <Logo />
         </a>
 
-        <nav className="hidden items-center gap-1 md:flex">
+        <nav aria-label="Navigation principale" className="hidden items-center gap-6 text-sm lg:flex" style={{ color: 'var(--mute)' }}>
           {LINKS.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              className="rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:text-accent"
-              style={{ color: 'var(--text-secondary)' }}
-            >
+            <a key={l.href} href={l.href} className="no-underline transition-colors hover:text-[color:var(--ink)]">
               {l.label}
             </a>
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
-          <div className="hidden sm:block">
-            <ThemeSwitcher compact />
-          </div>
-          <a
-            href={url('/#download')}
-            className="hidden items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold text-white shadow-glow transition-transform hover:-translate-y-0.5 md:inline-flex"
-            style={{ background: 'var(--accent-gradient)' }}
-          >
-            <DownloadIcon size={16} /> Télécharger
+        <div className="flex items-center gap-2">
+          <a href={url('/#telecharger')} className="btn btn--ink" data-umami-event="nav-telecharger">
+            <DownloadIcon /> Télécharger
           </a>
           <button
+            type="button"
             onClick={() => setOpen((v) => !v)}
             aria-label={open ? 'Fermer le menu' : 'Ouvrir le menu'}
             aria-expanded={open}
-            className="glass grid h-10 w-10 place-items-center rounded-xl md:hidden"
-            style={{ color: 'var(--text-primary)' }}
+            className="grid h-10 w-10 place-items-center rounded-full lg:hidden"
+            style={{ boxShadow: 'inset 0 0 0 1px var(--rule)', color: 'var(--ink)' }}
           >
-            {open ? <X size={18} /> : <Menu size={18} />}
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+              {open ? <path d="M6 6l12 12M18 6 6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
+            </svg>
           </button>
         </div>
       </div>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.2 }}
-            className="mx-4 mt-2 rounded-2xl glass p-3 md:hidden"
-          >
-            <nav className="flex flex-col">
-              {LINKS.map((l) => (
-                <a
-                  key={l.href}
-                  href={l.href}
-                  onClick={() => setOpen(false)}
-                  className="rounded-lg px-3 py-3 text-sm font-medium"
-                  style={{ color: 'var(--text-primary)' }}
-                >
-                  {l.label}
-                </a>
-              ))}
-            </nav>
-            <div className="mt-2 flex items-center justify-between gap-3 px-1">
-              <ThemeSwitcher />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {open && (
+        <nav aria-label="Navigation mobile" className="wrap grid pb-4 lg:hidden">
+          {LINKS.map((l) => (
+            <a key={l.href} href={l.href} onClick={() => setOpen(false)} className="border-t py-3 text-base no-underline" style={{ borderColor: 'var(--rule)' }}>
+              {l.label}
+            </a>
+          ))}
+        </nav>
+      )}
     </header>
   )
 }

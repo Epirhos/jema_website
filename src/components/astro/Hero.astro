@@ -1,82 +1,173 @@
 ---
-/** Hero — rendu statique. Le libellé du bouton s'adapte au système détecté. */
-import { Download, Play, Lock, Cpu, WifiOff } from 'lucide-react'
+/**
+ * Premier écran. Ordre de lecture voulu (scan < 2 s) :
+ * 1 logo + nom (barre) · 2 « Logiciel d'écriture avec IA » + slogan · 3 bouton
+ * Télécharger (le plus gros élément, système détecté) · 4 la page annotée par Jema.
+ */
 import site from '../../data/site.json'
 import { url } from '../../lib/url.js'
-
-const BADGES = [
-  { icon: WifiOff, label: '100 % local' },
-  { icon: Lock, label: 'Chiffrement AES-256' },
-  { icon: Cpu, label: 'IA embarquée, sans compte' }
-]
+import Mascot from './Mascot.astro'
 ---
 
-<section id="top" class="relative px-4 pt-32 pb-16 sm:px-6 sm:pt-40">
-  <div class="mx-auto max-w-4xl text-center">
-    {
-      site.beta.active && (
-        <a
-          href={url('/#download')}
-          class="glass fade-in inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium"
-          style="color: var(--text-secondary)"
-        >
-          <span class="h-2 w-2 rounded-full" style="background: var(--success-color)" />
-          {site.beta.label}
-        </a>
-      )
-    }
+<section id="top" class="hero">
+  <div class="wrap hero-grid">
+    <div class="copy">
+      <span class="kicker">Logiciel d'écriture avec IA · romans, mémoires, thèses</span>
+      <h1 class="display hero-title">Racontez,<br /><em>Jema s'occupe du reste.</em></h1>
+      <p class="sub">
+        Jema relit dans la marge : elle suit vos personnages, repère vos incohérences et propose des corrections.
+        <strong>Vous gardez le dernier mot. Vos pages ne quittent jamais votre ordinateur.</strong>
+      </p>
 
-    <h1
-      class="fade-in mt-6 font-serif text-4xl font-bold leading-[1.1] tracking-tight sm:text-6xl"
-      style="color: var(--text-primary); --fade-delay: 0.08s"
-    >
-      Racontez,<br /><span class="accent-text">on s'occupe du reste.</span>
-    </h1>
-
-    <p
-      class="fade-in mx-auto mt-6 max-w-2xl text-base leading-relaxed sm:text-lg"
-      style="color: var(--text-secondary); --fade-delay: 0.16s"
-    >
-      Jema est l'éditeur littéraire qui écrit à vos côtés&nbsp;: correction fine, fiches de personnages et de
-      lieux générées automatiquement, mémoire de votre univers. Tout reste sur votre machine.
-    </p>
-
-    <div
-      class="fade-in mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row"
-      style="--fade-delay: 0.24s"
-    >
-      <a
-        href={url('/#download')}
-        class="inline-flex w-full items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold text-white shadow-glow transition-transform hover:-translate-y-0.5 sm:w-auto"
-        style="background: var(--accent-gradient)"
-      >
-        <Download size={18} /> <span data-os-label>Télécharger Jema</span>
-      </a>
-      <a
-        href={url('/#showcase')}
-        class="glass inline-flex w-full items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold transition-transform hover:-translate-y-0.5 sm:w-auto"
-        style="color: var(--text-primary)"
-      >
-        <Play size={16} /> Essayer la démo
-      </a>
-    </div>
-
-    <div class="fade-in mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2" style="--fade-delay: 0.4s">
-      {
-        BADGES.map(({ icon: Icon, label }) => (
-          <span class="inline-flex items-center gap-1.5 text-xs font-medium" style="color: var(--text-muted)">
-            <Icon size={14} /> {label}
+      <div class="cta">
+        <!-- Ordinateur : lien direct vers le fichier du système détecté (complété par le script). -->
+        <a class="btn-big" href={url('/#telecharger')} data-hero-dl data-umami-event="hero-telecharger">
+          <span class="os-ico" data-hero-ico aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
           </span>
-        ))
-      }
+          <span>
+            <span class="t1">Télécharger gratuitement</span>
+            <span class="t2" data-hero-meta>{site.fallbackVersion} · bêta jusqu'au 20 février 2027</span>
+          </span>
+        </a>
+        <!-- Téléphone : on ne peut pas installer Jema ici, on s'envoie le lien. -->
+        <a class="btn-big btn-mobile" hidden data-hero-mail data-umami-event="hero-envoyer-lien"
+          href={`mailto:?subject=${encodeURIComponent('Installer Jema sur mon ordinateur')}&body=${encodeURIComponent(`Jema, le logiciel d'écriture avec IA : ${site.siteUrl}/#telecharger`)}`}>
+          <span><span class="t1">M'envoyer le lien</span><span class="t2">pour installer Jema sur mon ordinateur</span></span>
+        </a>
+        <p class="os" data-hero-os>
+          Windows, macOS et Linux · <a href={url('/#telecharger')}>autres systèmes</a> · {site.requirements.ramShort}
+        </p>
+      </div>
+
+      <ul class="proofs" aria-label="En bref">
+        <li><i aria-hidden="true">✓</i>Gratuit pendant la bêta</li>
+        <li><i aria-hidden="true">✓</i>Sans compte</li>
+        <li><i aria-hidden="true">✓</i>L'IA fonctionne hors ligne</li>
+      </ul>
     </div>
+
+    <figure class="sheet sheet--stack page" data-annot aria-label="Exemple : une page de manuscrit annotée par Jema dans la marge">
+      <div class="page-text">
+        <p class="folio">L'Atelier de reliure · chapitre 2 · folio 14</p>
+        <div class="manuscript">
+          <p>L'eau monta jusqu'au troisième barreau de l'échelle. <span class="mark" data-ref="1">Maëlle<sup>1</sup></span> posa le registre sur l'établi, le temps de compter les cahiers <span class="sug" data-ref="2"><span class="old">encore</span><span class="new">restés</span><sup>2</sup></span> secs.</p>
+          <p>Ilyès frappa deux fois. Elle reconnut sa manière, hésitante. <span class="mark" data-ref="3">Il était revenu de Lyon la veille<sup>3</sup></span>, et la crue n'avait pas attendu.</p>
+        </div>
+      </div>
+      <aside class="margin" aria-label="Remarques de Jema">
+        <div class="m-head">
+          <Mascot uid="hero" size={36} />
+          <span>Jema relit<small data-count>3 remarques</small></span>
+        </div>
+        <div class="note" data-ref="1" tabindex="0"><b>1 · Personnage</b><span>Maëlle, 3ᵉ apparition. Sa fiche est à jour.</span></div>
+        <div class="note note--ochre" data-ref="2" tabindex="0">
+          <b>2 · Style</b><span>« encore secs » : je propose « restés secs ».</span>
+          <div class="acts">
+            <button type="button" class="yes" data-act="ok" data-umami-event="hero-accepter">Accepter</button>
+            <button type="button" data-act="no" data-umami-event="hero-ignorer">Ignorer</button>
+          </div>
+          <span class="try" aria-hidden="true">↑ Essayez</span>
+        </div>
+        <div class="note" data-ref="3" tabindex="0"><b>3 · Continuité</b><span>Au chapitre 1, Ilyès part pour Lyon <em>après</em> la crue.</span></div>
+      </aside>
+    </figure>
   </div>
+  <p class="wrap band">
+    <span>Vos pages restent sur votre ordinateur · l'IA fonctionne hors ligne</span>
+    <span class="sys">Windows 10/11 · macOS · Linux (.deb, AppImage)</span>
+  </p>
 </section>
 
+<style>
+  .hero { padding-top: calc(64px + env(safe-area-inset-top, 0px)); }
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr); gap: clamp(28px, 4vw, 56px); align-items: center; padding-top: clamp(28px, 5vw, 64px); padding-bottom: clamp(32px, 4vw, 48px); }
+  .copy { display: grid; gap: 20px; min-width: 0; }
+  .hero-title { font-size: clamp(42px, 5.6vw, 72px); }
+  .sub { font-size: 18px; line-height: 1.55; color: var(--mute); max-width: 46ch; margin: 0; }
+  .sub strong { color: var(--ink); font-weight: 600; }
+  .cta { display: grid; gap: 10px; justify-items: start; }
+  .os { margin: 0; font-size: 13.5px; color: var(--mute); }
+  .os a { color: var(--ink); text-underline-offset: 3px; }
+  .proofs { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 14px; }
+  .proofs li { display: inline-flex; align-items: center; gap: 7px; }
+  .proofs i { width: 18px; height: 18px; border-radius: 6px; display: grid; place-items: center; background: var(--jema-soft); color: var(--jema); font-style: normal; font-size: 11px; }
+
+  .page { margin: 0; display: grid; grid-template-columns: minmax(0, 1fr) 184px; min-width: 0; }
+  .page-text { padding: 28px 22px 28px 32px; min-width: 0; }
+  .folio { margin: 0 0 14px; }
+  .manuscript { font-size: 15px; }
+  .manuscript p { margin: 0; }
+  .margin { border-left: 1px dashed var(--rule); padding: 18px 14px; display: grid; gap: 12px; align-content: start; background: linear-gradient(90deg, rgba(67, 56, 202, 0.035), transparent); }
+  .m-head { display: flex; align-items: center; gap: 8px; font: 700 10.5px var(--f-ui); letter-spacing: 0.12em; text-transform: uppercase; color: var(--jema); }
+  .m-head small { display: block; font: 500 11px var(--f-ui); letter-spacing: 0; text-transform: none; color: var(--mute); }
+  .try { font: 600 10.5px var(--f-ui); color: var(--ochre); }
+  :global(.note.done) .try { display: none; }
+
+  .band { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 20px; font-size: 13px; color: var(--mute); padding-top: 14px; padding-bottom: 14px; border-top: 1px solid var(--rule); margin: 0 auto; }
+  .band .sys { color: var(--ink); font-weight: 600; }
+
+  @media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 560px) {
+    .btn-big { width: 100%; }
+    .page { grid-template-columns: 1fr; }
+    .margin { border-left: 0; border-top: 1px dashed var(--rule); grid-template-columns: 1fr 1fr; }
+    .m-head { grid-column: 1 / -1; }
+    .page-text { padding: 20px 18px; }
+  }
+</style>
+
 <script>
-  // Personnalise le bouton principal selon le système du visiteur.
-  const ua = navigator.userAgent
-  const os = /Windows/i.test(ua) ? 'Windows' : /Mac OS X/i.test(ua) && !/iPhone|iPad/i.test(ua) ? 'macOS' : /Linux/i.test(ua) && !/Android/i.test(ua) ? 'Linux' : null
-  const label = document.querySelector('[data-os-label]')
-  if (os && label) label.textContent = `Télécharger pour ${os}`
+  import site from '../../data/site.json'
+  import { latestRelease, detectOS, OS_LABEL } from '../../lib/releases.js'
+
+  // 1) Bouton : système détecté → lien direct. Téléphone → « M'envoyer le lien ».
+  const os = detectOS()
+  const dl = document.querySelector<HTMLAnchorElement>('[data-hero-dl]')
+  const mail = document.querySelector<HTMLAnchorElement>('[data-hero-mail]')
+  const meta = document.querySelector('[data-hero-meta]')
+  const ico = document.querySelector('[data-hero-ico]')
+  const ICONS: Record<string, string> = {
+    windows: '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.5 10.5 4.4v7.1H3V5.5Zm0 13 7.5 1.1v-7H3v5.9Zm8.5 1.2L21 21V12.5h-9.5v7.2Zm0-15.4v7.2H21V3l-9.5 1.3Z"/></svg>',
+    mac: '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.9c0-2.4 2-3.6 2.1-3.6-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.6.9-.7 0-1.9-.9-3.1-.8-1.6 0-3 .9-3.8 2.4-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.2 0 2-1.1 2.8-2.2.9-1.3 1.2-2.5 1.3-2.6-.1 0-2.5-1-2.5-3.8ZM14 5.7c.6-.8 1-1.9.9-3-.9 0-2 .6-2.7 1.4-.6.7-1.1 1.8-1 2.9 1 .1 2.1-.5 2.8-1.3Z"/></svg>'
+  }
+  if (os === 'mobile' && dl && mail) {
+    dl.hidden = true
+    mail.hidden = false
+  } else if (os && os !== 'mobile' && dl) {
+    if (ICONS[os] && ico) ico.innerHTML = ICONS[os]
+    latestRelease(site.releasesRepo, site.fallbackVersion).then(({ version, urls }) => {
+      // Linux : deux formats, on laisse choisir dans la section Télécharger.
+      if (os === 'linux') {
+        if (meta) meta.textContent = `pour Linux · ${version} · .deb ou AppImage`
+        return
+      }
+      dl.href = os === 'windows' ? urls.windows : urls.mac
+      dl.dataset.umamiEventOs = os
+      if (meta) meta.textContent = `pour ${OS_LABEL[os]} · ${version} · bêta jusqu'au 20 février 2027`
+    })
+  }
+
+  // 2) Page annotée : chaque remarque allume son passage ; Accepter / Ignorer agissent sur le texte.
+  const root = document.querySelector('[data-annot]')
+  if (root) {
+    const count = root.querySelector('[data-count]')
+    const link = (ref: string, on: boolean) =>
+      root.querySelectorAll(`[data-ref="${ref}"]`).forEach((el) => el.classList.toggle('hl', on))
+    root.querySelectorAll<HTMLElement>('.note[data-ref]').forEach((n) => {
+      const ref = n.dataset.ref!
+      for (const e of ['mouseenter', 'focus']) n.addEventListener(e, () => link(ref, true))
+      for (const e of ['mouseleave', 'blur']) n.addEventListener(e, () => link(ref, false))
+    })
+    root.querySelectorAll<HTMLButtonElement>('.note [data-act]').forEach((b) =>
+      b.addEventListener('click', () => {
+        const note = b.closest('.note')!
+        const ok = b.dataset.act === 'ok'
+        if (ok) root.querySelector('.sug[data-ref="2"]')?.classList.add('done')
+        note.classList.add('done')
+        note.querySelector('.acts')!.outerHTML = `<span class="res">${ok ? '✓ Accepté' : 'Ignoré : votre texte reste tel quel'}</span>`
+        if (count) count.textContent = '2 remarques · 1 réglée'
+      })
+    )
+  }
 </script>

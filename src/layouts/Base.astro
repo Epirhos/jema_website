@@ -1,17 +1,19 @@
 ---
 /**
- * Gabarit commun à toutes les pages : <head> (SEO, Open Graph, thème posé
- * avant le rendu pour éviter le flash), navigation, bandeau d'annonce, footer.
+ * Gabarit commun à toutes les pages : <head> (SEO, Open Graph), navigation,
+ * bandeau d'annonce, footer. Direction B : un seul univers papier et encre.
  */
 import '@fontsource/inter/400.css'
 import '@fontsource/inter/500.css'
 import '@fontsource/inter/600.css'
 import '@fontsource/inter/700.css'
-import '@fontsource/inter/800.css'
-import '@fontsource/merriweather/300.css'
+import '@fontsource/newsreader/400.css'
+import '@fontsource/newsreader/500.css'
+import '@fontsource/newsreader/600.css'
+import '@fontsource/newsreader/400-italic.css'
+import '@fontsource/newsreader/500-italic.css'
 import '@fontsource/merriweather/400.css'
 import '@fontsource/merriweather/400-italic.css'
-import '@fontsource/merriweather/700.css'
 import '../styles/global.css'
 import Navbar from '../components/Navbar.jsx'
 import Footer from '../components/astro/Footer.astro'
@@ -22,9 +24,9 @@ interface Props {
   description?: string
 }
 
-const DEFAULT_TITLE = "Jema — Racontez, on s'occupe du reste."
+const DEFAULT_TITLE = "Jema — Racontez, Jema s'occupe du reste."
 const DEFAULT_DESC =
-  "L'atelier d'écriture qui suit vos personnages, vos lieux et votre chronologie. IA locale, 100 % sur votre ordinateur. Bêta gratuite."
+  "Logiciel d'écriture avec IA pour romans, mémoires et thèses. Jema relit dans la marge, suit vos personnages et repère vos incohérences. Tout reste sur votre ordinateur. Bêta gratuite."
 
 const { title, description = DEFAULT_DESC } = Astro.props
 const fullTitle = title ? `${title} · Jema` : DEFAULT_TITLE
@@ -33,7 +35,7 @@ const favicon = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/favicon.svg`
 ---
 
 <!doctype html>
-<html lang="fr" class="light">
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -41,7 +43,7 @@ const favicon = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/favicon.svg`
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <meta name="theme-color" content="#4F46E5" />
+    <meta name="theme-color" content="#ebe7de" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="fr_FR" />
     <meta property="og:site_name" content="Jema" />
@@ -49,25 +51,11 @@ const favicon = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/favicon.svg`
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta name="twitter:card" content="summary" />
-    <!-- Thème avant le premier rendu (aucun flash) + marqueur JS pour les apparitions. -->
-    <script is:inline>
-      ;(function () {
-        var root = document.documentElement
-        root.classList.add('js')
-        var t = null
-        try {
-          t = localStorage.getItem('jema-website-theme')
-        } catch (e) {}
-        if (t !== 'light' && t !== 'dark' && t !== 'editorial') {
-          t = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-        }
-        root.classList.remove('light', 'dark', 'editorial')
-        root.classList.add(t)
-      })()
-    </script>
+    <!-- Marqueur JS : sans lui, les blocs [data-reveal] restent visibles. -->
+    <script is:inline>document.documentElement.classList.add('js')</script>
   </head>
   <body>
-    <div class="min-h-dvh overflow-x-hidden">
+    <div class="min-h-dvh overflow-x-clip">
       <Navbar client:load />
       <Banner />
       <main>

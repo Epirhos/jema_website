@@ -10,12 +10,14 @@
   },
   "requirements": {
     "ram": "8 Go de mémoire vive minimum pour l'assistant IA",
-    "os": "Windows 10/11 (64 bits) · macOS (Apple Silicon et Intel) · Linux x86_64"
+    "os": "Windows 10/11 (64 bits) · macOS (Apple Silicon et Intel) · Linux x86_64",
+    "ramShort": "8 Go de RAM conseillés"
   },
   "banner": {
     "enabled": false,
     "text": "",
     "linkLabel": "",
     "link": ""
-  }
+  },
+  "siteUrl": "https://jema.pages.dev"
 }

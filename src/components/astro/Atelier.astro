@@ -1,0 +1,37 @@
+---
+/** « Aussi dans l'atelier » : le reste de l'outil, en notes courtes. */
+const ITEMS = [
+  { k: 'Confidentialité', t: 'Rien ne sort de votre ordinateur', d: "Pas de compte, pas de cloud. L'IA tourne sur votre machine, hors ligne." },
+  { k: 'Protection', t: 'Un mot de passe par projet', d: 'Chiffrement AES-256 sur le disque, avec une clé de récupération.' },
+  { k: 'Mise en page', t: 'De vraies pages', d: 'Format A4 ou personnalisé, marges, notes de bas de page, typographie française.' },
+  { k: 'Import', t: 'Reprenez un manuscrit existant', d: 'Word, PDF, texte ou Markdown, découpé en chapitres.' },
+  { k: 'Export', t: 'Prêt pour un éditeur', d: 'PDF paginé, EPUB, Word ou HTML, chapitre par chapitre ou en entier.' },
+  { k: 'Statistiques', t: 'Votre progression', d: 'Mots par jour, objectifs par chapitre, tics de langage.' }
+]
+---
+
+<section class="atelier">
+  <div class="wrap">
+    <div class="head" data-reveal>
+      <span class="kicker">Aussi dans l'atelier</span>
+      <h2 class="h2">Tout ce qu'il faut pour aller jusqu'au point final.</h2>
+    </div>
+    <dl class="grid">
+      {ITEMS.map((it, i) => (
+        <div class="item" data-reveal style={`--reveal-delay: ${(i % 3) * 0.05}s`}>
+          <dt><span class="kicker">{it.k}</span>{it.t}</dt>
+          <dd>{it.d}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<style>
+  .atelier { padding: clamp(56px, 8vw, 96px) 0; border-top: 1px solid var(--rule); }
+  .head { display: grid; gap: 10px; max-width: 760px; margin-bottom: 28px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0 32px; margin: 0; }
+  .item { padding: 18px 0; border-top: 1px solid var(--rule); }
+  dt { display: grid; gap: 4px; font-family: var(--f-disp); font-size: 22px; line-height: 1.2; color: var(--ink); }
+  dd { margin: 6px 0 0; font-size: 15px; color: var(--mute); }
+</style>

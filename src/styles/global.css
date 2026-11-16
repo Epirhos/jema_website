@@ -1,321 +1,132 @@
-/* Polices auto-hébergées (@fontsource) : aucune requête vers Google Fonts. */
+/* Polices auto-hébergées (@fontsource, importées dans Base.astro) : aucune requête vers Google. */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* ============================================================
-   TOKENS DE THÈME — repris à l'identique de l'application Jema
-   (src/renderer/src/assets/main.css). Light / Dark / Editorial.
+   DIRECTION B · « le manuscrit, avec Jema dans la marge »
+   Un seul univers, papier et encre. Le code couleur a un sens :
+   encre noire = l'auteur · encre bleue = Jema (l'IA) · ocre = correction proposée.
    ============================================================ */
 :root {
-  --glass-bg: rgba(255, 255, 255, 0.77);
-  --glass-border: rgba(0, 0, 0, 0.07);
-  --glass-shadow: 0 4px 20px rgba(0, 0, 0, 0.126);
+  --paper: #fdfbf7;          /* la page — même papier que l'app */
+  --desk: #ebe7de;           /* le bureau sous la page */
+  --desk-2: #f3f0e8;
+  --ink: #1d1a17;            /* l'auteur */
+  --ink-2: #3d3832;
+  --mute: #635d54;
+  --rule: rgba(29, 26, 23, 0.13);
+  --jema: #4338ca;           /* Jema, l'IA — indigo de l'app */
+  --jema-soft: rgba(67, 56, 202, 0.12);
+  --ochre: #9b4a1e;          /* correction proposée — ocre du thème Éditorial */
+  --ochre-soft: rgba(155, 74, 30, 0.12);
+  --ok: #2e7d32;
+  --danger: #b42318;
 
-  --app-bg-mid: #eef0f9;
-  --app-bg-edge: #dfe3f4;
-
-  --paper-color: #fdfbf7;
-  --scroller-bg: #e8eaf0;
-
-  --toolbar-bg: rgba(255, 255, 255, 0.98);
-  --toolbar-border: rgba(0, 0, 0, 0.07);
-  --tab-bar-bg: rgba(243, 244, 246, 0.95);
-  --tab-inactive-color: #6b7280;
-  --tab-active-color: #4f46e5;
-
-  --text-primary: #1f2937;
-  --text-secondary: #6b7280;
-  --text-muted: #9ca3af;
-
-  --accent-color: #4f46e5;
-  --accent-strong: #4338ca;
-  --accent-gradient: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-  --accent-glow: rgba(79, 70, 229, 0.35);
-
-  --danger-color: #e5484d;
-  --success-color: #10b981;
-
-  --card-bg: rgba(255, 255, 255, 0.9);
-  --badge-bg: #e5e7eb;
-  --badge-color: #374151;
-
-  --search-bg: rgba(255, 255, 255, 0.6);
-  --ai-bubble-bg: rgba(255, 255, 255, 0.92);
-  --glass-bg-lighter: rgba(255, 255, 255, 0.82);
-  --backdrop-blur: blur(14px);
+  --f-ui: 'Inter', system-ui, sans-serif;
+  --f-disp: 'Newsreader', Georgia, serif;
+  --f-read: 'Merriweather', Georgia, serif;
+  color-scheme: light;
 }
 
-.dark {
-  --glass-bg: rgba(14, 14, 22, 0.9);
-  --glass-border: rgba(255, 255, 255, 0.06);
-  --glass-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
-
-  --app-bg-mid: #0c0c18;
-  --app-bg-edge: #05050c;
-
-  --paper-color: #1c1c28;
-  --scroller-bg: #0a0a14;
-
-  --toolbar-bg: rgba(14, 14, 22, 0.98);
-  --toolbar-border: rgba(255, 255, 255, 0.06);
-  --tab-bar-bg: rgba(10, 10, 20, 0.96);
-  --tab-inactive-color: rgba(200, 200, 220, 0.45);
-  --tab-active-color: #7c70f5;
-
-  --text-primary: rgba(238, 238, 252, 0.92);
-  --text-secondary: rgba(200, 200, 220, 0.6);
-  --text-muted: rgba(200, 200, 220, 0.35);
-
-  --accent-color: #7c70f5;
-  --accent-strong: #5b50d6;
-  --accent-gradient: linear-gradient(135deg, #7c70f5 0%, #5b50d6 100%);
-  --accent-glow: rgba(124, 112, 245, 0.4);
-
-  --danger-color: #f2555a;
-  --success-color: #10b981;
-
-  --card-bg: rgba(30, 30, 46, 0.9);
-  --badge-bg: rgba(60, 60, 82, 0.8);
-  --badge-color: rgba(200, 200, 220, 0.8);
-
-  --search-bg: rgba(255, 255, 255, 0.05);
-  --ai-bubble-bg: rgba(14, 14, 22, 0.92);
-  --glass-bg-lighter: rgba(30, 30, 46, 0.78);
-}
-
-.editorial {
-  --glass-bg: rgba(254, 248, 234, 0.86);
-  --glass-border: rgba(139, 90, 43, 0.14);
-  --glass-shadow: 0 4px 20px rgba(90, 50, 20, 0.12);
-
-  --app-bg-mid: #ede0c8;
-  --app-bg-edge: #d4a96a;
-
-  --paper-color: #fefcf5;
-  --scroller-bg: #e8d9bf;
-
-  --toolbar-bg: rgba(254, 250, 240, 0.98);
-  --toolbar-border: rgba(139, 90, 43, 0.12);
-  --tab-bar-bg: rgba(240, 228, 206, 0.96);
-  --tab-inactive-color: #8b6b4a;
-  --tab-active-color: #7c3a1e;
-
-  --text-primary: #2c1a0e;
-  --text-secondary: #6b4c30;
-  --text-muted: #a08060;
-
-  --accent-color: #9b4a1e;
-  --accent-strong: #7c3a1e;
-  --accent-gradient: linear-gradient(135deg, #b5601e 0%, #9b4a1e 100%);
-  --accent-glow: rgba(155, 74, 30, 0.35);
-
-  --danger-color: #c0392b;
-  --success-color: #2e7d32;
-
-  --card-bg: rgba(254, 250, 240, 0.92);
-  --badge-bg: #e8d0b0;
-  --badge-color: #5c3a1e;
-
-  --search-bg: rgba(255, 248, 230, 0.7);
-  --ai-bubble-bg: rgba(254, 250, 240, 0.94);
-  --glass-bg-lighter: rgba(254, 250, 240, 0.86);
-}
-
-/* ============================================================
-   BASE
-   ============================================================ */
-* {
-  box-sizing: border-box;
-}
-html {
-  scroll-behavior: smooth;
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
 /* Les ancres ne passent pas sous la barre de navigation fixe. */
-section[id] {
-  scroll-margin-top: 88px;
-}
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
+section[id] { scroll-margin-top: 84px; }
 
 body {
   margin: 0;
   min-height: 100dvh;
-  font-family: 'Inter', system-ui, sans-serif;
-  color: var(--text-primary);
-  background:
-    radial-gradient(1200px 600px at 15% -10%, var(--accent-glow), transparent 60%),
-    linear-gradient(135deg, var(--app-bg-edge) 0%, var(--app-bg-mid) 22%, var(--app-bg-mid) 78%, var(--app-bg-edge) 100%);
-  background-attachment: fixed;
+  font-family: var(--f-ui);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--desk);
   -webkit-font-smoothing: antialiased;
-  transition: background 0.5s ease, color 0.4s ease;
 }
+::selection { background: var(--jema-soft); }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--jema); outline-offset: 2px; border-radius: 4px; }
 
-::selection {
-  background: var(--accent-glow);
-  color: var(--text-primary);
-}
+/* ---------- Primitives ---------- */
+.wrap { width: 100%; max-width: 1180px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.kicker { font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ochre); }
+.kicker--jema { color: var(--jema); }
+.display { font-family: var(--f-disp); font-weight: 400; letter-spacing: -0.025em; line-height: 1.04; color: var(--ink); text-wrap: balance; }
+.display em { font-style: italic; color: var(--jema); }
+.h2 { font-family: var(--f-disp); font-weight: 400; font-size: clamp(30px, 4vw, 44px); letter-spacing: -0.02em; line-height: 1.1; text-wrap: balance; }
+.lead { font-size: 17px; color: var(--mute); max-width: 60ch; }
 
-/* Verre dépoli — la signature visuelle de Jema */
-.glass {
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
-  backdrop-filter: var(--backdrop-blur);
-  -webkit-backdrop-filter: var(--backdrop-blur);
-}
+.btn { display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; font: 600 14px var(--f-ui); padding: 10px 18px; text-decoration: none; cursor: pointer; border: 0; transition: transform 0.15s ease, box-shadow 0.15s ease; }
+.btn:hover { transform: translateY(-1px); }
+.btn--ink { background: var(--ink); color: var(--paper); }
+.btn--line { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1px var(--rule); }
 
-.accent-text {
-  background: var(--accent-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
+/* Grand bouton de téléchargement : le plus gros élément de l'écran. */
+.btn-big { display: inline-flex; align-items: center; gap: 14px; background: var(--ink); color: var(--paper); border-radius: 16px; padding: 15px 22px; text-decoration: none; box-shadow: 0 10px 24px rgba(29, 26, 23, 0.22); transition: transform 0.15s ease, box-shadow 0.15s ease; }
+.btn-big:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(29, 26, 23, 0.28); }
+.btn-big[hidden] { display: none; }
+.btn-big .t1 { display: block; font-weight: 700; font-size: 17px; line-height: 1.3; }
+.btn-big .t2 { display: block; font-size: 12.5px; opacity: 0.75; font-weight: 500; }
 
-/* Scrollbar discrète */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-::-webkit-scrollbar-thumb {
-  background: var(--glass-border);
-  border-radius: 8px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
-}
+/* ---------- La feuille ---------- */
+.sheet { position: relative; background: var(--paper); border-radius: 4px; box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05), 0 22px 46px rgba(60, 40, 20, 0.16); }
+.sheet--stack::before, .sheet--stack::after { content: ""; position: absolute; inset: 0; background: var(--paper); border-radius: 4px; z-index: -1; box-shadow: 0 6px 20px rgba(60, 40, 20, 0.08); }
+.sheet--stack::before { transform: rotate(-2deg) translate(-6px, 8px); }
+.sheet--stack::after { transform: rotate(1.3deg) translate(8px, 5px); }
+.folio { font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mute); }
+.manuscript { font-family: var(--f-read); color: var(--ink); line-height: 1.95; }
+.manuscript p + p { text-indent: 1.5em; }
 
-/* ============================================================
-   ÉDITEUR TIPTAP — surface papier + typo Merriweather
-   ============================================================ */
-.paper-surface .ProseMirror {
-  outline: none;
-  font-family: 'Merriweather', Georgia, serif;
-  font-size: 1.02rem;
-  line-height: 1.85;
-  color: var(--text-primary);
-  min-height: 320px;
-}
-.paper-surface .ProseMirror > * + * {
-  margin-top: 0.85em;
-}
-.paper-surface .ProseMirror h1 {
-  font-size: 1.9rem;
-  font-weight: 700;
-  line-height: 1.2;
-}
-.paper-surface .ProseMirror h2 {
-  font-size: 1.45rem;
-  font-weight: 700;
-}
-.paper-surface .ProseMirror blockquote {
-  border-left: 3px solid var(--accent-color);
-  padding-left: 1rem;
-  font-style: italic;
-  color: var(--text-secondary);
-}
-.paper-surface .ProseMirror ul,
-.paper-surface .ProseMirror ol {
-  padding-left: 1.4rem;
-}
-.paper-surface .ProseMirror ul {
-  list-style: disc;
-}
-.paper-surface .ProseMirror ol {
-  list-style: decimal;
-}
-.paper-surface .ProseMirror p.is-editor-empty:first-child::before {
-  content: attr(data-placeholder);
-  float: left;
-  color: var(--text-muted);
-  pointer-events: none;
-  height: 0;
-}
-/* Surlignage IA simulé */
-.paper-surface .ProseMirror mark {
-  background: var(--accent-glow);
-  border-radius: 3px;
-  padding: 0 2px;
-}
+/* Marques de Jema dans le texte */
+.mark { background: linear-gradient(transparent 60%, var(--jema-soft) 60%); border-radius: 2px; transition: background-color 0.2s; }
+.mark sup, .sug sup { font: 700 9px var(--f-ui); margin-left: 1px; }
+.mark sup { color: var(--jema); }
+.mark.hl { background-color: rgba(67, 56, 202, 0.24); }
+.sug .old { text-decoration: underline wavy var(--ochre); text-decoration-thickness: 1.5px; text-underline-offset: 4px; }
+.sug .new { display: none; }
+.sug sup { color: var(--ochre); }
+.sug.done .old { display: none; }
+.sug.done .new { display: inline; background: rgba(46, 125, 50, 0.14); border-radius: 2px; }
+.sug.done sup { color: var(--ok); }
+.sug.hl .old, .sug.hl .new { background: var(--ochre-soft); }
+.del { text-decoration: line-through; text-decoration-color: var(--ochre); text-decoration-thickness: 2px; }
+.ins { color: var(--ochre); font-style: italic; }
 
-/* ============================================================
-   APPARITIONS (sections statiques Astro)
-   [data-reveal] devient visible quand il entre à l'écran (voir Base.astro).
-   Sans JavaScript, tout reste visible.
-   ============================================================ */
-.js [data-reveal] {
-  opacity: 0;
-  transform: translateY(22px);
-  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-  transition-delay: var(--reveal-delay, 0s);
-}
-.js [data-reveal].is-visible {
-  opacity: 1;
-  transform: none;
-}
-.fade-in {
-  animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: var(--fade-delay, 0s);
-}
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: none; }
-}
+/* Notes de marge */
+.note { font-size: 12px; line-height: 1.45; color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-left: 3px solid var(--jema); border-radius: 6px; padding: 8px 9px; display: grid; gap: 4px; transition: box-shadow 0.2s, opacity 0.3s; }
+.note b { font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--jema); }
+.note--ochre { border-left-color: var(--ochre); }
+.note--ochre b { color: var(--ochre); }
+.note.hl, .note:focus-visible { box-shadow: 0 0 0 2px var(--jema); outline: none; }
+.note--ochre.hl { box-shadow: 0 0 0 2px var(--ochre); }
+.note.done { opacity: 0.65; border-left-color: var(--ok); }
+.note .acts { display: flex; gap: 5px; margin-top: 2px; flex-wrap: wrap; }
+.note .acts button { font: 600 11px var(--f-ui); padding: 4px 10px; border-radius: 999px; border: 1px solid var(--rule); color: var(--mute); background: transparent; cursor: pointer; }
+.note .acts button.yes { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.note .res { font: 600 11px var(--f-ui); color: var(--ok); }
 
-/* ============================================================
-   TEXTE LONG (pages légales, annonces, guide, changelog)
-   ============================================================ */
-.prose-jema {
-  color: var(--text-secondary);
-  line-height: 1.75;
-}
-.prose-jema h1,
-.prose-jema h2,
-.prose-jema h3 {
-  font-family: 'Merriweather', Georgia, serif;
-  font-weight: 700;
-  color: var(--text-primary);
-  line-height: 1.3;
-}
-.prose-jema h1 { font-size: 1.9rem; margin: 0 0 1rem; }
-.prose-jema h2 { font-size: 1.3rem; margin: 2rem 0 0.6rem; }
-.prose-jema h3 { font-size: 1.05rem; margin: 1.5rem 0 0.4rem; }
-.prose-jema p,
-.prose-jema ul,
-.prose-jema ol,
-.prose-jema table,
-.prose-jema pre { margin: 0 0 1rem; }
+/* ---------- Apparitions douces ([data-reveal], voir Base.astro) ---------- */
+.js [data-reveal] { opacity: 0; transform: translateY(18px); transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); transition-delay: var(--reveal-delay, 0s); }
+.js [data-reveal].is-visible { opacity: 1; transform: none; }
+
+/* ---------- Texte long (légal, annonces, guide) ---------- */
+.prose-jema { color: var(--ink-2); line-height: 1.75; }
+.prose-jema h1, .prose-jema h2, .prose-jema h3 { font-family: var(--f-disp); font-weight: 500; color: var(--ink); line-height: 1.25; letter-spacing: -0.01em; }
+.prose-jema h1 { font-size: 2.2rem; margin: 0 0 1rem; }
+.prose-jema h2 { font-size: 1.45rem; margin: 2.2rem 0 0.6rem; }
+.prose-jema h3 { font-size: 1.15rem; margin: 1.6rem 0 0.4rem; }
+.prose-jema p, .prose-jema ul, .prose-jema ol, .prose-jema table, .prose-jema pre { margin: 0 0 1rem; }
 .prose-jema ul { list-style: disc; padding-left: 1.3rem; }
 .prose-jema ol { list-style: decimal; padding-left: 1.3rem; }
 .prose-jema li + li { margin-top: 0.3rem; }
-.prose-jema a { color: var(--accent-color); text-decoration: underline; text-underline-offset: 2px; }
-.prose-jema strong { color: var(--text-primary); }
-.prose-jema code {
-  font-size: 0.9em;
-  padding: 0.1em 0.35em;
-  border-radius: 6px;
-  background: var(--search-bg);
-}
-.prose-jema pre {
-  white-space: pre-wrap;
-  font-family: inherit;
-}
+.prose-jema a { color: var(--jema); text-decoration: underline; text-underline-offset: 2px; }
+.prose-jema strong { color: var(--ink); }
+.prose-jema code { font-size: 0.9em; padding: 0.1em 0.35em; border-radius: 6px; background: var(--desk-2); }
 .prose-jema table { width: 100%; border-collapse: collapse; font-size: 0.92em; display: block; overflow-x: auto; }
-.prose-jema th,
-.prose-jema td { border: 1px solid var(--glass-border); padding: 0.5rem 0.7rem; text-align: left; vertical-align: top; }
-.prose-jema th { color: var(--text-primary); }
-.prose-jema blockquote {
-  border-left: 3px solid var(--accent-color);
-  padding-left: 1rem;
-  font-style: italic;
-}
+.prose-jema th, .prose-jema td { border: 1px solid var(--rule); padding: 0.5rem 0.7rem; text-align: left; vertical-align: top; }
+.prose-jema blockquote { border-left: 3px solid var(--ochre); padding-left: 1rem; font-style: italic; margin: 0 0 1rem; }

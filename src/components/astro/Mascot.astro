@@ -1,0 +1,50 @@
+---
+/** Mascotte de l'app (MascotteJema), reprise à l'identique. Un `uid` évite les collisions d'identifiants SVG. */
+interface Props { size?: number; uid: string; label?: string }
+const { size = 34, uid, label } = Astro.props
+const id = (n: string) => `jm-${n}-${uid}`
+---
+
+<svg class="jm" width={size} height={size} viewBox="0 0 400 400" role={label ? 'img' : undefined} aria-label={label} aria-hidden={label ? undefined : 'true'}>
+  <defs>
+    <radialGradient id={id('moon')} cx="34%" cy="26%" r="84%"><stop offset="0%" stop-color="#f8f5fe"/><stop offset="20%" stop-color="#e6ddf7"/><stop offset="46%" stop-color="#bdabe7"/><stop offset="70%" stop-color="#9078cf"/><stop offset="88%" stop-color="#6c56b4"/><stop offset="100%" stop-color="#4f3c97"/></radialGradient>
+    <radialGradient id={id('suit')} cx="38%" cy="27%" r="90%"><stop offset="0%" stop-color="#ffffff"/><stop offset="44%" stop-color="#f4f2fc"/><stop offset="74%" stop-color="#e0d9f3"/><stop offset="100%" stop-color="#c1b8e3"/></radialGradient>
+    <radialGradient id={id('eye')} cx="40%" cy="30%" r="78%"><stop offset="0%" stop-color="#403765"/><stop offset="55%" stop-color="#241d42"/><stop offset="100%" stop-color="#120e28"/></radialGradient>
+    <radialGradient id={id('cheek')} cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e7a9da" stop-opacity="0.6"/><stop offset="100%" stop-color="#e7a9da" stop-opacity="0"/></radialGradient>
+    <clipPath id={id('clip')}><circle cx="200" cy="190" r="98"/></clipPath>
+  </defs>
+  <g class="jm-bob">
+    <rect x="86" y="162" width="24" height="58" rx="12" fill={`url(#${id('suit')})`} stroke="#b9b0df" stroke-width="1.5"/>
+    <circle cx="98" cy="192" r="10" fill="none" stroke="#4338ca" stroke-width="3.5" opacity="0.8"/>
+    <rect x="290" y="162" width="24" height="58" rx="12" fill={`url(#${id('suit')})`} stroke="#b9b0df" stroke-width="1.5"/>
+    <circle cx="302" cy="192" r="10" fill="none" stroke="#4338ca" stroke-width="3.5" opacity="0.8"/>
+    <circle cx="200" cy="190" r="98" fill={`url(#${id('moon')})`}/>
+    <g clip-path={`url(#${id('clip')})`}>
+      <ellipse cx="154" cy="128" rx="16" ry="12" fill="#5a479e" opacity="0.32"/>
+      <ellipse cx="246" cy="142" rx="12" ry="9" fill="#5a479e" opacity="0.3"/>
+      <ellipse cx="266" cy="220" rx="18" ry="13" fill="#4f3c97" opacity="0.34"/>
+      <ellipse cx="132" cy="166" rx="10" ry="8" fill="#5a479e" opacity="0.28"/>
+      <ellipse cx="148" cy="135" rx="7.5" ry="5.5" fill="#ffffff" opacity="0.95"/>
+    </g>
+    <ellipse cx="148" cy="220" rx="18" ry="12" fill={`url(#${id('cheek')})`}/>
+    <ellipse cx="252" cy="220" rx="18" ry="12" fill={`url(#${id('cheek')})`}/>
+    <g class="jm-blink">
+      <ellipse cx="166" cy="194" rx="22" ry="29" fill={`url(#${id('eye')})`}/>
+      <ellipse cx="234" cy="194" rx="22" ry="29" fill={`url(#${id('eye')})`}/>
+      <ellipse cx="158" cy="182" rx="8.5" ry="11" fill="#ffffff"/>
+      <ellipse cx="226" cy="182" rx="8.5" ry="11" fill="#ffffff"/>
+      <circle cx="174" cy="206" r="3.8" fill="#ffffff" opacity="0.9"/>
+      <circle cx="242" cy="206" r="3.8" fill="#ffffff" opacity="0.9"/>
+    </g>
+    <path d="M186 232 q14 14 28 0" stroke="#241d42" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+  </g>
+</svg>
+
+<style>
+  .jm { flex: none; overflow: visible; }
+  .jm-bob { animation: jm-bob 5s ease-in-out infinite; }
+  .jm-blink { animation: jm-blink 5s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  @keyframes jm-bob { 50% { transform: translateY(-10px); } }
+  @keyframes jm-blink { 0%, 90%, 100% { transform: scaleY(1); } 94%, 96% { transform: scaleY(0.07); } }
+  @media (prefers-reduced-motion: reduce) { .jm-bob, .jm-blink { animation: none; } }
+</style>

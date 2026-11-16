@@ -1,0 +1,102 @@
+---
+/** Télécharger : un fichier par système, liens complétés depuis la dernière version GitHub. */
+import site from '../../data/site.json'
+
+const n = site.fallbackVersion.replace(/^v/, '')
+const base = `https://github.com/${site.releasesRepo}/releases/download/${site.fallbackVersion}`
+const PLATFORMS = [
+  { os: 'windows', name: 'Windows', meta: 'Windows 10 et 11, 64 bits', files: [{ key: 'windows', label: 'Télécharger le .exe', href: `${base}/jema-editor-${n}-setup.exe` }] },
+  { os: 'mac', name: 'macOS', meta: 'Apple Silicon et Intel', files: [{ key: 'mac', label: 'Télécharger le .dmg', href: `${base}/jema-editor-${n}.dmg` }] },
+  { os: 'linux', name: 'Linux', meta: 'x86_64', files: [
+    { key: 'deb', label: '.deb (Ubuntu, Mint)', href: `${base}/jema-editor_${n}_amd64.deb` },
+    { key: 'appimage', label: 'AppImage (portable)', href: `${base}/jema-editor-${n}.AppImage` }
+  ] }
+]
+---
+
+<section id="telecharger" class="dl">
+  <div class="wrap">
+    <div class="head" data-reveal>
+      <span class="kicker">Télécharger</span>
+      <h2 class="h2">Installez Jema sur votre ordinateur.</h2>
+      <p class="lead">Gratuit pendant la bêta, jusqu'au 20 février 2027. Version <span data-dl-version>{site.fallbackVersion}</span>.</p>
+    </div>
+
+    <div class="cards">
+      {PLATFORMS.map((p) => (
+        <article class="card" data-os-card={p.os} data-reveal>
+          <h3>{p.name}</h3>
+          <p class="meta">{p.meta}</p>
+          <div class="files">
+            {p.files.map((f, i) => (
+              <a class={`btn ${i === 0 ? 'btn--ink' : 'btn--line'}`} href={f.href} data-dl={f.key} data-umami-event="telecharger" data-umami-event-fichier={f.key}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+                {f.label}
+              </a>
+            ))}
+          </div>
+          <p class="here" hidden>Votre système</p>
+        </article>
+      ))}
+    </div>
+
+    <div class="notes">
+      <div class="sheet help" data-reveal>
+        <h3>Un avertissement à l'installation ? C'est normal pendant la bêta.</h3>
+        <p>Jema n'est pas encore signé numériquement.</p>
+        <ul>
+          <li><b>Windows</b> affiche « Windows a protégé votre ordinateur » : cliquez sur <em>Informations complémentaires</em>, puis <em>Exécuter quand même</em>.</li>
+          <li><b>macOS</b> refuse d'ouvrir l'application : faites un clic droit sur Jema dans le dossier Applications, puis <em>Ouvrir</em>.</li>
+        </ul>
+      </div>
+      <div class="sheet help" data-reveal>
+        <h3>Configuration</h3>
+        <ul>
+          <li>{site.requirements.ram}.</li>
+          <li>Le moteur d'IA se télécharge une seule fois, au premier usage, avec votre accord. Ensuite, Jema fonctionne hors ligne.</li>
+          <li>Pendant la bêta, exportez régulièrement vos manuscrits.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .dl { padding: clamp(56px, 8vw, 96px) 0; }
+  .head { display: grid; gap: 10px; max-width: 760px; margin-bottom: 28px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .card { background: var(--paper); border-radius: 6px; border-top: 3px solid var(--rule); padding: 22px; display: grid; gap: 8px; align-content: start; box-shadow: 0 10px 26px rgba(60, 40, 20, 0.07); position: relative; }
+  .card.is-mine { border-top-color: var(--jema); box-shadow: 0 0 0 2px var(--jema), 0 14px 34px rgba(67, 56, 202, 0.16); }
+  h3 { margin: 0; font-family: var(--f-disp); font-weight: 500; font-size: 26px; }
+  .meta { margin: 0; color: var(--mute); font-size: 14px; }
+  .files { display: grid; gap: 8px; margin-top: 8px; }
+  .files .btn { justify-content: center; }
+  .here { position: absolute; top: 14px; right: 16px; margin: 0; font: 700 10.5px var(--f-ui); letter-spacing: 0.12em; text-transform: uppercase; color: var(--jema); }
+  .here[hidden] { display: none; }
+  .notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 24px; }
+  .help { padding: 22px 24px; }
+  .help h3 { font-size: 21px; margin-bottom: 8px; }
+  .help p, .help li { font-size: 14.5px; color: var(--ink-2); }
+  .help p { margin: 0 0 8px; }
+  .help ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
+</style>
+
+<script>
+  import site from '../../data/site.json'
+  import { latestRelease, detectOS } from '../../lib/releases.js'
+
+  const os = detectOS()
+  const mine = document.querySelector(`[data-os-card="${os}"]`)
+  if (mine) {
+    mine.classList.add('is-mine')
+    mine.querySelector<HTMLElement>('.here')!.hidden = false
+  }
+  latestRelease(site.releasesRepo, site.fallbackVersion).then(({ version, urls }) => {
+    document.querySelectorAll<HTMLAnchorElement>('[data-dl]').forEach((a) => {
+      const u = (urls as Record<string, string>)[a.dataset.dl!]
+      if (u) a.href = u
+    })
+    const v = document.querySelector('[data-dl-version]')
+    if (v) v.textContent = version
+  })
+</script>

@@ -1,5 +1,6 @@
 ---
 import { url } from '../../lib/url.js'
+import Logo from '../Logo.jsx'
 
 const LINKS = [
   { href: url('/legal/mentions-legales'), label: 'Mentions légales' },
@@ -10,25 +11,29 @@ const LINKS = [
 const year = new Date().getFullYear()
 ---
 
-<footer class="px-4 pb-10 pt-8 sm:px-6">
-  <div class="mx-auto max-w-6xl">
-    <div class="glass rounded-3xl px-6 py-8 sm:px-10">
-      <nav aria-label="Liens légaux" class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm">
-        {
-          LINKS.map((l) => (
-            <a href={l.href} class="transition-colors hover:underline" style="color: var(--text-secondary)">
-              {l.label}
-            </a>
-          ))
-        }
-      </nav>
-      <div
-        class="mt-6 flex flex-col items-center justify-between gap-2 pt-6 text-center text-xs sm:flex-row sm:text-left"
-        style="border-top: 1px solid var(--glass-border); color: var(--text-muted)"
-      >
-        <span>© {year} Jema · Dahirou Nounsi (Epirhos)</span>
-        <span>Conçu pour les auteurs · Local-first · Chiffrement AES-256</span>
-      </div>
+<footer class="foot">
+  <div class="wrap inner">
+    <div class="brand">
+      <Logo size={24} />
+      <p class="slogan">Racontez, <em>Jema s'occupe du reste.</em></p>
     </div>
+    <nav aria-label="Liens légaux" class="links">
+      {LINKS.map((l) => <a href={l.href}>{l.label}</a>)}
+    </nav>
+    <p class="legal">© {year} Jema · Dahirou Nounsi (Epirhos) · Vos manuscrits restent sur votre ordinateur.</p>
   </div>
 </footer>
+
+<style>
+  .foot { background: var(--ink); color: var(--paper); padding: 40px 0 calc(32px + env(safe-area-inset-bottom, 0px)); }
+  .inner { display: grid; gap: 22px; }
+  .brand { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+  .brand :global(span) { color: var(--paper) !important; }
+  .brand :global(svg) { stroke: #a5a0ff; }
+  .slogan { margin: 0; font-family: var(--f-disp); font-size: 22px; }
+  .slogan em { color: #b9b4ff; }
+  .links { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; }
+  .links a { color: rgba(253, 251, 247, 0.8); text-decoration: none; }
+  .links a:hover { color: var(--paper); text-decoration: underline; }
+  .legal { margin: 0; font-size: 12.5px; color: rgba(253, 251, 247, 0.55); border-top: 1px solid rgba(253, 251, 247, 0.12); padding-top: 16px; }
+</style>

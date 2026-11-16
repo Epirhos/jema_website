@@ -1,0 +1,50 @@
+---
+/** « Comment ça marche » : la vraie séquence, dans l'ordre où elle se passe. */
+import Mascot from './Mascot.astro'
+---
+
+<section id="comment" class="steps-sec">
+  <div class="wrap">
+    <div class="head" data-reveal>
+      <span class="kicker">Comment ça marche</span>
+      <h2 class="h2">L'IA vous aide à écrire. Elle n'écrit pas à votre place.</h2>
+    </div>
+    <ol class="steps">
+      <li class="step" data-reveal>
+        <span class="n">1 · Vous</span>
+        <h3>Écrivez, comme sur papier</h3>
+        <div class="mini manuscript">L'eau monta jusqu'au troisième barreau de l'échelle. Maëlle posa le registre sur l'établi…</div>
+        <p>Pages réelles, typographie française, notes de bas de page. Importez aussi un manuscrit Word existant.</p>
+      </li>
+      <li class="step step--jema" data-reveal style="--reveal-delay: .08s">
+        <span class="n"><Mascot uid="step" size={22} /> 2 · Jema</span>
+        <h3>Jema annote dans la marge</h3>
+        <div class="mini manuscript"><span class="mark">Il était revenu de Lyon la veille</span><div class="note"><b>Continuité</b>Au chapitre 1, il part après la crue.</div></div>
+        <p>Personnages, lieux, chronologie, répétitions. Elle signale et explique, chapitre après chapitre.</p>
+      </li>
+      <li class="step step--ochre" data-reveal style="--reveal-delay: .16s">
+        <span class="n">3 · Vous</span>
+        <h3>Vous décidez</h3>
+        <div class="mini manuscript">les cahiers <span class="del">encore</span> <span class="ins">restés</span> secs<div class="choice"><span class="yes">Accepter</span><span>Ignorer</span></div></div>
+        <p>Chaque proposition attend votre accord. Votre voix reste la vôtre.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<style>
+  .steps-sec { padding: clamp(56px, 8vw, 96px) 0; }
+  .head { display: grid; gap: 10px; max-width: 760px; margin-bottom: 32px; }
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 16px; }
+  .step { background: var(--paper); border-top: 3px solid var(--ink); padding: 20px; display: grid; gap: 12px; align-content: start; box-shadow: 0 10px 26px rgba(60, 40, 20, 0.07); }
+  .step--jema { border-top-color: var(--jema); }
+  .step--ochre { border-top-color: var(--ochre); }
+  .n { display: inline-flex; align-items: center; gap: 6px; font: 600 12px var(--f-ui); letter-spacing: 0.14em; text-transform: uppercase; color: var(--mute); }
+  h3 { margin: 0; font-family: var(--f-disp); font-weight: 500; font-size: 26px; letter-spacing: -0.01em; line-height: 1.15; }
+  p { margin: 0; font-size: 15px; color: var(--mute); }
+  .mini { font-size: 13.5px; line-height: 1.8; background: var(--desk-2); border-radius: 4px; padding: 12px 14px; }
+  .mini .note { margin-top: 8px; font-family: var(--f-ui); }
+  .choice { display: flex; gap: 6px; margin-top: 10px; font-family: var(--f-ui); }
+  .choice span { font: 600 12px var(--f-ui); padding: 5px 11px; border-radius: 999px; border: 1px solid var(--rule); }
+  .choice .yes { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+</style>
