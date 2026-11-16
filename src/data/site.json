@@ -21,7 +21,7 @@
   },
   "siteUrl": "https://jema.app",
   "analytics": {
-    "umamiWebsiteId": "",
+    "umamiWebsiteId": "b98343b4-8574-4b68-a029-30f95db7cf88",
     "umamiSrc": "https://cloud.umami.is/script.js"
   }
 }
