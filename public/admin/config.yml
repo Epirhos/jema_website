@@ -13,8 +13,8 @@ backend:
   # base_url: https://sveltia-cms-auth.<compte>.workers.dev
 
 locale: fr
-site_url: https://jema.pages.dev
-display_url: https://jema.pages.dev
+site_url: https://jema.app
+display_url: https://jema.app
 logo_url: /favicon.svg
 
 media_folder: public/images/uploads

@@ -20,7 +20,7 @@ Variables de build (facultatives) :
 
 | Variable | Rôle | Défaut |
 |---|---|---|
-| `SITE_URL` | domaine public (balises canoniques, sitemap) | `https://jema.pages.dev` |
+| `SITE_URL` | domaine public (balises canoniques, sitemap) | `https://jema.app` |
 | `BASE_PATH` | sous-dossier de publication | `/` (GitHub Pages : `/jema_website/`) |
 
 ## Modifier le contenu

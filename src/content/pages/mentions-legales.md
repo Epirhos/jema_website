@@ -19,9 +19,9 @@ Dahirou Nounsi (Epirhos).
 
 ## Hébergement
 
-Le site est hébergé par GitHub, Inc. (service GitHub Pages), 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis.
+Le site est hébergé par Cloudflare, Inc. (service Cloudflare Pages), 101 Townsend Street, San Francisco, CA 94107, États-Unis.
 
-Les fichiers d'installation de Jema sont également hébergés par GitHub, Inc.
+Les fichiers d'installation de Jema sont hébergés par GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis.
 
 ## Propriété intellectuelle
 

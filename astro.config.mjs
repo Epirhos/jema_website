@@ -9,7 +9,7 @@ const BASE = process.env.BASE_PATH || '/'
 // SITE_URL : domaine public (Cloudflare Pages). BASE_PATH : sous-dossier
 // éventuel (GitHub Pages sert le site sous /jema_website/).
 export default defineConfig({
-  site: process.env.SITE_URL || 'https://jema.pages.dev',
+  site: process.env.SITE_URL || 'https://jema.app',
   base: BASE,
   trailingSlash: 'ignore',
   integrations: [react(), tailwind({ applyBaseStyles: false }), sitemap()],
