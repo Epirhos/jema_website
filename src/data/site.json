@@ -19,5 +19,9 @@
     "linkLabel": "",
     "link": ""
   },
-  "siteUrl": "https://jema.pages.dev"
+  "siteUrl": "https://jema.pages.dev",
+  "analytics": {
+    "umamiWebsiteId": "",
+    "umamiSrc": "https://cloud.umami.is/script.js"
+  }
 }

@@ -1,0 +1,36 @@
+---
+import { getCollection, render } from 'astro:content'
+import Base from '../../layouts/Base.astro'
+import { url } from '../../lib/url.js'
+import { dateFr } from '../../lib/format.js'
+
+export async function getStaticPaths() {
+  const posts = await getCollection('journal', (p) => !p.data.brouillon)
+  return posts.map((p) => ({ params: { slug: p.id }, props: { p } }))
+}
+const { p } = Astro.props
+const { Content } = await render(p)
+---
+
+<Base title={p.data.titre} description={p.data.resume}>
+  <section class="art">
+    <div class="wrap">
+      <article class="sheet prose-jema doc">
+        <a href={url('/journal')} class="back">← Le journal</a>
+        <p class="meta"><span class="cat">{p.data.categorie}</span> · <time datetime={p.data.date.toISOString()}>{dateFr(p.data.date)}</time></p>
+        <h1>{p.data.titre}</h1>
+        <p class="resume">{p.data.resume}</p>
+        <Content />
+      </article>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .art { padding: calc(96px + env(safe-area-inset-top, 0px)) 0 72px; }
+  .doc { max-width: 760px; margin: 0 auto; padding: clamp(24px, 5vw, 56px); }
+  .back { display: inline-block; margin-bottom: 16px; font-size: 14px; font-weight: 600; text-decoration: none !important; }
+  .meta { font-size: 13px; color: var(--mute); }
+  .cat { font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ochre); font-size: 11px; }
+  .resume { font-size: 19px; color: var(--ink); font-family: var(--f-disp); }
+</style>

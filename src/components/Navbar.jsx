@@ -4,9 +4,9 @@ import { url } from '../lib/url.js'
 
 const LINKS = [
   { href: url('/#comment'), label: 'Comment ça marche' },
-  { href: url('/#visite'), label: "Visite de l'atelier" },
-  { href: url('/#telecharger'), label: 'Télécharger' },
-  { href: url('/#contact'), label: 'Contact' }
+  { href: url('/nouveautes'), label: 'Nouveautés' },
+  { href: url('/guide'), label: "Mode d'emploi" },
+  { href: url('/faq'), label: 'FAQ' }
 ]
 
 function DownloadIcon() {

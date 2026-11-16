@@ -1,0 +1,45 @@
+---
+import { getCollection } from 'astro:content'
+import Listing from '../../layouts/Listing.astro'
+import { url } from '../../lib/url.js'
+import parcours from '../../data/guide-parcours.json'
+
+const fiches = await getCollection('guide')
+const byId = Object.fromEntries(fiches.map((f) => [f.data.id, f]))
+const sorted = [...fiches].sort((a, b) => a.data.titre.localeCompare(b.data.titre, 'fr'))
+---
+
+<Listing title="Mode d'emploi" kicker="Guide" lead="Le même guide que dans l'application (touche F1). Choisissez ce que vous voulez faire, ou parcourez toutes les fiches.">
+  <h2 class="sub">Je veux…</h2>
+  <div class="tasks">
+    {parcours.map((t) => (
+      <div class="sheet task">
+        <h3>{t.tache}</h3>
+        <ul>
+          {t.fiches.filter((id) => byId[id]).map((id) => (
+            <li><a href={url(`/guide/${id}`)}>{byId[id].data.titre}</a></li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+  <h2 class="sub">Toutes les fiches</h2>
+  <ul class="all">
+    {sorted.map((f) => (
+      <li><a href={url(`/guide/${f.data.id}`)}><b>{f.data.titre}</b>{f.data.ou && <span>{f.data.ou}</span>}</a></li>
+    ))}
+  </ul>
+</Listing>
+
+<style>
+  .sub { font-family: var(--f-disp); font-weight: 500; font-size: 28px; margin: 8px 0 16px; }
+  .tasks { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); gap: 14px; margin-bottom: 48px; }
+  .task { padding: 20px; }
+  .task h3 { margin: 0 0 10px; font-size: 16px; }
+  .task ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+  .task a { color: var(--jema); }
+  .all { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); gap: 0 28px; }
+  .all a { display: grid; gap: 2px; padding: 12px 0; border-top: 1px solid var(--rule); text-decoration: none; }
+  .all b { font-family: var(--f-disp); font-weight: 500; font-size: 19px; }
+  .all span { font-size: 13px; color: var(--mute); }
+</style>

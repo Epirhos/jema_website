@@ -1,0 +1,36 @@
+---
+import { getCollection, render } from 'astro:content'
+import Base from '../../layouts/Base.astro'
+import { url } from '../../lib/url.js'
+
+export async function getStaticPaths() {
+  const fiches = await getCollection('guide')
+  return fiches.map((f) => ({ params: { slug: f.data.id }, props: { f } }))
+}
+const { f } = Astro.props
+const { Content } = await render(f)
+---
+
+<Base title={`${f.data.titre} · Mode d'emploi`} description={f.data.resume}>
+  <section class="fiche">
+    <div class="wrap">
+      <article class="sheet prose-jema doc">
+        <a href={url('/guide')} class="back">← Mode d'emploi</a>
+        <h1>{f.data.titre}</h1>
+        {f.data.ou && <p class="ou"><span>Où</span>{f.data.ou}</p>}
+        {f.data.resume && <p class="resume">{f.data.resume}</p>}
+        <Content />
+      </article>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .fiche { padding: calc(96px + env(safe-area-inset-top, 0px)) 0 72px; }
+  .doc { max-width: 760px; margin: 0 auto; padding: clamp(24px, 5vw, 56px); }
+  .back { display: inline-block; margin-bottom: 16px; font-size: 14px; font-weight: 600; text-decoration: none !important; }
+  .ou { display: flex; gap: 10px; align-items: baseline; font-size: 14px; color: var(--ink-2); }
+  .ou span { font: 700 10.5px var(--f-ui); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ochre); }
+  .resume { font-family: var(--f-disp); font-size: 19px; color: var(--ink); border-left: 3px solid var(--jema); padding-left: 14px; }
+  .doc :global(kbd) { font: 600 0.85em var(--f-ui); background: var(--desk-2); border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 5px; padding: 1px 6px; }
+</style>

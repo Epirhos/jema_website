@@ -18,6 +18,7 @@ import '../styles/global.css'
 import Navbar from '../components/Navbar.jsx'
 import Footer from '../components/astro/Footer.astro'
 import Banner from '../components/astro/Banner.astro'
+import Analytics from '../components/astro/Analytics.astro'
 
 interface Props {
   title?: string
@@ -53,6 +54,7 @@ const favicon = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/favicon.svg`
     <meta name="twitter:card" content="summary" />
     <!-- Marqueur JS : sans lui, les blocs [data-reveal] restent visibles. -->
     <script is:inline>document.documentElement.classList.add('js')</script>
+    <Analytics />
   </head>
   <body>
     <div class="min-h-dvh overflow-x-clip">

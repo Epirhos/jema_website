@@ -7,6 +7,11 @@
 import site from '../../data/site.json'
 import { url } from '../../lib/url.js'
 import Mascot from './Mascot.astro'
+import { getCollection } from 'astro:content'
+import { versionSlug } from '../../lib/format.js'
+
+const latest = (await getCollection('versions', (v) => !v.data.brouillon))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())[0]
 ---
 
 <section id="top" class="hero">
@@ -74,7 +79,9 @@ import Mascot from './Mascot.astro'
     </figure>
   </div>
   <p class="wrap band">
-    <span>Vos pages restent sur votre ordinateur · l'IA fonctionne hors ligne</span>
+    {latest
+      ? <a class="news" href={url(`/nouveautes/${versionSlug(latest.data.version)}`)} data-umami-event="hero-nouveautes"><b>Nouveau · v{latest.data.version}</b> {latest.data.titre} →</a>
+      : <span>Vos pages restent sur votre ordinateur · l'IA fonctionne hors ligne</span>}
     <span class="sys">Windows 10/11 · macOS · Linux (.deb, AppImage)</span>
   </p>
 </section>
@@ -105,6 +112,9 @@ import Mascot from './Mascot.astro'
   :global(.note.done) .try { display: none; }
 
   .band { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 20px; font-size: 13px; color: var(--mute); padding-top: 14px; padding-bottom: 14px; border-top: 1px solid var(--rule); margin: 0 auto; }
+  .band .news { color: var(--ink); text-decoration: none; }
+  .band .news b { color: var(--jema); margin-right: 6px; }
+  .band .news:hover { text-decoration: underline; }
   .band .sys { color: var(--ink); font-weight: 600; }
 
   @media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; } }

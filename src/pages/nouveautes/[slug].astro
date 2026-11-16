@@ -1,0 +1,45 @@
+---
+import { getCollection, render } from 'astro:content'
+import Base from '../../layouts/Base.astro'
+import { url } from '../../lib/url.js'
+import { dateFr, versionSlug } from '../../lib/format.js'
+
+export async function getStaticPaths() {
+  const versions = await getCollection('versions', (v) => !v.data.brouillon)
+  return versions.map((v) => ({ params: { slug: versionSlug(v.data.version) }, props: { v } }))
+}
+const { v } = Astro.props
+const { Content } = await render(v)
+---
+
+<Base title={`Version ${v.data.version} · ${v.data.titre}`} description={v.data.resume}>
+  <section class="rel">
+    <div class="wrap">
+      <article class="sheet prose-jema doc">
+        <a href={url('/nouveautes')} class="back">← Toutes les nouveautés</a>
+        <p class="meta"><span class="ver">v{v.data.version}</span> · {v.data.canal} · <time datetime={v.data.date.toISOString()}>{dateFr(v.data.date)}</time></p>
+        <h1>{v.data.titre}</h1>
+        <p class="resume">{v.data.resume}</p>
+        <Content />
+        <div class="cta">
+          <a class="btn btn--ink" href={url('/#telecharger')} data-umami-event="version-telecharger" data-umami-event-version={v.data.version}>Télécharger Jema</a>
+          <a class="btn btn--line" href={url('/#contact')}>Signaler un problème</a>
+        </div>
+      </article>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .rel { padding: calc(96px + env(safe-area-inset-top, 0px)) 0 72px; }
+  .doc { max-width: 780px; margin: 0 auto; padding: clamp(24px, 5vw, 56px); }
+  .back { display: inline-block; margin-bottom: 16px; font-size: 14px; font-weight: 600; text-decoration: none !important; }
+  .meta { font-size: 13px; color: var(--mute); }
+  .ver { font-weight: 700; color: var(--ochre); letter-spacing: 0.06em; }
+  .resume { font-size: 18px; color: var(--ink); }
+  .doc :global(h2) { font-family: var(--f-ui); font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--jema); border-top: 1px solid var(--rule); padding-top: 18px; }
+  .cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
+  .cta a { text-decoration: none !important; }
+  .cta .btn--ink { color: var(--paper) !important; }
+  .cta .btn--line { color: var(--ink) !important; }
+</style>

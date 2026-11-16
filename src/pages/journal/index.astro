@@ -1,0 +1,31 @@
+---
+import { getCollection } from 'astro:content'
+import Listing from '../../layouts/Listing.astro'
+import { url } from '../../lib/url.js'
+import { dateFr } from '../../lib/format.js'
+
+const posts = (await getCollection('journal', (p) => !p.data.brouillon))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+---
+
+<Listing title="Journal" kicker="Annonces et coulisses" lead="Les annonces de Jema, les coulisses de sa fabrication et des conseils d'écriture.">
+  <div class="posts">
+    {posts.map((p) => (
+      <a class="sheet post" href={url(`/journal/${p.id}`)}>
+        <span class="meta"><span class="cat">{p.data.categorie}</span><time datetime={p.data.date.toISOString()}>{dateFr(p.data.date)}</time></span>
+        <span class="t">{p.data.titre}</span>
+        <span class="r">{p.data.resume}</span>
+      </a>
+    ))}
+  </div>
+</Listing>
+
+<style>
+  .posts { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr)); gap: 16px; }
+  .post { display: grid; gap: 8px; align-content: start; padding: 24px; text-decoration: none; color: var(--ink); transition: transform 0.15s; }
+  .post:hover { transform: translateY(-2px); }
+  .meta { display: flex; gap: 10px; align-items: center; font-size: 13px; color: var(--mute); }
+  .cat { font: 700 10.5px var(--f-ui); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ochre); }
+  .t { font-family: var(--f-disp); font-size: 25px; line-height: 1.15; }
+  .r { color: var(--ink-2); font-size: 15px; }
+</style>

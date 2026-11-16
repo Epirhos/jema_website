@@ -1,0 +1,44 @@
+---
+import { getCollection } from 'astro:content'
+import Listing from '../../layouts/Listing.astro'
+import { url } from '../../lib/url.js'
+import { dateFr, versionSlug } from '../../lib/format.js'
+
+const versions = (await getCollection('versions', (v) => !v.data.brouillon))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+---
+
+<Listing title="Nouveautés" kicker="Journal des versions" lead="Ce qui change dans Jema, version après version, raconté du côté de l'auteur.">
+  <ol class="versions">
+    {versions.map((v, i) => (
+      <li>
+        <a class="sheet entry" href={url(`/nouveautes/${versionSlug(v.data.version)}`)}>
+          <span class="meta">
+            <span class="ver">v{v.data.version}</span>
+            <span class={`canal canal--${v.data.canal === 'stable' ? 'stable' : 'beta'}`}>{v.data.canal}</span>
+            {i === 0 && <span class="last">Dernière version</span>}
+            <time datetime={v.data.date.toISOString()}>{dateFr(v.data.date)}</time>
+          </span>
+          <span class="t">{v.data.titre}</span>
+          <span class="r">{v.data.resume}</span>
+          <span class="more">Lire les notes de version →</span>
+        </a>
+      </li>
+    ))}
+  </ol>
+</Listing>
+
+<style>
+  .versions { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; max-width: 860px; }
+  .entry { display: grid; gap: 8px; padding: 24px 28px; text-decoration: none; color: var(--ink); transition: transform 0.15s; }
+  .entry:hover { transform: translateY(-2px); }
+  .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; font-size: 13px; color: var(--mute); }
+  .ver { font: 700 13px var(--f-ui); letter-spacing: 0.08em; color: var(--ochre); }
+  .canal, .last { font: 700 10.5px var(--f-ui); letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; }
+  .canal--beta { background: var(--ochre-soft); color: var(--ochre); }
+  .canal--stable { background: rgba(46, 125, 50, 0.12); color: var(--ok); }
+  .last { background: var(--jema-soft); color: var(--jema); }
+  .t { font-family: var(--f-disp); font-size: 28px; line-height: 1.15; }
+  .r { color: var(--ink-2); max-width: 65ch; }
+  .more { font-size: 14px; font-weight: 600; color: var(--jema); }
+</style>

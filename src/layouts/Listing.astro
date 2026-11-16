@@ -1,0 +1,26 @@
+---
+/** Gabarit des pages-listes (Nouveautés, Journal, Guide) : en-tête + contenu. */
+import Base from './Base.astro'
+interface Props { title: string; kicker: string; lead?: string; description?: string }
+const { title, kicker, lead, description } = Astro.props
+---
+
+<Base title={title} description={description ?? lead}>
+  <section class="list-sec">
+    <div class="wrap">
+      <header class="list-head">
+        <span class="kicker">{kicker}</span>
+        <h1 class="display">{title}</h1>
+        {lead && <p class="lead">{lead}</p>}
+      </header>
+      <slot />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .list-sec { padding: calc(100px + env(safe-area-inset-top, 0px)) 0 80px; }
+  .list-head { display: grid; gap: 12px; max-width: 760px; margin-bottom: 36px; }
+  .list-head h1 { font-size: clamp(38px, 5vw, 58px); margin: 0; }
+  .list-head .lead { margin: 0; }
+</style>

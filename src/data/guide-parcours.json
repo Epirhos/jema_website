@@ -1,0 +1,75 @@
+[
+  {
+    "tache": "Créer un projet",
+    "fiches": [
+      "bibliotheque",
+      "ecrire",
+      "parametres"
+    ]
+  },
+  {
+    "tache": "Écrire et organiser mes chapitres",
+    "fiches": [
+      "ecrire",
+      "chapitres",
+      "mise-en-page",
+      "references",
+      "affichage",
+      "notes",
+      "etiquettes"
+    ]
+  },
+  {
+    "tache": "Importer un manuscrit",
+    "fiches": [
+      "chapitres",
+      "typo-auto"
+    ]
+  },
+  {
+    "tache": "Interroger Jema",
+    "fiches": [
+      "demander-jema",
+      "notifications",
+      "assistant-jema"
+    ]
+  },
+  {
+    "tache": "Relire les fiches de l'univers et les corriger",
+    "fiches": [
+      "univers",
+      "fiche-rapide",
+      "assistant-jema"
+    ]
+  },
+  {
+    "tache": "Corriger mon texte",
+    "fiches": [
+      "correction",
+      "rechercher",
+      "typo-auto",
+      "continuite"
+    ]
+  },
+  {
+    "tache": "Suivre ma progression",
+    "fiches": [
+      "statistiques",
+      "chapitres"
+    ]
+  },
+  {
+    "tache": "Exporter mon manuscrit",
+    "fiches": [
+      "exporter",
+      "mise-en-page"
+    ]
+  },
+  {
+    "tache": "Protéger et sauvegarder mon projet",
+    "fiches": [
+      "proteger",
+      "references"
+    ]
+  }
+]

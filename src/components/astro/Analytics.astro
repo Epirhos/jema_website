@@ -1,0 +1,45 @@
+---
+/**
+ * Mesure d'audience Umami : sans cookie, sans donnée personnelle conservée.
+ * Inactive tant que `analytics.umamiWebsiteId` est vide dans src/data/site.json.
+ *
+ * Mesuré automatiquement par Umami : visites, pages, provenance (sites référents,
+ * campagnes UTM), pays, appareil, temps passé.
+ * Ajouté ici : profondeur de lecture (25/50/75/100 %) et sections réellement vues.
+ * Les clics importants portent un attribut data-umami-event dans les composants.
+ */
+import site from '../../data/site.json'
+const { umamiWebsiteId, umamiSrc } = site.analytics
+---
+
+{umamiWebsiteId && (
+  <>
+    <script is:inline defer src={umamiSrc} data-website-id={umamiWebsiteId} data-do-not-track="true"></script>
+    <script is:inline>
+      ;(function () {
+        var track = function (name, data) { if (window.umami && window.umami.track) window.umami.track(name, data) }
+        // Profondeur de lecture : chaque palier une seule fois par page.
+        var seen = {}
+        var onScroll = function () {
+          var h = document.documentElement
+          var pct = ((h.scrollTop + innerHeight) / h.scrollHeight) * 100
+          ;[25, 50, 75, 100].forEach(function (p) {
+            if (pct >= p - 1 && !seen[p]) { seen[p] = 1; track('lecture', { profondeur: p + '%', page: location.pathname }) }
+          })
+        }
+        addEventListener('scroll', onScroll, { passive: true })
+        // Sections réellement vues (au moins 40 % à l'écran).
+        if ('IntersectionObserver' in window) {
+          var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+              if (e.isIntersecting) { track('section-vue', { section: e.target.id }); io.unobserve(e.target) }
+            })
+          }, { threshold: 0.4 })
+          addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('section[id]').forEach(function (s) { io.observe(s) })
+          })
+        }
+      })()
+    </script>
+  </>
+)}

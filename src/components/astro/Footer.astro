@@ -2,11 +2,18 @@
 import { url } from '../../lib/url.js'
 import Logo from '../Logo.jsx'
 
+const PRODUCT = [
+  { href: url('/nouveautes'), label: 'Nouveautés' },
+  { href: url('/journal'), label: 'Journal' },
+  { href: url('/guide'), label: "Mode d'emploi" },
+  { href: url('/beta'), label: 'La bêta' },
+  { href: url('/faq'), label: 'FAQ' },
+  { href: url('/#contact'), label: 'Contact' }
+]
 const LINKS = [
   { href: url('/legal/mentions-legales'), label: 'Mentions légales' },
   { href: url('/legal/confidentialite'), label: 'Confidentialité' },
-  { href: url('/legal/licence-beta'), label: 'Licence bêta' },
-  { href: url('/#contact'), label: 'Contact' }
+  { href: url('/legal/licence-beta'), label: 'Licence bêta' }
 ]
 const year = new Date().getFullYear()
 ---
@@ -17,6 +24,9 @@ const year = new Date().getFullYear()
       <Logo size={24} />
       <p class="slogan">Racontez, <em>Jema s'occupe du reste.</em></p>
     </div>
+    <nav aria-label="Jema" class="links prod">
+      {PRODUCT.map((l) => <a href={l.href}>{l.label}</a>)}
+    </nav>
     <nav aria-label="Liens légaux" class="links">
       {LINKS.map((l) => <a href={l.href}>{l.label}</a>)}
     </nav>
@@ -33,6 +43,7 @@ const year = new Date().getFullYear()
   .slogan { margin: 0; font-family: var(--f-disp); font-size: 22px; }
   .slogan em { color: #b9b4ff; }
   .links { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; }
+  .prod a { font-size: 15px; }
   .links a { color: rgba(253, 251, 247, 0.8); text-decoration: none; }
   .links a:hover { color: var(--paper); text-decoration: underline; }
   .legal { margin: 0; font-size: 12.5px; color: rgba(253, 251, 247, 0.55); border-top: 1px solid rgba(253, 251, 247, 0.12); padding-top: 16px; }
