@@ -6,7 +6,7 @@
 # (sveltia-cms-auth) : renseigner alors `base_url`.
 backend:
   name: github
-  repo: flowvx/jema_website
+  repo: Epirhos/jema_website
   # Branche de test. Passer à `main` au lancement : chaque publication y sera
   # mise en ligne automatiquement.
   branch: bulle
