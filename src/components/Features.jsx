@@ -6,7 +6,7 @@ import {
   BarChart3,
   Lock,
   FileText,
-  Layers
+  FileDown
 } from 'lucide-react'
 import Reveal from './Reveal.jsx'
 
@@ -14,7 +14,7 @@ const FEATURES = [
   {
     icon: WifiOff,
     title: 'Local-first & privé',
-    desc: "L'écriture et l'analyse IA tournent sur votre machine. Le cloud n'est qu'une sauvegarde chiffrée de bout en bout, optionnelle."
+    desc: "L'écriture et l'analyse IA tournent sur votre machine. Pas de compte, pas de cloud, aucun texte envoyé sur Internet."
   },
   {
     icon: Sparkles,
@@ -43,13 +43,13 @@ const FEATURES = [
   },
   {
     icon: Lock,
-    title: 'Manuscrit inviolable',
-    desc: 'Verrouillage par mot de passe local (Bcrypt), suppression protégée. Votre travail ne se perd jamais par erreur.'
+    title: 'Manuscrit protégé',
+    desc: 'Un mot de passe chiffre votre projet sur le disque (AES-256), avec une clé de récupération. Suppression protégée, sauvegardes versionnées.'
   },
   {
-    icon: Layers,
-    title: 'Multilingue',
-    desc: "Pensée pour écrire dans votre langue. Recherche sémantique et lexicale fusionnées pour tout retrouver."
+    icon: FileDown,
+    title: 'Import & export',
+    desc: "Importez un manuscrit Word, PDF ou texte. Exportez en PDF paginé, EPUB, Word ou HTML, chapitre par chapitre ou en entier."
   }
 ]
 

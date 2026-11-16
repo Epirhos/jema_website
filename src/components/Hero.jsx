@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion'
-import { Download as DownloadIcon, Play, ShieldCheck, Cpu, WifiOff } from 'lucide-react'
+import { Download as DownloadIcon, Play, Lock, Cpu, WifiOff } from 'lucide-react'
 
 const BADGES = [
   { icon: WifiOff, label: '100 % local' },
-  { icon: ShieldCheck, label: 'Chiffré E2E' },
-  { icon: Cpu, label: 'IA embarquée' }
+  { icon: Lock, label: 'Chiffrement AES-256' },
+  { icon: Cpu, label: 'IA embarquée, sans compte' }
 ]
 
 export default function Hero() {
@@ -12,7 +12,7 @@ export default function Hero() {
     <section id="top" className="relative px-4 pt-32 pb-16 sm:px-6 sm:pt-40">
       <div className="mx-auto max-w-4xl text-center">
         <motion.a
-          href="#showcase"
+          href="#download"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
@@ -20,7 +20,7 @@ export default function Hero() {
           style={{ color: 'var(--text-secondary)' }}
         >
           <span className="h-2 w-2 rounded-full" style={{ background: 'var(--success-color)' }} />
-          Sanctuaire d'écriture augmenté par l'IA
+          Bêta ouverte · gratuite jusqu'au 20 février 2027
         </motion.a>
 
         <motion.h1

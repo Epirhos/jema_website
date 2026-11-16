@@ -2,12 +2,13 @@ import { useState, useEffect } from 'react'
 import { Download as DownloadIcon, Check } from 'lucide-react'
 import Reveal from './Reveal.jsx'
 
-const GITHUB_RELEASE_REPO = 'flowvx/jema-releases'
+const GITHUB_RELEASE_REPO = 'Epirhos/jema-releases'
+const FALLBACK_VERSION = 'v4.0.0'
 const DEFAULT_DOWNLOADS = {
-  windows: 'https://github.com/flowvx/jema-releases/releases/download/v1.0.0/jema-editor-1.0.0-setup.exe',
-  mac: 'https://github.com/flowvx/jema-releases/releases/download/v1.0.0/jema-editor-1.0.0.dmg',
-  appimage: 'https://github.com/flowvx/jema-releases/releases/download/v1.0.0/jema-editor-1.0.0.AppImage',
-  deb: 'https://github.com/flowvx/jema-releases/releases/download/v1.0.0/jema-editor_1.0.0_amd64.deb'
+  windows: 'https://github.com/Epirhos/jema-releases/releases/download/v4.0.0/jema-editor-4.0.0-setup.exe',
+  mac: 'https://github.com/Epirhos/jema-releases/releases/download/v4.0.0/jema-editor-4.0.0.dmg',
+  appimage: 'https://github.com/Epirhos/jema-releases/releases/download/v4.0.0/jema-editor-4.0.0.AppImage',
+  deb: 'https://github.com/Epirhos/jema-releases/releases/download/v4.0.0/jema-editor_4.0.0_amd64.deb'
 }
 
 // Icônes OS en SVG inline (marques → tracé neutre monochrome).
@@ -68,6 +69,7 @@ const PLATFORMS = [
 export default function Download() {
   const [linuxVariant, setLinuxVariant] = useState('DEB')
   const [downloadUrls, setDownloadUrls] = useState(DEFAULT_DOWNLOADS)
+  const [version, setVersion] = useState(FALLBACK_VERSION)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -85,9 +87,7 @@ export default function Download() {
       const data = await response.json()
       const assets = Array.isArray(data.assets) ? data.assets : []
 
-      // Debug: list asset names
-      console.debug('GitHub release:', data.tag_name ?? '(no tag)')
-      console.debug('Assets:', assets.map((a) => a.name))
+      if (data.tag_name) setVersion(data.tag_name)
 
       const exeAsset = assets.find((asset) => (asset.name || '').toLowerCase().endsWith('.exe'))
       const dmgAsset = assets.find((asset) => (asset.name || '').toLowerCase().endsWith('.dmg'))
@@ -123,6 +123,9 @@ export default function Download() {
             Léger à l'installation. Le moteur IA se télécharge en un clic, au premier usage, avec
             votre accord.
           </p>
+          <p className="mt-3 text-xs font-medium" style={{ color: 'var(--text-muted)' }}>
+            Version {version} · Bêta gratuite jusqu'au 20 février 2027
+          </p>
         </Reveal>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -151,8 +154,8 @@ export default function Download() {
                           onClick={() => setLinuxVariant(option.label)}
                           className={`inline-flex flex-1 items-center justify-center rounded-xl border px-3 py-2 text-[13px] font-semibold transition ${
                             linuxVariant === option.label
-                              ? 'border-transparent bg-[rgba(255,255,255,0.12)] text-white'
-                              : 'border-[rgba(255,255,255,0.18)] bg-transparent text-[var(--text-primary)]'
+                              ? 'border-transparent text-white'
+                              : 'border-[var(--glass-border)] bg-transparent text-[var(--text-primary)]'
                           }`}
                           style={{ background: linuxVariant === option.label ? 'var(--accent-gradient)' : undefined }}
                         >
@@ -202,11 +205,7 @@ export default function Download() {
           ))}
         </div>
 
-        {loading ? (
-          <p className="mt-6 text-center text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
-            Chargement des téléchargements en cours…
-          </p>
-        ) : error ? (
+        {!loading && error ? (
           <div className="mt-6 text-center">
             <p className="mb-3 text-sm font-medium" style={{ color: 'var(--danger-color)' }}>
               {error}
@@ -227,6 +226,22 @@ export default function Download() {
             Gratuit. Vos manuscrits vous appartiennent — aucune donnée n'est envoyée sans votre accord.
           </p>
         )}
+
+        <div className="glass mx-auto mt-8 max-w-3xl rounded-2xl p-5 text-left text-sm" style={{ color: 'var(--text-secondary)' }}>
+          <p className="font-semibold" style={{ color: 'var(--text-primary)' }}>
+            Un avertissement à l'installation ? C'est normal pendant la bêta.
+          </p>
+          <p className="mt-2">
+            Jema n'est pas encore signé numériquement. <strong>Windows</strong> peut afficher « Windows a protégé votre
+            ordinateur » : cliquez sur <em>Informations complémentaires</em>, puis <em>Exécuter quand même</em>.{' '}
+            <strong>macOS</strong> peut refuser d'ouvrir l'application : faites un clic droit sur Jema dans le dossier
+            Applications, puis <em>Ouvrir</em>.
+          </p>
+          <p className="mt-2">
+            L'assistant IA fonctionne sur votre ordinateur : il demande une machine récente, avec beaucoup de mémoire.
+            Pendant la bêta, exportez régulièrement vos manuscrits.
+          </p>
+        </div>
       </div>
     </section>
   )
