@@ -14,11 +14,11 @@ const SCRIPT = [
   },
   {
     q: 'Qui est Lucien pour Darelle ?',
-    a: "D'après le manuscrit, Lucien est une figure à la fois attirante et source de tension pour Darelle : un mélange d'attente amoureuse et d'appréhension. Voulez-vous que je crée sa fiche de personnage ?"
+    a: "D'après le manuscrit, Lucien est une figure à la fois attirante et source de tension pour Darelle : un mélange d'attente amoureuse et d'appréhension. Veux-tu que je crée sa fiche de personnage ?"
   },
   {
     q: 'Oui, crée sa fiche.',
-    a: "C'est fait : la fiche personnage « Lucien » est créée. Retrouvez-la dans l'onglet Personnages. ✍️"
+    a: "C'est fait : la fiche personnage « Lucien » est créée. Tu la retrouves dans l'onglet Personnages. ✍️"
   }
 ]
 
@@ -180,10 +180,9 @@ export default function ChatSimulation() {
               <input
                 readOnly
                 value=""
-                placeholder="Message à Jema…"
+                placeholder="Choisis une question ci-dessus…"
                 className="flex-1 bg-transparent text-sm outline-none placeholder:opacity-70"
                 style={{ color: 'var(--text-primary)' }}
-                onFocus={() => next && ask(next.q, next.a)}
               />
               <button
                 onClick={() => next && ask(next.q, next.a)}

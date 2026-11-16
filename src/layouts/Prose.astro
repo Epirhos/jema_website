@@ -1,0 +1,27 @@
+---
+/** Gabarit des pages de texte (légal, informations) : carte de verre + typo de lecture. */
+import Base from './Base.astro'
+import { ArrowLeft } from 'lucide-react'
+import { url } from '../lib/url.js'
+
+interface Props {
+  title: string
+  description?: string
+  updated?: Date
+}
+const { title, description, updated } = Astro.props
+const fmt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'long' })
+---
+
+<Base title={title} description={description}>
+  <section class="px-4 pb-16 pt-32 sm:px-6 sm:pt-40">
+    <article class="glass prose-jema mx-auto max-w-3xl rounded-3xl p-7 text-sm sm:p-10 sm:text-base">
+      <a href={url('/')} class="mb-6 inline-flex items-center gap-1.5 text-sm font-medium !no-underline">
+        <ArrowLeft size={15} /> Retour à l'accueil
+      </a>
+      <h1>{title}</h1>
+      <slot />
+      {updated && <p class="mt-10 text-xs" style="color: var(--text-muted)">Dernière mise à jour : {fmt.format(updated)}</p>}
+    </article>
+  </section>
+</Base>

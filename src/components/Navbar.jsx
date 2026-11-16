@@ -3,12 +3,13 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Download as DownloadIcon } from 'lucide-react'
 import Logo from './Logo.jsx'
 import ThemeSwitcher from './ThemeSwitcher.jsx'
+import { url } from '../lib/url.js'
 
 const LINKS = [
-  { href: '#showcase', label: 'Découvrir' },
-  { href: '#features', label: 'Fonctions' },
-  { href: '#download', label: 'Télécharger' },
-  { href: '#contact', label: 'Contact' }
+  { href: url('/#showcase'), label: 'Découvrir' },
+  { href: url('/#features'), label: 'Fonctions' },
+  { href: url('/#download'), label: 'Télécharger' },
+  { href: url('/#contact'), label: 'Contact' }
 ]
 
 export default function Navbar() {
@@ -29,7 +30,7 @@ export default function Navbar() {
           scrolled ? 'mt-2 rounded-2xl glass' : 'bg-transparent'
         }`}
       >
-        <a href="#top" className="shrink-0" aria-label="Accueil Jema">
+        <a href={url('/')} className="shrink-0" aria-label="Accueil Jema">
           <Logo />
         </a>
 
@@ -51,7 +52,7 @@ export default function Navbar() {
             <ThemeSwitcher compact />
           </div>
           <a
-            href="#download"
+            href={url('/#download')}
             className="hidden items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold text-white shadow-glow transition-transform hover:-translate-y-0.5 md:inline-flex"
             style={{ background: 'var(--accent-gradient)' }}
           >

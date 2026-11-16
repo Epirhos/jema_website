@@ -1,6 +1,6 @@
 import { Sun, Moon, BookOpen } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { THEMES, useTheme } from '../context/ThemeContext.jsx'
+import { THEMES, useTheme } from '../lib/theme.js'
 
 const ICONS = { light: Sun, dark: Moon, editorial: BookOpen }
 

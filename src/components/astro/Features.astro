@@ -1,3 +1,5 @@
+---
+/** Grille des fonctions — rendu statique (aucun JavaScript envoyé). */
 import {
   WifiOff,
   Sparkles,
@@ -8,8 +10,6 @@ import {
   FileText,
   FileDown
 } from 'lucide-react'
-import Reveal from './Reveal.jsx'
-
 const FEATURES = [
   {
     icon: WifiOff,
@@ -53,40 +53,40 @@ const FEATURES = [
   }
 ]
 
-export default function Features() {
-  return (
-    <section id="features" className="px-4 py-16 sm:px-6 sm:py-24">
-      <div className="mx-auto max-w-6xl">
-        <Reveal className="mb-10 text-center">
-          <h2 className="font-serif text-3xl font-bold sm:text-4xl" style={{ color: 'var(--text-primary)' }}>
-            Tout un atelier, discret et puissant
-          </h2>
-          <p className="mx-auto mt-3 max-w-xl text-sm sm:text-base" style={{ color: 'var(--text-secondary)' }}>
-            L'IA reste à portée de main sans jamais interrompre le fil de votre écriture.
-          </p>
-        </Reveal>
+---
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {FEATURES.map((f, i) => (
-            <Reveal key={f.title} delay={(i % 4) * 0.06}>
-              <div className="glass group h-full rounded-2xl p-5 transition-transform hover:-translate-y-1">
-                <span
-                  className="grid h-11 w-11 place-items-center rounded-xl text-white"
-                  style={{ background: 'var(--accent-gradient)' }}
-                >
-                  <f.icon size={20} />
-                </span>
-                <h3 className="mt-4 text-base font-semibold" style={{ color: 'var(--text-primary)' }}>
-                  {f.title}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                  {f.desc}
-                </p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
+<section id="features" class="px-4 py-16 sm:px-6 sm:py-24">
+  <div class="mx-auto max-w-6xl">
+    <div class="mb-10 text-center" data-reveal>
+      <h2 class="font-serif text-3xl font-bold sm:text-4xl" style="color: var(--text-primary)">
+        Tout un atelier, discret et puissant
+      </h2>
+      <p class="mx-auto mt-3 max-w-xl text-sm sm:text-base" style="color: var(--text-secondary)">
+        L'IA reste à portée de main sans jamais interrompre le fil de votre écriture.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        FEATURES.map((f, i) => (
+          <div data-reveal style={`--reveal-delay: ${(i % 4) * 0.06}s`}>
+            <div class="glass h-full rounded-2xl p-5 transition-transform hover:-translate-y-1">
+              <span
+                class="grid h-11 w-11 place-items-center rounded-xl text-white"
+                style="background: var(--accent-gradient)"
+              >
+                <f.icon size={20} />
+              </span>
+              <h3 class="mt-4 text-base font-semibold" style="color: var(--text-primary)">
+                {f.title}
+              </h3>
+              <p class="mt-2 text-sm leading-relaxed" style="color: var(--text-secondary)">
+                {f.desc}
+              </p>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,82 @@
+---
+/** Hero — rendu statique. Le libellé du bouton s'adapte au système détecté. */
+import { Download, Play, Lock, Cpu, WifiOff } from 'lucide-react'
+import site from '../../data/site.json'
+import { url } from '../../lib/url.js'
+
+const BADGES = [
+  { icon: WifiOff, label: '100 % local' },
+  { icon: Lock, label: 'Chiffrement AES-256' },
+  { icon: Cpu, label: 'IA embarquée, sans compte' }
+]
+---
+
+<section id="top" class="relative px-4 pt-32 pb-16 sm:px-6 sm:pt-40">
+  <div class="mx-auto max-w-4xl text-center">
+    {
+      site.beta.active && (
+        <a
+          href={url('/#download')}
+          class="glass fade-in inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium"
+          style="color: var(--text-secondary)"
+        >
+          <span class="h-2 w-2 rounded-full" style="background: var(--success-color)" />
+          {site.beta.label}
+        </a>
+      )
+    }
+
+    <h1
+      class="fade-in mt-6 font-serif text-4xl font-bold leading-[1.1] tracking-tight sm:text-6xl"
+      style="color: var(--text-primary); --fade-delay: 0.08s"
+    >
+      Racontez,<br /><span class="accent-text">on s'occupe du reste.</span>
+    </h1>
+
+    <p
+      class="fade-in mx-auto mt-6 max-w-2xl text-base leading-relaxed sm:text-lg"
+      style="color: var(--text-secondary); --fade-delay: 0.16s"
+    >
+      Jema est l'éditeur littéraire qui écrit à vos côtés&nbsp;: correction fine, fiches de personnages et de
+      lieux générées automatiquement, mémoire de votre univers. Tout reste sur votre machine.
+    </p>
+
+    <div
+      class="fade-in mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row"
+      style="--fade-delay: 0.24s"
+    >
+      <a
+        href={url('/#download')}
+        class="inline-flex w-full items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold text-white shadow-glow transition-transform hover:-translate-y-0.5 sm:w-auto"
+        style="background: var(--accent-gradient)"
+      >
+        <Download size={18} /> <span data-os-label>Télécharger Jema</span>
+      </a>
+      <a
+        href={url('/#showcase')}
+        class="glass inline-flex w-full items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold transition-transform hover:-translate-y-0.5 sm:w-auto"
+        style="color: var(--text-primary)"
+      >
+        <Play size={16} /> Essayer la démo
+      </a>
+    </div>
+
+    <div class="fade-in mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2" style="--fade-delay: 0.4s">
+      {
+        BADGES.map(({ icon: Icon, label }) => (
+          <span class="inline-flex items-center gap-1.5 text-xs font-medium" style="color: var(--text-muted)">
+            <Icon size={14} /> {label}
+          </span>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  // Personnalise le bouton principal selon le système du visiteur.
+  const ua = navigator.userAgent
+  const os = /Windows/i.test(ua) ? 'Windows' : /Mac OS X/i.test(ua) && !/iPhone|iPad/i.test(ua) ? 'macOS' : /Linux/i.test(ua) && !/Android/i.test(ua) ? 'Linux' : null
+  const label = document.querySelector('[data-os-label]')
+  if (os && label) label.textContent = `Télécharger pour ${os}`
+</script>

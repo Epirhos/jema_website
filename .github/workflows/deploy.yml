@@ -29,8 +29,11 @@ jobs:
       - name: Installation des dépendances
         run: npm install
 
-      - name: Compilation de l'application React
+      - name: Compilation du site (Astro)
         run: npm run build
+        env:
+          BASE_PATH: /jema_website/
+          SITE_URL: https://flowvx.github.io
 
       - name: Configuration de GitHub Pages
         uses: actions/configure-pages@v4

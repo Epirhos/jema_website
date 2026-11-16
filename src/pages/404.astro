@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro'
+import { url } from '../lib/url.js'
+---
+
+<Base title="Page introuvable">
+  <section class="px-4 pb-24 pt-40 text-center sm:px-6">
+    <p class="font-serif text-6xl font-bold accent-text">404</p>
+    <h1 class="mt-4 font-serif text-2xl font-bold" style="color: var(--text-primary)">Cette page n'a pas été écrite… pour l'instant.</h1>
+    <p class="mx-auto mt-3 max-w-md text-sm" style="color: var(--text-secondary)">
+      Le lien est peut-être ancien, ou la page a changé de chapitre.
+    </p>
+    <a
+      href={url('/')}
+      class="mt-8 inline-flex items-center rounded-xl px-6 py-3 text-sm font-semibold text-white"
+      style="background: var(--accent-gradient)">Retour à l'accueil</a
+    >
+  </section>
+</Base>

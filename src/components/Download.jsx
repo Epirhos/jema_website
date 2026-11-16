@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import { Download as DownloadIcon, Check } from 'lucide-react'
 import Reveal from './Reveal.jsx'
+import site from '../data/site.json'
 
-const GITHUB_RELEASE_REPO = 'Epirhos/jema-releases'
-const FALLBACK_VERSION = 'v4.0.0'
+const GITHUB_RELEASE_REPO = site.releasesRepo
+const FALLBACK_VERSION = site.fallbackVersion
 const DEFAULT_DOWNLOADS = {
   windows: 'https://github.com/Epirhos/jema-releases/releases/download/v4.0.0/jema-editor-4.0.0-setup.exe',
   mac: 'https://github.com/Epirhos/jema-releases/releases/download/v4.0.0/jema-editor-4.0.0.dmg',
@@ -35,14 +36,12 @@ const PLATFORMS = [
     meta: 'Apple Silicon & Intel · .dmg',
     note: 'Universel',
     hrefKey: 'mac',
-    primary: false,
   },
   {
     os: 'Windows',
     Icon: Windows,
     meta: 'Windows 10/11 · .exe',
     note: 'Installeur < 300 Mo',
-    primary: true,
     hrefKey: 'windows'
   },
   {
@@ -50,7 +49,6 @@ const PLATFORMS = [
     Icon: Linux,
     meta: 'AppImage · .deb',
     note: 'x86_64',
-    primary: false,
     linuxOptions: [
       {
         label: 'DEB',
@@ -70,6 +68,7 @@ export default function Download() {
   const [linuxVariant, setLinuxVariant] = useState('DEB')
   const [downloadUrls, setDownloadUrls] = useState(DEFAULT_DOWNLOADS)
   const [version, setVersion] = useState(FALLBACK_VERSION)
+  const [userOs, setUserOs] = useState('Windows')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -110,6 +109,9 @@ export default function Download() {
 
   useEffect(() => {
     fetchLatestRelease()
+    const ua = navigator.userAgent
+    if (/Mac OS X/i.test(ua) && !/iPhone|iPad/i.test(ua)) setUserOs('macOS')
+    else if (/Linux/i.test(ua) && !/Android/i.test(ua)) setUserOs('Linux')
   }, [])
 
   return (
@@ -124,7 +126,7 @@ export default function Download() {
             votre accord.
           </p>
           <p className="mt-3 text-xs font-medium" style={{ color: 'var(--text-muted)' }}>
-            Version {version} · Bêta gratuite jusqu'au 20 février 2027
+            Version {version}{site.beta.active ? ` · ${site.beta.label.replace(/^Bêta ouverte · /, 'Bêta ')}` : ''}
           </p>
         </Reveal>
 
@@ -133,7 +135,7 @@ export default function Download() {
             <Reveal key={p.os} delay={i * 0.08}>
               <div
                 className="glass flex h-full flex-col items-center rounded-2xl p-6 text-center transition-transform hover:-translate-y-1"
-                style={p.primary === true ? { boxShadow: 'var(--glass-shadow), 0 0 40px var(--accent-glow)' } : undefined}
+                style={p.os === userOs ? { boxShadow: 'var(--glass-shadow), 0 0 40px var(--accent-glow)' } : undefined}
               >
                 <span style={{ color: 'var(--text-primary)' }}>
                   <p.Icon width={40} height={40} />
@@ -175,7 +177,7 @@ export default function Download() {
                       target="_blank" rel="noopener noreferrer"
                       className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-transform hover:-translate-y-0.5"
                       style={
-                        p.primary === true
+                        p.os === userOs
                           ? { background: 'var(--accent-gradient)', color: '#fff' }
                           : { background: 'var(--search-bg)', color: 'var(--text-primary)', border: '1px solid var(--glass-border)' }
                       }
@@ -189,7 +191,7 @@ export default function Download() {
                     target="_blank" rel="noopener noreferrer"
                     className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-transform hover:-translate-y-0.5"
                     style={
-                      p.primary === true
+                      p.os === userOs
                         ? { background: 'var(--accent-gradient)', color: '#fff' }
                         : { background: 'var(--search-bg)', color: 'var(--text-primary)', border: '1px solid var(--glass-border)' }
                     }
@@ -238,8 +240,8 @@ export default function Download() {
             Applications, puis <em>Ouvrir</em>.
           </p>
           <p className="mt-2">
-            L'assistant IA fonctionne sur votre ordinateur : il demande une machine récente, avec beaucoup de mémoire.
-            Pendant la bêta, exportez régulièrement vos manuscrits.
+            <strong>Configuration :</strong> {site.requirements.ram}. Il fonctionne entièrement sur votre
+            ordinateur. Pendant la bêta, exportez régulièrement vos manuscrits.
           </p>
         </div>
       </div>

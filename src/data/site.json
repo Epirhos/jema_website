@@ -1,0 +1,21 @@
+{
+  "contactEmail": "editor.jema@gmail.com",
+  "releasesRepo": "Epirhos/jema-releases",
+  "fallbackVersion": "v4.0.0",
+  "beta": {
+    "active": true,
+    "start": "2026-11-20",
+    "end": "2027-02-20",
+    "label": "Bêta ouverte · gratuite jusqu'au 20 février 2027"
+  },
+  "requirements": {
+    "ram": "8 Go de mémoire vive minimum pour l'assistant IA",
+    "os": "Windows 10/11 (64 bits) · macOS (Apple Silicon et Intel) · Linux x86_64"
+  },
+  "banner": {
+    "enabled": false,
+    "text": "",
+    "linkLabel": "",
+    "link": ""
+  }
+}

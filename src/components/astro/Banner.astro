@@ -1,0 +1,24 @@
+---
+/** Bandeau d'annonce global, piloté par src/data/site.json (éditable depuis l'admin). */
+import site from '../../data/site.json'
+const { enabled, text, link, linkLabel } = site.banner
+---
+
+{
+  enabled && text && (
+    <div class="px-4 pt-24 sm:px-6">
+      <p
+        class="glass mx-auto flex max-w-3xl flex-wrap items-center justify-center gap-x-2 rounded-2xl px-4 py-2.5 text-center text-sm"
+        style="color: var(--text-primary)"
+      >
+        <span class="h-2 w-2 shrink-0 rounded-full" style="background: var(--accent-color)" aria-hidden="true" />
+        <span>{text}</span>
+        {link && (
+          <a href={link} class="font-semibold underline underline-offset-2" style="color: var(--accent-color)">
+            {linkLabel || 'En savoir plus'} →
+          </a>
+        )}
+      </p>
+    </div>
+  )
+}

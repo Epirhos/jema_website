@@ -1,49 +1,55 @@
-LICENCE D'UTILISATION DE LA VERSION BÊTA DE JEMA
+---
+title: Licence d'utilisation de la bêta
+description: Conditions d'utilisation de la version bêta de Jema (20 novembre 2026 – 20 février 2027).
+section: legal
+updated: 2026-11-10
+---
 
-Version du 10 novembre 2026, applicable à la phase de test du 20 novembre 2026 au 20 février 2027.
+Version du 10 novembre 2026, applicable à la phase de test du 20 novembre 2026 au 20 février 2027.  
 Éditeur : Dahirou Nounsi, dit Epirhos, personne physique. Contact : editor.jema@gmail.com
 
 Merci de lire attentivement ce texte. En installant ou en utilisant Jema, vous l'acceptez. Si vous ne l'acceptez pas, n'installez pas le logiciel.
 
-1. CE QUE VOUS INSTALLEZ : UNE VERSION DE TEST
+## 1. Ce que vous installez : une version de test
 Jema est fourni gratuitement, dans une version Bêta, c'est-à-dire une version de test encore en développement. Vous participez à ce test de votre plein gré, sans contrepartie et sans contrat de test distinct. Cette version n'est pas une version finale.
 
-2. DES PROMESSES NE SONT PAS ENCORE TENUES
+## 2. Des promesses ne sont pas encore tenues
 Certaines fonctions annoncées ou prévues ne sont pas encore disponibles, sont incomplètes ou fonctionnent moins bien que prévu. Par exemple, à la date de cette licence :
 - la sauvegarde en ligne et l'écriture à plusieurs n'existent pas encore ;
 - l'intelligence artificielle est désactivée sur les projets protégés par mot de passe ;
 - l'intelligence artificielle peut être lente, interrompre une réponse, mal comprendre le sous-entendu ou se tromper sur les personnages, les lieux, leurs relations et la chronologie ;
 - l'intelligence artificielle demande un ordinateur récent, avec beaucoup de mémoire.
+
 Les réponses et suggestions de l'intelligence artificielle peuvent être fausses. Vérifiez-les toujours. Vous restez seul juge de ce que vous écrivez.
 
-3. DES FAILLES DE SÉCURITÉ PEUVENT EXISTER
+## 3. Des failles de sécurité peuvent exister
 Jema a été conçu pour protéger vos textes : ils restent sur votre ordinateur, et un projet protégé par mot de passe est chiffré. Mais une version de test peut contenir des défauts, y compris des failles de sécurité encore inconnues. L'application n'est pas encore signée numériquement : Windows peut afficher un avertissement à l'installation. N'utilisez pas cette version Bêta comme seul endroit où se trouve un texte important.
 
-4. FAITES DES SAUVEGARDES
+## 4. Faites des sauvegardes
 Des pertes ou altérations de données sont possibles pendant un test. Conservez régulièrement une copie de vos manuscrits en dehors de Jema, par exemple avec la fonction « Exporter le projet » (archive .zip) ou un export Word ou PDF.
 
-5. AUCUNE GARANTIE
+## 5. Aucune garantie
 Le logiciel est fourni « en l'état », sans aucune garantie, expresse ou implicite, notamment de bon fonctionnement, d'absence d'erreur, de sécurité, de disponibilité ou d'adéquation à un usage particulier.
 
-6. LIMITATION DE RESPONSABILITÉ
+## 6. Limitation de responsabilité
 Dans toute la mesure permise par la loi, l'éditeur ne pourra être tenu responsable d'aucun dommage, direct ou indirect, résultant de l'installation, de l'utilisation ou de l'impossibilité d'utiliser cette version Bêta, notamment d'une perte ou d'une altération de données, d'une faille de sécurité, d'une erreur de l'intelligence artificielle ou d'une interruption du logiciel. Cette limitation ne s'applique pas aux cas où la loi interdit de l'écarter.
 
-7. VOS ŒUVRES VOUS APPARTIENNENT
+## 7. Vos œuvres vous appartiennent
 Vos textes, idées, univers, notes et fiches restent votre propriété exclusive. Jema ne les envoie pas sur Internet, ne les lit pas pour le compte de l'éditeur et ne les utilise pas pour entraîner une intelligence artificielle. La politique de confidentialité décrit les seules connexions réseau de Jema (téléchargement de l'IA avec votre accord, vérification des mises à jour).
 
-8. LE LOGICIEL
+## 8. Le logiciel
 L'éditeur conserve tous les droits sur le logiciel Jema : code, interface, architecture, nom, logo et mascotte. Il vous est accordé, pour la durée du test, une licence personnelle, gratuite, non exclusive et non transférable d'utilisation, pour créer et éditer vos propres œuvres. Vous ne pouvez pas revendre, copier pour diffusion, décompiler ou modifier le logiciel. Jema intègre des composants tiers sous licences libres, listés dans le fichier THIRD_PARTY_NOTICES.md.
 
-9. MISES À JOUR
+## 9. Mises à jour
 Les mises à jour corrigent des défauts, y compris de sécurité. Il vous est vivement recommandé de les installer dès qu'elles sont proposées. L'utilisation prolongée d'une version obsolète, ou le refus répété des correctifs, peut entraîner la fin de votre accès à la version de test.
 
-10. VOS RETOURS
+## 10. Vos retours
 Si vous transmettez à l'éditeur des commentaires, suggestions, signalements de défauts ou idées, l'éditeur peut les utiliser librement pour améliorer Jema, sans compensation financière ni obligation de citation.
 
-11. FIN DU TEST
+## 11. Fin du test
 La version Bêta cesse de fonctionner à la fin de la période de test ; l'export de vos manuscrits reste possible. L'éditeur peut modifier, suspendre ou arrêter le test à tout moment. Vous pouvez y mettre fin à tout moment en désinstallant Jema. Cette licence prend fin automatiquement si vous n'en respectez pas les termes.
 
-12. DROIT APPLICABLE
+## 12. Droit applicable
 Cette licence est soumise au droit français. Pour toute question : editor.jema@gmail.com.
 
 En cliquant sur « J'accepte », vous reconnaissez avoir lu et accepté cette licence, et avoir compris qu'il s'agit d'une version de test, qui peut contenir des promesses non encore tenues et des failles de sécurité.

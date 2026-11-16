@@ -1,0 +1,34 @@
+---
+import { url } from '../../lib/url.js'
+
+const LINKS = [
+  { href: url('/legal/mentions-legales'), label: 'Mentions légales' },
+  { href: url('/legal/confidentialite'), label: 'Confidentialité' },
+  { href: url('/legal/licence-beta'), label: 'Licence bêta' },
+  { href: url('/#contact'), label: 'Contact' }
+]
+const year = new Date().getFullYear()
+---
+
+<footer class="px-4 pb-10 pt-8 sm:px-6">
+  <div class="mx-auto max-w-6xl">
+    <div class="glass rounded-3xl px-6 py-8 sm:px-10">
+      <nav aria-label="Liens légaux" class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm">
+        {
+          LINKS.map((l) => (
+            <a href={l.href} class="transition-colors hover:underline" style="color: var(--text-secondary)">
+              {l.label}
+            </a>
+          ))
+        }
+      </nav>
+      <div
+        class="mt-6 flex flex-col items-center justify-between gap-2 pt-6 text-center text-xs sm:flex-row sm:text-left"
+        style="border-top: 1px solid var(--glass-border); color: var(--text-muted)"
+      >
+        <span>© {year} Jema · Dahirou Nounsi (Epirhos)</span>
+        <span>Conçu pour les auteurs · Local-first · Chiffrement AES-256</span>
+      </div>
+    </div>
+  </div>
+</footer>

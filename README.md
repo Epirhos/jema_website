@@ -1,59 +1,51 @@
-# Jema — Landing Page
+# Jema — Site officiel
 
-Site vitrine officiel de **Jema**, l'éditeur de texte littéraire augmenté par l'IA locale.
+Site d'annonce et de téléchargement de **Jema**, l'éditeur littéraire augmenté par l'IA locale.
 Slogan : _« Racontez, on s'occupe du reste. »_
 
-SPA React + Vite + Tailwind, reprenant à l'identique le design de l'application de bureau
-(glassmorphism éditorial, polices Inter + Merriweather, thèmes **Clair / Sombre / Éditorial**).
-
-## Stack
-
-- React 18 + Vite 6
-- Tailwind CSS 3 (tokens de thème pilotés par variables CSS)
-- Framer Motion (animations premium, respecte `prefers-reduced-motion`)
-- Tiptap / ProseMirror (simulateur d'éditeur réel, bubble menu inclus)
-- Lucide React (icônes, identiques à l'app)
+Site **statique** Astro : HTML pré-rendu (référencement), JavaScript chargé seulement là où il sert
+(démo interactive, téléchargements, menu). Design repris de l'application (thèmes Clair / Sombre /
+Éditorial, verre dépoli, Inter + Merriweather auto-hébergées).
 
 ## Démarrer
 
 ```bash
 npm install
-npm run dev      # http://localhost:5173
-npm run build    # bundle de production → dist/
+npm run dev      # http://localhost:4321
+npm run build    # site statique → dist/
 npm run preview  # sert le build
 ```
+
+Variables de build (facultatives) :
+
+| Variable | Rôle | Défaut |
+|---|---|---|
+| `SITE_URL` | domaine public (balises canoniques, sitemap) | `https://jema.pages.dev` |
+| `BASE_PATH` | sous-dossier de publication | `/` (GitHub Pages : `/jema_website/`) |
+
+## Modifier le contenu
+
+| Quoi | Où |
+|---|---|
+| Email, dépôt des versions, dates de bêta, configuration requise, bandeau d'annonce | `src/data/site.json` |
+| Pages légales (Markdown) | `src/content/pages/*.md` |
+| Accueil (sections) | `src/pages/index.astro` + `src/components/` |
 
 ## Structure
 
 ```
 src/
-  App.jsx                  # assemblage des sections
-  context/ThemeContext.jsx # thèmes light / dark / editorial (comme l'app)
-  components/
-    Navbar.jsx             # nav responsive + sélecteur de thème
-    ThemeSwitcher.jsx      # bascule Clair/Sombre/Éditorial en direct
-    Hero.jsx               # slogan + CTA
-    Showcase.jsx           # mockup fenêtre = éditeur + panneau Jema
-    EditorPreview.jsx      # éditeur Tiptap + toolbar + bouton Correction
-    ChatSimulation.jsx     # panneau « Jema Intelligence » scripté
-    Features.jsx           # grille de fonctionnalités
-    Download.jsx           # cartes Windows / macOS / Linux
-    Pricing.jsx            # licences (MASQUÉ : <Pricing enabled={false} />)
-    Contact.jsx            # formulaire → mailto
-    Footer.jsx
+  layouts/Base.astro        # <head>, thème sans flash, navigation, bandeau, footer
+  layouts/Prose.astro       # gabarit des pages de texte
+  pages/                    # index, legal/[slug], 404
+  content/pages/            # pages Markdown (légal…)
+  content.config.ts         # schémas des contenus
+  data/site.json            # réglages éditables
+  components/astro/         # sections statiques (Hero, Features, Footer, Banner)
+  components/*.jsx          # îlots React : Navbar, Showcase (démo Tiptap), Download, Contact
+  lib/                      # url() (base), thème partagé, plugin rehype
 ```
 
 ## Section Licence (monétisation)
 
-Le composant `Pricing` existe mais reste **masqué** tant que le modèle économique
-n'est pas arrêté. Pour l'activer, dans `App.jsx` :
-
-```jsx
-<Pricing enabled={true} onPurchase={(plan) => /* brancher le flux de licence */} />
-```
-
-## Thèmes
-
-Les tokens CSS de `src/index.css` sont copiés depuis
-`jema-editor_v2/src/renderer/src/assets/main.css` pour une fidélité visuelle exacte.
-La classe de thème (`light` / `dark` / `editorial`) est posée sur `<html>`, comme dans l'app.
+`src/components/Pricing.jsx` existe mais n'est pas monté tant que le modèle économique n'est pas arrêté.

@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro'
+import Hero from '../components/astro/Hero.astro'
+import Features from '../components/astro/Features.astro'
+import Showcase from '../components/Showcase.jsx'
+import Download from '../components/Download.jsx'
+import Contact from '../components/Contact.jsx'
+---
+
+<Base>
+  <Hero />
+  <!-- La démo (éditeur Tiptap) ne se charge qu'à l'approche de la section. -->
+  <Showcase client:visible />
+  <Features />
+  <Download client:visible />
+  <Contact client:visible />
+</Base>

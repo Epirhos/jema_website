@@ -3,6 +3,7 @@ import { useEditor, EditorContent, BubbleMenu } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Underline from '@tiptap/extension-underline'
 import Placeholder from '@tiptap/extension-placeholder'
+import Highlight from '@tiptap/extension-highlight'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
   Bold,
@@ -14,7 +15,8 @@ import {
   Sparkles,
   StickyNote,
   Loader2,
-  Check
+  Check,
+  X
 } from 'lucide-react'
 
 const SEED = `<h2>Chapitre premier — La cabine d'essayage</h2><p>Darelle poussa le rideau de la cabine, le cœur battant. Dans le miroir, une inconnue lui rendait son regard : plus assurée, presque téméraire. Lucien l'attendait de l'autre côté, et elle savait déjà que rien ne serait plus comme avant.</p>`
@@ -38,15 +40,38 @@ function TBtn({ active, onClick, title, children }) {
   )
 }
 
+/**
+ * Suggestions simulées, comme dans l'app (CorrectionReview) : Jema PROPOSE,
+ * l'auteur accepte ou ignore. Rien n'est réécrit sans son accord.
+ */
+const SUGGESTIONS = [
+  {
+    id: 'rythme',
+    kind: 'Rythme',
+    from: "l'attendait de l'autre côté, et elle savait",
+    to: "l'attendait de l'autre côté ; elle savait",
+    reason: 'Deux propositions longues liées par « et » : un point-virgule marque mieux la bascule.'
+  },
+  {
+    id: 'cliche',
+    kind: 'Style',
+    from: null,
+    to: null,
+    reason: '« Rien ne serait plus comme avant » est une formule très courante. Une image à vous la rendrait plus marquante.'
+  }
+]
+
 export default function EditorPreview() {
   const [tab, setTab] = useState('redaction')
   const [correcting, setCorrecting] = useState(false)
-  const [corrected, setCorrected] = useState(false)
+  const [pending, setPending] = useState([])
+  const [toast, setToast] = useState(null)
 
   const editor = useEditor({
     extensions: [
       StarterKit,
       Underline,
+      Highlight,
       Placeholder.configure({ placeholder: 'Commencez votre histoire ici…' })
     ],
     content: SEED,
@@ -57,27 +82,40 @@ export default function EditorPreview() {
 
   if (!editor) return <div className="min-h-[420px]" />
 
-  // Correction simulée : niveau 2 — remplace une répétition et surligne.
+  const flash = (text) => {
+    setToast(text)
+    setTimeout(() => setToast(null), 2400)
+  }
+
   const runCorrection = () => {
     if (correcting) return
-    setCorrected(false)
+    setPending([])
     setCorrecting(true)
     setTimeout(() => {
-      editor
-        .chain()
-        .focus()
-        .setContent(
-          `<h2>Chapitre premier — La cabine d'essayage</h2><p>Darelle écarta le rideau de la cabine, le cœur battant. Dans le miroir, une inconnue lui rendait son regard : plus assurée, presque téméraire. Lucien patientait de l'autre côté&nbsp;; elle pressentait déjà que <mark>rien ne serait plus comme avant</mark>.</p>`
-        )
-        .run()
       setCorrecting(false)
-      setCorrected(true)
-      setTimeout(() => setCorrected(false), 2600)
-    }, 1400)
+      setPending(SUGGESTIONS)
+    }, 1200)
+  }
+
+  const resolve = (s, accept) => {
+    if (accept && s.from) {
+      const html = editor.getHTML()
+      if (html.includes(s.from)) editor.commands.setContent(html.replace(s.from, `<mark>${s.to}</mark>`))
+    }
+    setPending((list) => {
+      const next = list.filter((x) => x.id !== s.id)
+      if (next.length === 0) flash('Relecture terminée · votre texte, vos choix')
+      return next
+    })
+  }
+
+  const addNote = () => {
+    editor.chain().focus().toggleHighlight().run()
+    flash('Note inline ajoutée au passage')
   }
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="relative flex h-full flex-col">
       {/* Onglets — Rédaction / Mise en page (comme la toolbar de l'app) */}
       <div
         className="flex items-center gap-1 px-3 pt-2"
@@ -145,9 +183,9 @@ export default function EditorPreview() {
               <>
                 <Loader2 size={14} className="animate-spin" /> Correction…
               </>
-            ) : corrected ? (
+            ) : pending.length > 0 ? (
               <>
-                <Check size={14} /> Corrigé
+                <Check size={14} /> {pending.length} suggestion{pending.length > 1 ? 's' : ''}
               </>
             ) : (
               <>
@@ -166,6 +204,54 @@ export default function EditorPreview() {
         >
           <EditorContent editor={editor} />
         </div>
+
+      </div>
+
+      {/* Suggestions : superposées en bas de la page, toujours visibles */}
+      <div className="pointer-events-none absolute inset-x-3 bottom-3 z-10 mx-auto flex max-w-[62ch] flex-col gap-2">
+          <AnimatePresence>
+            {pending.map((sug, i) => (
+              <motion.div
+                key={sug.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0, transition: { delay: i * 0.08 } }}
+                exit={{ opacity: 0, x: 30 }}
+                className="glass pointer-events-auto rounded-xl p-3 text-sm"
+              >
+                <div className="flex items-start gap-3">
+                  <span
+                    className="mt-0.5 shrink-0 rounded-md px-2 py-0.5 text-[11px] font-semibold text-white"
+                    style={{ background: 'var(--accent-color)' }}
+                  >
+                    {sug.kind}
+                  </span>
+                  <p className="flex-1 leading-snug" style={{ color: 'var(--text-secondary)' }}>
+                    {sug.reason}
+                  </p>
+                </div>
+                <div className="mt-2 flex justify-end gap-2">
+                  <button
+                    type="button"
+                    onClick={() => resolve(sug, false)}
+                    className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-medium"
+                    style={{ color: 'var(--text-secondary)', border: '1px solid var(--glass-border)' }}
+                  >
+                    <X size={12} /> {sug.from ? 'Ignorer' : 'Compris'}
+                  </button>
+                  {sug.from && (
+                    <button
+                      type="button"
+                      onClick={() => resolve(sug, true)}
+                      className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold text-white"
+                      style={{ background: 'var(--accent-gradient)' }}
+                    >
+                      <Check size={12} /> Accepter
+                    </button>
+                  )}
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
       </div>
 
       {/* Bubble menu — barre flottante de sélection (Gras / Italique / Note) */}
@@ -184,13 +270,13 @@ export default function EditorPreview() {
           <UnderlineIcon size={15} />
         </TBtn>
         <span className="mx-0.5 h-5 w-px" style={{ background: 'var(--glass-border)' }} />
-        <TBtn title="Ajouter une note" active={editor.isActive('highlight')} onClick={() => editor.chain().focus().toggleMark('bold').run()}>
+        <TBtn title="Ajouter une note" active={editor.isActive('highlight')} onClick={addNote}>
           <StickyNote size={15} />
         </TBtn>
       </BubbleMenu>
 
       <AnimatePresence>
-        {corrected && (
+        {toast && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -198,7 +284,7 @@ export default function EditorPreview() {
             className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-lg px-3 py-1.5 text-xs font-medium text-white"
             style={{ background: 'var(--success-color)' }}
           >
-            Fluidité améliorée · répétition corrigée
+            {toast}
           </motion.div>
         )}
       </AnimatePresence>
