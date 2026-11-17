@@ -1,16 +1,4 @@
 {
-  "downloads": {
-    "open": true,
-    "title": "Les téléchargements reprennent bientôt.",
-    "reason": "Nous écrivons la prochaine version de Jema à partir de vos retours.",
-    "until": "2026-11-23"
-  },
-  "banner": {
-    "enabled": true,
-    "text": "Les téléchargements reprennent bientôt. Jema en réécriture de son code.",
-    "linkLabel": "",
-    "link": ""
-  },
   "beta": {
     "active": true,
     "label": "Bêta ouverte · gratuite jusqu'au 20 février 2027",

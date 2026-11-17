@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#ebe7de" />
+    <title>Mode d'emploi · Administration du site Jema</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/admin/theme.css" />
+    <style>
+      :root { color-scheme: light; }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; scroll-padding-top: 20px; }
+      body { margin: 0; background: var(--j-desk); color: var(--j-ink); font: 400 15.5px/1.6 'Inter', system-ui, sans-serif; }
+      a { color: var(--j-jema); text-underline-offset: 3px; }
+      .layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 32px; max-width: 1080px; margin: 0 auto; padding: 32px 24px 80px; }
+      nav.toc { position: sticky; top: 24px; align-self: start; display: grid; gap: 2px; font-size: 14px; }
+      nav.toc .kicker { margin-bottom: 8px; }
+      nav.toc a { color: var(--j-ink-2); text-decoration: none; padding: 6px 10px; border-radius: 8px; }
+      nav.toc a:hover { background: var(--j-desk-2); }
+      .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; font: 500 22px 'Newsreader', Georgia, serif; color: var(--j-ink); text-decoration: none; }
+      .brand img { width: 30px; height: 30px; border-radius: 8px; }
+      .kicker { font: 700 10.5px 'Inter', sans-serif; letter-spacing: 0.12em; text-transform: uppercase; color: var(--j-ochre); }
+      h1, h2, h3 { font-family: 'Newsreader', Georgia, serif; font-weight: 500; letter-spacing: -0.01em; line-height: 1.15; margin: 0; }
+      h1 { font-size: clamp(34px, 4vw, 46px); }
+      h1 em { color: var(--j-jema); }
+      h2 { font-size: 30px; }
+      h3 { font-size: 21px; margin-top: 22px; }
+      .lead { font-size: 18px; color: var(--j-mute); margin: 12px 0 0; max-width: 60ch; }
+      main { display: grid; gap: 22px; min-width: 0; }
+      .sheet { background: var(--j-paper); border-radius: 8px; box-shadow: var(--j-shadow); padding: clamp(22px, 3vw, 34px); }
+      .sheet > .kicker { display: block; margin-bottom: 8px; }
+      .sheet p, .sheet li { color: var(--j-ink-2); }
+      .sheet p { margin: 10px 0; }
+      ol.steps { counter-reset: s; list-style: none; padding: 0; margin: 16px 0; display: grid; gap: 12px; }
+      ol.steps > li { counter-increment: s; position: relative; padding-left: 44px; }
+      ol.steps > li::before { content: counter(s); position: absolute; left: 0; top: -1px; width: 30px; height: 30px; border-radius: 999px; display: grid; place-items: center; background: var(--j-ink); color: var(--j-paper); font: 700 13px 'Inter', sans-serif; }
+      ul { padding-left: 20px; }
+      li + li { margin-top: 4px; }
+      b, strong { color: var(--j-ink); }
+      .ui { display: inline-block; padding: 1px 8px; border-radius: 6px; background: var(--j-desk-2); box-shadow: inset 0 0 0 1px var(--j-rule); font: 600 13px 'Inter', sans-serif; color: var(--j-ink); white-space: nowrap; }
+      .ui.ink { background: var(--j-ink); color: var(--j-paper); box-shadow: none; border-radius: 999px; padding: 1px 10px; }
+      .note { margin: 16px 0; padding: 12px 16px; border-radius: 8px; border-left: 3px solid var(--j-jema); background: var(--j-jema-soft); font-size: 14.5px; }
+      .note.warn { border-left-color: var(--j-ochre); background: var(--j-ochre-soft); }
+      .note b:first-child { display: block; margin-bottom: 2px; }
+      figure { margin: 18px 0 6px; }
+      figure img { display: block; width: 100%; border-radius: 8px; box-shadow: 0 0 0 1px var(--j-rule), 0 12px 28px rgba(60, 40, 20, 0.1); }
+      figcaption { font-size: 13px; color: var(--j-mute); margin-top: 8px; }
+      table { width: 100%; border-collapse: collapse; font-size: 14.5px; margin: 12px 0; }
+      th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--j-rule); vertical-align: top; }
+      th { font: 700 10.5px 'Inter', sans-serif; letter-spacing: 0.1em; text-transform: uppercase; color: var(--j-mute); }
+      code { font: 500 13px ui-monospace, Consolas, monospace; background: var(--j-desk-2); padding: 1px 5px; border-radius: 4px; }
+      .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin-top: 16px; }
+      .card { display: block; padding: 16px; border-radius: 8px; background: var(--j-desk-2); text-decoration: none; color: var(--j-ink); box-shadow: inset 0 0 0 1px var(--j-rule); }
+      .card:hover { box-shadow: inset 0 0 0 2px var(--j-jema); }
+      .card b { display: block; font: 500 19px 'Newsreader', Georgia, serif; margin-bottom: 4px; }
+      .card span { font-size: 13.5px; color: var(--j-mute); }
+      .top { font-size: 13px; text-decoration: none; color: var(--j-mute); }
+      /* Dans le panneau de l'admin : une seule colonne, sans sommaire. */
+      body.panneau .layout { grid-template-columns: 1fr; padding: 18px 16px 60px; gap: 0; }
+      body.panneau nav.toc { display: none; }
+      body.panneau h1 { font-size: 32px; }
+      body.panneau .sheet { padding: 20px; }
+      body.panneau .top { display: none; }
+      @media (max-width: 860px) { .layout { grid-template-columns: 1fr; } nav.toc { position: static; } }
+    </style>
+  </head>
+  <body>
+    <script>if (location.search.indexOf('panneau') > -1) document.body.classList.add('panneau')</script>
+    <div class="layout">
+      <nav class="toc" aria-label="Sommaire">
+        <a class="brand" href="/admin/"><img src="/favicon.svg" alt="" />Jema</a>
+        <span class="kicker">Mode d'emploi</span>
+        <a href="#bienvenue">Bien démarrer</a>
+        <a href="#telechargements">Mettre les téléchargements en pause</a>
+        <a href="#versions">Publier une nouvelle version</a>
+        <a href="#journal">Écrire un article</a>
+        <a href="#pages">Modifier une page (FAQ, légal…)</a>
+        <a href="#bandeau">Afficher un bandeau</a>
+        <a href="#images">Ajouter une image</a>
+        <a href="#reglages">Réglages du site</a>
+        <a href="#erreur">Annuler une erreur</a>
+        <a href="#problemes">En cas de problème</a>
+      </nav>
+
+      <main>
+        <!-- ───────────── Bien démarrer ───────────── -->
+        <section class="sheet" id="bienvenue">
+          <span class="kicker">Mode d'emploi de l'administration</span>
+          <h1>Le site se met à jour <em>sans toucher au code.</em></h1>
+          <p class="lead">Tout ce que vous enregistrez ici est publié sur le site en une à deux minutes. Ce guide explique chaque écran, pas à pas.</p>
+
+          <h3>Comment ça marche</h3>
+          <ol class="steps">
+            <li>Vous modifiez un contenu, puis vous cliquez sur <span class="ui ink">Enregistrer</span> en haut à droite.</li>
+            <li>L'admin dépose la modification sur GitHub (le dépôt <code>Epirhos/jema_website</code>), comme une nouvelle page dans un classeur. Rien ne se perd : chaque version est conservée.</li>
+            <li>Cloudflare voit la modification, reconstruit le site et le met en ligne : <b>environ 1 à 2 minutes</b>. Rechargez la page du site pour la voir.</li>
+          </ol>
+          <div class="note"><b>Pour travailler sans publier tout de suite</b>Les nouveautés et les articles ont un interrupteur <span class="ui">Brouillon (non publié)</span>. Activez-le, enregistrez autant de fois que vous voulez : rien n'apparaît sur le site tant qu'il est activé.</div>
+
+          <h3>Se connecter</h3>
+          <ol class="steps">
+            <li>Ouvrez <code>jema.app/admin</code> et choisissez <span class="ui">Se connecter avec un jeton d'accès</span>.</li>
+            <li>Collez votre jeton GitHub. Le navigateur s'en souvient : vous ne le collez qu'une fois par ordinateur.</li>
+          </ol>
+          <details>
+            <summary><b>Créer ou renouveler le jeton</b> (tous les 90 jours)</summary>
+            <ol class="steps">
+              <li>Sur GitHub : photo de profil → <span class="ui">Settings</span> → <span class="ui">Developer settings</span> → <span class="ui">Personal access tokens</span> → <span class="ui">Fine-grained tokens</span> → <span class="ui">Generate new token</span>.</li>
+              <li>Nom : <code>Jema admin</code> · Expiration : 90 jours · Resource owner : <code>Epirhos</code> · Repository access : <i>Only select repositories</i> → <code>jema_website</code>.</li>
+              <li>Permissions → Repository → <b>Contents : Read and write</b>. Cliquez sur <span class="ui">Generate token</span> et copiez-le immédiatement (il ne s'affiche qu'une fois).</li>
+            </ol>
+            <div class="note warn"><b>Le jeton est une clé</b>Ne le collez jamais dans un message, un e-mail ou un document. S'il a fuité : même page GitHub → <span class="ui">Revoke</span>, puis créez-en un nouveau.</div>
+          </details>
+
+          <h3>Que voulez-vous faire ?</h3>
+          <div class="cards">
+            <a class="card" href="#telechargements"><b>Mettre les téléchargements en pause</b><span>Pendant une mise à jour, sans fermer le site.</span></a>
+            <a class="card" href="#versions"><b>Annoncer une version</b><span>La fiche « Nouveautés » d'une version de Jema.</span></a>
+            <a class="card" href="#journal"><b>Écrire un article</b><span>Annonce, coulisses, conseil d'écriture.</span></a>
+            <a class="card" href="#bandeau"><b>Afficher un bandeau</b><span>Une ligne en haut de toutes les pages.</span></a>
+          </div>
+        </section>
+
+        <!-- ───────────── Téléchargements ───────────── -->
+        <section class="sheet" id="telechargements">
+          <span class="kicker">Téléchargements</span>
+          <h2>Mettre les téléchargements en pause</h2>
+          <p>À utiliser quand la version proposée ne doit plus être installée (bug, préparation d'une mise à jour). Le site reste en ligne et explique la situation aux visiteurs.</p>
+          <ol class="steps">
+            <li>Colonne de gauche : <span class="ui">Téléchargements</span> → <span class="ui">Ouvrir ou mettre en pause</span>.</li>
+            <li>Désactivez <span class="ui">Téléchargements ouverts</span>.</li>
+            <li>Écrivez <b>pourquoi</b>, du point de vue du visiteur, en une ou deux phrases. Ajoutez la <b>date de reprise</b> si vous la connaissez.</li>
+            <li><span class="ui ink">Enregistrer</span>. Une à deux minutes plus tard, le site est en pause.</li>
+          </ol>
+          <figure><img src="img/telechargements.jpg" alt="Écran Téléchargements : interrupteur, titre, raison et date de reprise" loading="lazy" /><figcaption>L'écran « Ouvrir ou mettre en pause ».</figcaption></figure>
+          <h3>Ce que voient les visiteurs pendant la pause</h3>
+          <ul>
+            <li>Le bouton « Télécharger » devient <b>« Me prévenir à la reprise »</b> (un e-mail prérempli vers l'adresse de contact).</li>
+            <li>Un <b>bandeau</b> en haut de toutes les pages annonce la pause et la date de reprise.</li>
+            <li>La section Télécharger affiche votre titre, votre raison et la date.</li>
+            <li>Les <b>liens déjà partagés</b> (<code>jema.app/telecharger/windows</code>…) mènent à cette explication au lieu du fichier.</li>
+          </ul>
+          <p><b>Pour rouvrir :</b> réactivez l'interrupteur et enregistrez. Le bandeau de pause disparaît de lui-même.</p>
+          <div class="note warn"><b>La pause ne concerne que le site</b>Les personnes qui ont déjà Jema reçoivent toujours les mises à jour automatiques. Pour retirer une version défectueuse de partout, passez-la en « brouillon » sur GitHub (dépôt <code>jema-releases</code> → Releases → la version → Edit → <i>Save as draft</i>).</div>
+          <a class="top" href="#bienvenue">↑ Haut de page</a>
+        </section>
+
+        <!-- ───────────── Versions ───────────── -->
+        <section class="sheet" id="versions">
+          <span class="kicker">Nouveautés</span>
+          <h2>Publier une nouvelle version</h2>
+          <p>À faire <b>après</b> la publication des fichiers d'installation sur GitHub (dépôt <code>jema-releases</code>) : le site les trouve tout seul, il ne reste qu'à raconter ce qui change.</p>
+          <ol class="steps">
+            <li><span class="ui">Nouveautés</span> → <span class="ui ink">Nouveau</span>.</li>
+            <li><b>Numéro de version</b> : exactement celui publié sur GitHub, sans le v (<code>4.1.0</code>).</li>
+            <li><b>Titre-promesse</b> : une phrase, ce que l'auteur y gagne. <i>« Jema se souvient de vos chronologies »</i> plutôt que <i>« Nouveau moteur de chronologie »</i>.</li>
+            <li><b>Résumé</b> : deux lignes. Il apparaît sur l'accueil (« Nouveau · v4.1.0 ») et dans la liste.</li>
+            <li><b>Notes de version</b> : gardez les rubriques <i>Nouveau, Amélioré, Corrigé, Sécurité, À savoir</i>, supprimez les vides. Une ligne par changement, en commençant par ce que l'auteur peut faire.</li>
+            <li><span class="ui ink">Enregistrer</span>. La fiche est en ligne à l'adresse <code>/nouveautes/4-1-0</code>.</li>
+          </ol>
+          <figure><img src="img/version.jpg" alt="Éditeur d'une fiche de version, avec l'aperçu à droite" loading="lazy" /><figcaption>À gauche la saisie, à droite l'aperçu avec la mise en page du site.</figcaption></figure>
+          <h3>Ensuite, en 1 minute</h3>
+          <ul>
+            <li><span class="ui">Réglages du site</span> → <b>Version de secours</b> : mettez la nouvelle (<code>v4.1.0</code>). Elle ne sert que si GitHub ne répond pas, mais elle doit rester à jour.</li>
+            <li>Facultatif : un <a href="#bandeau">bandeau</a> « La version 4.1 est disponible » avec le lien <code>/nouveautes/4-1-0</code>, et un <a href="#journal">article</a> pour raconter les coulisses.</li>
+          </ul>
+          <a class="top" href="#bienvenue">↑ Haut de page</a>
+        </section>
+
+        <!-- ───────────── Journal ───────────── -->
+        <section class="sheet" id="journal">
+          <span class="kicker">Journal</span>
+          <h2>Écrire un article</h2>
+          <ol class="steps">
+            <li><span class="ui">Journal</span> → <span class="ui ink">Nouveau</span>.</li>
+            <li>Titre, date, catégorie (<i>Annonce, Coulisses, Conseil, Version</i>) et un <b>résumé</b> d'une ou deux phrases : il s'affiche dans la liste et quand l'article est partagé sur les réseaux.</li>
+            <li>Écrivez le texte. La barre d'outils au-dessus du texte gère les titres, le gras, les listes, les liens et les images.</li>
+            <li>Pas encore prêt ? Activez <span class="ui">Brouillon (non publié)</span> avant d'enregistrer.</li>
+          </ol>
+          <div class="note"><b>L'adresse de l'article</b>Elle est fabriquée à partir de la date et du titre au premier enregistrement (<code>/journal/2026-12-01-titre</code>) et ne change plus ensuite, même si vous modifiez le titre. Les liens partagés restent donc valables.</div>
+          <h3>Mise en forme</h3>
+          <table>
+            <tr><th>Pour</th><th>Utilisez</th></tr>
+            <tr><td>Un intertitre</td><td>« Titre 2 » dans la barre d'outils (évitez le « Titre 1 », réservé au titre de l'article)</td></tr>
+            <tr><td>Une citation</td><td>Le bouton citation : elle s'affiche avec le liseré ocre du site</td></tr>
+            <tr><td>Un lien vers le site</td><td>Une adresse qui commence par <code>/</code> : <code>/nouveautes</code>, <code>/guide</code>, <code>/#telecharger</code></td></tr>
+          </table>
+          <a class="top" href="#bienvenue">↑ Haut de page</a>
+        </section>
+
+        <!-- ───────────── Pages ───────────── -->
+        <section class="sheet" id="pages">
+          <span class="kicker">Pages</span>
+          <h2>Modifier une page (Bêta, FAQ, mentions légales…)</h2>
+          <ol class="steps">
+            <li><span class="ui">Pages</span> → cliquez sur la page.</li>
+            <li>Modifiez le contenu. Pour une page légale, mettez à jour la <b>Dernière mise à jour</b>.</li>
+            <li><span class="ui ink">Enregistrer</span>.</li>
+          </ol>
+          <table>
+            <tr><th>Page</th><th>Adresse sur le site</th></tr>
+            <tr><td>La bêta</td><td><code>/beta</code></td></tr>
+            <tr><td>Questions fréquentes</td><td><code>/faq</code></td></tr>
+            <tr><td>Mentions légales, confidentialité, licence bêta</td><td><code>/legal/…</code></td></tr>
+          </table>
+          <div class="note warn"><b>Créer une nouvelle page</b>C'est possible (<span class="ui ink">Nouveau</span>, type « Information » ou « Légal »), mais elle n'apparaît dans aucun menu : il faudra ajouter le lien dans le pied de page (voir le manuel technique). En attendant, vous pouvez la lier depuis un article ou le bandeau.</div>
+          <div class="note warn"><b>Ne supprimez pas les pages légales</b>Mentions légales et confidentialité sont obligatoires. Ajoutez à la politique de confidentialité tout nouvel outil qui collecte des données.</div>
+          <a class="top" href="#bienvenue">↑ Haut de page</a>
+        </section>
+
+        <!-- ───────────── Bandeau ───────────── -->
+        <section class="sheet" id="bandeau">
+          <span class="kicker">Bandeau</span>
+          <h2>Afficher un bandeau d'annonce</h2>
+          <p>Une ligne indigo en haut de toutes les pages, pour une information du moment : nouvelle version, fin de la bêta, événement.</p>
+          <ol class="steps">
+            <li><span class="ui">Bandeau</span> → <span class="ui">Modifier le bandeau</span>.</li>
+            <li>Activez <span class="ui">Afficher le bandeau</span>, écrivez une phrase courte, et si besoin un lien (<code>/nouveautes/4-1-0</code>) avec son texte (« Voir les nouveautés »).</li>
+            <li><span class="ui ink">Enregistrer</span>. Pour le retirer : désactivez, enregistrez.</li>
+          </ol>
+          <p>Pendant une <a href="#telechargements">pause des téléchargements</a>, le bandeau annonce la pause de lui-même et remplace temporairement le vôtre.</p>
+          <a class="top" href="#bienvenue">↑ Haut de page</a>
+        </section>
+
+        <!-- ───────────── Images ───────────── -->
+        <section class="sheet" id="images">
+          <span class="kicker">Images</span>
+          <h2>Ajouter une image</h2>
+          <ol class="steps">
+            <li>Dans le texte d'un article ou d'une page, cliquez sur le bouton image de la barre d'outils, puis choisissez ou glissez le fichier depuis votre ordinateur.</li>
+            <li>Ajoutez toujours un <b>texte alternatif</b> qui décrit l'image : il est lu aux personnes malvoyantes et affiché si l'image ne charge pas.</li>
+          </ol>
+          <ul>
+            <li>Formats conseillés : <b>JPG ou WebP</b> pour les photos et captures, moins de <b>500 Ko</b> et 2000 pixels de large au maximum.</li>
+            <li>Les images sont rangées dans <code>public/images/uploads</code>. L'icône image en haut à gauche de l'admin les liste toutes.</li>
+          </ul>
+          <a class="top" href="#bienvenue">↑ Haut de page</a>
+        </section>
+
+        <!-- ───────────── Réglages ───────────── -->
+        <section class="sheet" id="reglages">
+          <span class="kicker">Réglages du site</span>
+          <h2>Les réglages (à modifier rarement)</h2>
+          <table>
+            <tr><th>Réglage</th><th>Quand le changer</th></tr>
+            <tr><td><b>Bêta</b></td><td>Dates et pastille de la bêta ; désactivez « Bêta en cours » à la fin de la bêta.</td></tr>
+            <tr><td><b>E-mail de contact</b></td><td>Si l'adresse de contact change. Elle reçoit les demandes « Me prévenir ».</td></tr>
+            <tr><td><b>Configuration requise</b></td><td>Si la mémoire nécessaire ou les systèmes pris en charge changent.</td></tr>
+            <tr><td><b>Version de secours</b></td><td><b>À chaque nouvelle version</b> (voir <a href="#versions">Publier une version</a>).</td></tr>
+            <tr><td><b>Dépôt GitHub des versions</b>, <b>Adresse du site</b></td><td>Jamais sans raison technique : une erreur casse les téléchargements.</td></tr>
+            <tr><td><b>Mesure d'audience</b></td><td>Identifiant Umami. Vide = plus aucune mesure.</td></tr>
+          </table>
+          <a class="top" href="#bienvenue">↑ Haut de page</a>
+        </section>
+
+        <!-- ───────────── Annuler ───────────── -->
+        <section class="sheet" id="erreur">
+          <span class="kicker">Annuler une erreur</span>
+          <h2>Revenir en arrière</h2>
+          <p>Chaque enregistrement est conservé sur GitHub avec un message clair (<code>contenu : modifie journal « … »</code>). Rien n'est jamais perdu.</p>
+          <ol class="steps">
+            <li><b>Le plus simple :</b> rouvrez le contenu, corrigez, enregistrez.</li>
+            <li><b>Retrouver une ancienne version :</b> sur GitHub, dépôt <code>jema_website</code> → ouvrez le fichier (par exemple <code>src/content/journal/…</code>) → bouton <span class="ui">History</span>. Ouvrez la version voulue, copiez le texte et recollez-le dans l'admin.</li>
+            <li><b>Un contenu supprimé par erreur :</b> même chemin depuis l'onglet <span class="ui">Commits</span> du dépôt : retrouvez le commit « supprime… », ouvrez le fichier tel qu'il était, recréez-le dans l'admin.</li>
+          </ol>
+          <div class="note"><b>Brouillon de secours</b>Si le navigateur se ferme pendant une saisie, l'admin propose de reprendre le texte non enregistré à la réouverture.</div>
+          <a class="top" href="#bienvenue">↑ Haut de page</a>
+        </section>
+
+        <!-- ───────────── Problèmes ───────────── -->
+        <section class="sheet" id="problemes">
+          <span class="kicker">En cas de problème</span>
+          <h2>Ça ne marche pas comme prévu</h2>
+          <table>
+            <tr><th>Ce que vous voyez</th><th>Que faire</th></tr>
+            <tr><td>Ma modification n'apparaît pas sur le site</td><td>Attendez 2 minutes et rechargez la page (Ctrl+F5). Toujours rien : Cloudflare → Workers &amp; Pages → <code>jema</code> → Deployments. Une ligne rouge = la construction a échoué ; ouvrez-la pour lire l'erreur (souvent un champ obligatoire vide ou une date invalide).</td></tr>
+            <tr><td>L'admin refuse le jeton, ou « Bad credentials »</td><td>Le jeton a expiré (90 jours) ou a été révoqué : <a href="#bienvenue">créez-en un nouveau</a>.</td></tr>
+            <tr><td>« Enregistrer » reste grisé</td><td>Rien n'a changé, ou un champ obligatoire (marqué d'une étoile ocre) est vide ou mal rempli : il est signalé en rouge.</td></tr>
+            <tr><td>L'admin affiche une page blanche</td><td>Rechargez. Si cela persiste, essayez un autre navigateur et consultez le manuel technique (chapitre Admin).</td></tr>
+          </table>
+          <p>Pour tout ce qui touche au code, à l'hébergement ou au domaine : <b>manuel technique</b>, fichier <code>docs/manuel/Manuel-site-Jema.pdf</code> du dépôt.</p>
+          <a class="top" href="#bienvenue">↑ Haut de page</a>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

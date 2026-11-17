@@ -1,6 +1,6 @@
 ---
-/** Bandeau d'annonce global, piloté par src/data/site.json (éditable depuis l'admin). */
-import site from '../../data/site.json'
+/** Bandeau d'annonce global, piloté par src/data/banner.json (éditable depuis l'admin). */
+import banner from '../../data/banner.json'
 import { url } from '../../lib/url.js'
 import { downloadsOpen, resumeDate } from '../../lib/downloads.js'
 
@@ -8,10 +8,10 @@ import { downloadsOpen, resumeDate } from '../../lib/downloads.js'
 const paused = !downloadsOpen
 const text = paused
   ? (resumeDate ? `Téléchargements en pause · reprise prévue le ${resumeDate}.` : 'Téléchargements en pause : la date de reprise sera annoncée ici.')
-  : site.banner.text
-const link = paused ? url('/#telecharger') : site.banner.link
-const linkLabel = paused ? 'Me prévenir à la reprise' : site.banner.linkLabel
-const enabled = paused || site.banner.enabled
+  : banner.text
+const link = paused ? url('/#telecharger') : banner.link
+const linkLabel = paused ? 'Me prévenir à la reprise' : banner.linkLabel
+const enabled = paused || banner.enabled
 ---
 
 {

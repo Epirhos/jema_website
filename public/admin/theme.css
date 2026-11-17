@@ -1,7 +1,14 @@
 /*
- * Habillage de l'admin (Sveltia CMS) aux couleurs du site : papier chaud,
- * encre, accent indigo Jema, Inter pour l'interface, Newsreader pour les titres.
+ * Habillage de l'admin (Sveltia CMS) : la même identité que le site.
+ *   bureau #ebe7de · feuille #fdfbf7 · encre #1d1a17 · indigo Jema #4338ca · ocre #9b4a1e
+ *   Inter pour l'interface, Newsreader pour les titres, Merriweather pour les textes longs.
  * Les polices sont servies depuis /admin/fonts : aucune requête externe.
+ *
+ * Deux niveaux :
+ *  1) les variables de Sveltia (--sui-*) : couleurs et polices partout ;
+ *  2) quelques sélecteurs de structure (barre, colonne, feuille, champs, boutons).
+ * Si une mise à jour de Sveltia casse un sélecteur du niveau 2, l'admin reste
+ * utilisable : seul l'habillage fin disparaît. Voir docs/manuel (Admin).
  */
 @font-face { font-family: 'Inter'; font-weight: 400; font-display: swap; src: url('fonts/inter-latin-400-normal.woff2') format('woff2'); }
 @font-face { font-family: 'Inter'; font-weight: 500; font-display: swap; src: url('fonts/inter-latin-500-normal.woff2') format('woff2'); }
@@ -11,51 +18,239 @@
 @font-face { font-family: 'Newsreader'; font-weight: 500; font-style: italic; font-display: swap; src: url('fonts/newsreader-latin-500-italic.woff2') format('woff2'); }
 @font-face { font-family: 'Merriweather'; font-weight: 400; font-display: swap; src: url('fonts/merriweather-latin-400-normal.woff2') format('woff2'); }
 
-/* Commun aux deux modes */
+/* ───────────── 1) Variables ───────────── */
 :root:root {
+  --j-desk: #ebe7de;
+  --j-desk-2: #f3f0e8;
+  --j-paper: #fdfbf7;
+  --j-ink: #1d1a17;
+  --j-ink-2: #3a3530;
+  --j-mute: #635d54;
+  --j-rule: #d8d2c5;
+  --j-jema: #4338ca;
+  --j-jema-soft: #e8e6fb;
+  --j-ochre: #9b4a1e;
+  --j-ochre-soft: #f4e6dc;
+  --j-shadow: 0 10px 26px rgba(60, 40, 20, 0.07), 0 0 0 1px rgba(60, 40, 20, 0.05);
+
   --sui-base-hue: 38 !important;
   --sui-font-family-default: 'Inter', system-ui, sans-serif !important;
   --sui-control-medium-border-radius: 8px !important;
   --sui-textbox-border-radius: 8px !important;
 }
 
-/* Mode clair : le bureau et la feuille du site */
 :root:root[data-theme='light'],
 :root:root:not([data-theme]) {
-  --sui-background-color-1-hsl: 40 60% 99% !important;   /* feuille   #fdfbf7 */
-  --sui-background-color-2-hsl: 42 38% 96.5% !important; /* panneaux  #f3f0e8 */
+  --sui-background-color-1-hsl: 40 60% 99% !important;   /* feuille */
+  --sui-background-color-2-hsl: 42 38% 96.5% !important; /* bureau clair */
   --sui-background-color-3-hsl: 43 24% 93% !important;
-  --sui-background-color-4-hsl: 43 21% 90% !important;   /* bureau    #ebe7de */
+  --sui-background-color-4-hsl: 43 21% 90% !important;   /* bureau */
   --sui-background-color-5-hsl: 40 14% 81% !important;
-  --sui-foreground-color-1-hsl: 30 12% 10% !important;   /* encre     #1d1a17 */
+  --sui-foreground-color-1-hsl: 30 12% 10% !important;   /* encre */
   --sui-foreground-color-2-hsl: 32 8% 24% !important;
-  --sui-foreground-color-3-hsl: 35 6% 36% !important;    /* gris      #635d54 */
-  --sui-primary-accent-color: hsl(243 57% 51%) !important;        /* indigo #4338ca */
+  --sui-foreground-color-3-hsl: 35 6% 36% !important;
+  --sui-border-color-1-hsl: 40 16% 72% !important;
+  --sui-border-color-2-hsl: 40 18% 80% !important;
+  --sui-border-color-3-hsl: 40 20% 86% !important;
+  --sui-primary-accent-color: hsl(243 57% 51%) !important;
   --sui-primary-accent-color-light: hsl(243 62% 60%) !important;
   --sui-primary-accent-color-dark: hsl(243 60% 40%) !important;
   --sui-primary-accent-color-text: hsl(243 57% 47%) !important;
-  --sui-focus-ring-color: hsl(243 57% 51% / 45%) !important;
+  --sui-focus-ring-color: hsl(243 57% 51% / 40%) !important;
+  --sui-selected-background-color: #e8e6fb !important;
 }
 
-/* Mode sombre : encre et papier inversés, indigo adouci */
 :root:root[data-theme='dark'] {
-  --sui-background-color-1-hsl: 30 10% 8% !important;
-  --sui-background-color-2-hsl: 30 9% 10% !important;
-  --sui-background-color-3-hsl: 30 8% 13% !important;
-  --sui-background-color-4-hsl: 30 8% 17% !important;
+  --j-paper: #1f1c19;
+  --j-desk: #151311;
+  --j-desk-2: #191715;
+  --j-ink: #f6f1e8;
+  --j-ink-2: #ddd5c8;
+  --j-mute: #a39a8d;
+  --j-rule: #3a352f;
+  --j-jema: #a5b4fc;
+  --j-jema-soft: #2b2a4a;
+  --j-ochre: #e0a27a;
+  --j-ochre-soft: #3a2a20;
+  --j-shadow: 0 10px 26px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  --sui-background-color-1-hsl: 30 10% 11% !important;
+  --sui-background-color-2-hsl: 30 9% 8% !important;
+  --sui-background-color-3-hsl: 30 8% 14% !important;
+  --sui-background-color-4-hsl: 30 8% 18% !important;
   --sui-background-color-5-hsl: 30 7% 30% !important;
   --sui-foreground-color-1-hsl: 40 40% 95% !important;
-  --sui-primary-accent-color: hsl(234 89% 74%) !important;       /* #818cf8 */
+  --sui-primary-accent-color: hsl(234 89% 74%) !important;
   --sui-primary-accent-color-light: hsl(234 89% 80%) !important;
   --sui-primary-accent-color-dark: hsl(239 70% 62%) !important;
   --sui-primary-accent-color-text: hsl(234 89% 78%) !important;
   --sui-primary-accent-color-inverted: hsl(30 12% 10%) !important;
   --sui-focus-ring-color: hsl(234 89% 74% / 45%) !important;
+  --sui-selected-background-color: #2b2a4a !important;
 }
 
-/* Titres de l'interface en Newsreader, comme sur le site */
-h1, h2, [role='dialog'] h2, .sui.headline {
+/* ───────────── 2) Structure ───────────── */
+
+/* Le bureau */
+body, .sui.app-shell, .page-root { background: var(--j-desk) !important; }
+
+/* Barre du haut : comme la barre du site au défilement */
+.sui.app-shell > .outer > .main > .toolbar-wrapper {
+  background: color-mix(in srgb, var(--j-desk-2) 94%, transparent) !important;
+  border-bottom: 1px solid var(--j-rule);
+}
+.toolbar-wrapper img.logo { width: 26px; height: 26px; border-radius: 7px; }
+.toolbar-wrapper .sui.search-bar { background: var(--j-paper) !important; border-radius: 999px !important; box-shadow: inset 0 0 0 1px var(--j-rule); }
+
+/* Colonne de gauche : « sommaire » du site */
+nav.primary-sidebar { background: transparent !important; padding: 14px 10px !important; }
+nav.primary-sidebar .sui.option-group > .label,
+nav.primary-sidebar [role='group'] > .label {
+  font: 700 10.5px 'Inter', sans-serif !important;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--j-ochre) !important;
+  padding-bottom: 6px;
+}
+nav.primary-sidebar [role='treeitem'],
+nav.primary-sidebar [role='option'] { border-radius: 8px !important; font-weight: 500; }
+nav.primary-sidebar [aria-selected='true'],
+nav.primary-sidebar [aria-current='page'] {
+  background: var(--j-paper) !important;
+  box-shadow: var(--j-shadow);
+  color: var(--j-ink) !important;
+}
+nav.primary-sidebar [aria-selected='true'] .sui.icon { color: var(--j-jema) !important; }
+.sui.resizable-handle { background: transparent !important; }
+
+/* Le contenu : une feuille posée sur le bureau */
+.page-root main.wrapper,
+.page-root .sui.group.pane,
+.content-editor .sui.resizable-pane > * {
+  background: var(--j-paper) !important;
+}
+.page-root main.wrapper {
+  margin: 14px 16px 16px 6px;
+  border-radius: 8px;
+  box-shadow: var(--j-shadow);
+  overflow: hidden;
+}
+
+/* Titres : Newsreader, comme les titres du site */
+.page-root main.wrapper > .sui.toolbar h2,
+.sui.toolbar h2,
+h1, h2 {
   font-family: 'Newsreader', Georgia, serif !important;
   font-weight: 500 !important;
   letter-spacing: -0.01em;
 }
+.page-root main.wrapper > .sui.toolbar h2 { font-size: 26px !important; }
+.page-root main.wrapper > .sui.toolbar .description { color: var(--j-mute) !important; }
+
+/* Listes d'entrées : lignes aérées, survol papier */
+.sui.grid .sui.grid-row { border-color: var(--j-rule) !important; }
+.sui.grid .sui.grid-row:hover { background: var(--j-desk-2) !important; }
+.sui.grid .sui.grid-cell.title { font-weight: 500; }
+
+/* Boutons : l'action principale en encre (comme « Télécharger »), arrondie */
+.sui.button.primary {
+  background: var(--j-ink) !important;
+  border-color: var(--j-ink) !important;
+  color: var(--j-paper) !important;
+  border-radius: 999px !important;
+  padding-inline: 18px !important;
+  font-weight: 600 !important;
+}
+.sui.button.primary:not(:disabled):hover { background: #000 !important; }
+.sui.button.primary:disabled { opacity: 0.35; }
+.sui.button:not(.primary):not(.ghost):not(.iconic) { border-radius: 999px !important; }
+
+/* Éditeur : chaque champ comme une ligne de formulaire du site */
+section.field { padding-block: 14px !important; border-color: var(--j-rule) !important; }
+section.field > header h4 {
+  font: 600 13.5px 'Inter', sans-serif !important;
+  color: var(--j-ink) !important;
+}
+section.field > header .required { color: var(--j-ochre) !important; }
+section.field p.hint { color: var(--j-mute) !important; font-size: 12.5px !important; line-height: 1.5; }
+.sui.text-input, .sui.text-area, .sui.date-time-input {
+  background: var(--j-paper) !important;
+}
+.content-editor .sui.text-area textarea { line-height: 1.6; }
+
+/* Champs regroupés (Téléchargements, Bandeau…) : une carte au liseré ocre */
+section.field[data-field-type='object'] > .field-wrapper > * {
+  border-radius: 8px !important;
+  border-color: var(--j-rule) !important;
+}
+section.field[data-field-type='object'] > header h4 {
+  font: 500 21px 'Newsreader', Georgia, serif !important;
+}
+
+/* Interrupteurs et choix : indigo Jema */
+[role='switch'][aria-checked='true'] { background: var(--j-jema) !important; border-color: var(--j-jema) !important; }
+
+/* Fenêtres : feuille, coins doux */
+dialog.sui.modal .content { background: var(--j-paper) !important; border-radius: 12px !important; box-shadow: 0 30px 80px rgba(29, 26, 23, 0.25) !important; }
+dialog.sui.modal .title { font: 500 22px 'Newsreader', Georgia, serif !important; }
+
+/* Écran de connexion */
+.sui.app-shell img.logo[src$='favicon.svg'] { border-radius: 18px; }
+
+/* ───────────── Bouton d'aide (ajouté par index.html) ───────────── */
+.jema-help-btn {
+  position: fixed; right: 18px; bottom: 18px; z-index: 1000;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 16px 10px 12px; border: 0; border-radius: 999px;
+  background: var(--j-ink); color: var(--j-paper);
+  font: 600 14px 'Inter', sans-serif; cursor: pointer;
+  box-shadow: 0 10px 30px rgba(29, 26, 23, 0.25);
+}
+.jema-help-btn:hover { background: #000; }
+.jema-help-btn:focus-visible { outline: 3px solid var(--j-jema); outline-offset: 3px; }
+.jema-help-btn svg { flex: none; }
+.jema-help-panel {
+  position: fixed; top: 0; right: 0; bottom: 0; z-index: 1001;
+  width: min(480px, 100vw);
+  background: var(--j-desk);
+  box-shadow: -20px 0 60px rgba(29, 26, 23, 0.22);
+  transform: translateX(105%); transition: transform 0.28s cubic-bezier(0.2, 0.7, 0.2, 1);
+  display: grid; grid-template-rows: auto 1fr;
+}
+.jema-help-panel.open { transform: none; }
+.jema-help-panel header {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 12px 14px 12px 20px; border-bottom: 1px solid var(--j-rule); background: var(--j-desk-2);
+  font: 700 10.5px 'Inter', sans-serif; letter-spacing: 0.12em; text-transform: uppercase; color: var(--j-ochre);
+}
+.jema-help-panel header a { color: var(--j-ink); font: 600 13px 'Inter', sans-serif; letter-spacing: 0; text-transform: none; margin-left: auto; }
+.jema-help-panel header button {
+  width: 36px; height: 36px; border-radius: 999px; border: 0; cursor: pointer;
+  background: transparent; color: var(--j-ink); box-shadow: inset 0 0 0 1px var(--j-rule);
+}
+.jema-help-panel iframe { width: 100%; height: 100%; border: 0; background: var(--j-desk); }
+@media (prefers-reduced-motion: reduce) { .jema-help-panel { transition: none; } }
+
+/* ───────────── Éditeur : la feuille de saisie sur le bureau ───────────── */
+.content-editor .content-area { background: var(--j-desk) !important; padding: 12px 14px 14px; }
+.content-editor .pane-wrapper { padding: 4px; }
+.content-editor .sui.group.pane {
+  background: var(--j-paper) !important;
+  border-radius: 8px !important;
+  box-shadow: var(--j-shadow);
+  overflow: hidden;
+}
+.content-editor #first-pane-header,
+.content-editor #second-pane-header {
+  background: var(--j-paper) !important;
+  border-bottom: 1px solid var(--j-rule);
+}
+.content-editor #first-pane-header *,
+.content-editor #second-pane-header * {
+  font: 700 10.5px 'Inter', sans-serif !important;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--j-ochre) !important;
+}
+.content-editor #first-pane-header .sui.icon,
+.content-editor #second-pane-header .sui.icon { font: normal 20px 'Material Symbols Outlined' !important; letter-spacing: 0; text-transform: none; color: var(--j-mute) !important; }
+.content-editor > .sui.toolbar.primary { background: var(--j-desk-2) !important; border-bottom: 1px solid var(--j-rule); }
+.content-editor > .sui.toolbar.primary h2 { font-size: 22px !important; }
+.content-editor .sui.resizable-handle { background: transparent !important; }

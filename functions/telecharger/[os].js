@@ -4,15 +4,16 @@
  * Seule porte d'entrée vers les fichiers d'installation :
  *  - téléchargements ouverts → redirection vers le fichier de la dernière version
  *    publiée sur GitHub (les versions en brouillon ou « pre-release » sont ignorées) ;
- *  - téléchargements en pause (admin → Réglages → Téléchargements) → redirection
+ *  - téléchargements en pause (admin → Téléchargements) → redirection
  *    vers la section Télécharger du site, qui explique pourquoi.
  * Chaque passage est compté dans Umami (événement « fichier » ou « fichier-en-pause »),
  * y compris quand le lien a été partagé hors du site.
  *
- * Le réglage est lu dans src/data/site.json au moment de la publication :
+ * Le réglage est lu dans src/data/downloads.json au moment de la publication :
  * basculer l'interrupteur dans l'admin republie le site et cette fonction.
  */
 import site from '../../src/data/site.json'
+import downloads from '../../src/data/downloads.json'
 
 const EXT = { windows: '.exe', mac: '.dmg', deb: '.deb', appimage: '.appimage' }
 const CACHE_SECONDS = 600
@@ -82,7 +83,7 @@ export async function onRequestGet({ request, params, waitUntil }) {
   const origin = new URL(request.url).origin
   if (!EXT[os]) return redirect(`${origin}/#telecharger`)
 
-  if (site.downloads?.open === false) {
+  if (downloads.open === false) {
     waitUntil(track(request, 'fichier-en-pause', { os }))
     return redirect(`${origin}/#telecharger`)
   }

@@ -17,6 +17,63 @@
     <script>
       // Aperçu des contenus avec la mise en page du site.
       if (window.CMS && CMS.registerPreviewStyle) CMS.registerPreviewStyle('/admin/preview.css')
+
+      // Mode d'emploi : bouton fixe en bas à gauche, panneau latéral qui s'ouvre
+      // directement sur la fiche de l'écran en cours (version, article, réglages…).
+      ;(function () {
+        var SECTIONS = [
+          [/collections\/telechargements/, 'telechargements'],
+          [/collections\/bandeau/, 'bandeau'],
+          [/collections\/reglages/, 'reglages'],
+          [/collections\/versions/, 'versions'],
+          [/collections\/journal/, 'journal'],
+          [/collections\/pages/, 'pages'],
+          [/assets/, 'images']
+        ]
+        var section = function () {
+          for (var i = 0; i < SECTIONS.length; i++) if (SECTIONS[i][0].test(location.hash)) return SECTIONS[i][1]
+          return 'bienvenue'
+        }
+
+        var btn = document.createElement('button')
+        btn.type = 'button'
+        btn.className = 'jema-help-btn'
+        btn.setAttribute('aria-expanded', 'false')
+        btn.setAttribute('aria-controls', 'jema-help')
+        btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>Mode d’emploi'
+
+        var panel = document.createElement('aside')
+        panel.id = 'jema-help'
+        panel.className = 'jema-help-panel'
+        panel.setAttribute('aria-label', 'Mode d’emploi de l’administration')
+        panel.hidden = true
+        panel.innerHTML =
+          '<header><span>Mode d’emploi</span>' +
+          '<a href="/admin/aide/" target="_blank" rel="noopener">Ouvrir en grand ↗</a>' +
+          '<button type="button" aria-label="Fermer le mode d’emploi">✕</button></header>' +
+          '<iframe title="Mode d’emploi de l’administration"></iframe>'
+        var frame = panel.querySelector('iframe')
+
+        var open = function () {
+          frame.src = '/admin/aide/?panneau#' + section()
+          panel.hidden = false
+          requestAnimationFrame(function () { panel.classList.add('open') })
+          btn.setAttribute('aria-expanded', 'true')
+          panel.querySelector('header button').focus()
+        }
+        var close = function () {
+          panel.classList.remove('open')
+          btn.setAttribute('aria-expanded', 'false')
+          setTimeout(function () { panel.hidden = true }, 300)
+          btn.focus()
+        }
+        btn.addEventListener('click', function () { panel.classList.contains('open') ? close() : open() })
+        panel.querySelector('header button').addEventListener('click', close)
+        addEventListener('keydown', function (e) { if (e.key === 'Escape' && panel.classList.contains('open')) close() })
+
+        var mount = function () { document.body.appendChild(btn); document.body.appendChild(panel) }
+        document.readyState === 'loading' ? addEventListener('DOMContentLoaded', mount) : mount()
+      })()
     </script>
   </body>
 </html>

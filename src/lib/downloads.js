@@ -1,14 +1,15 @@
 /**
- * État des téléchargements, piloté depuis l'admin (Réglages → Téléchargements).
+ * État des téléchargements, piloté depuis l'admin (Téléchargements, fichier src/data/downloads.json).
  * Fermés : tous les boutons Télécharger sont remplacés par un encart qui
  * explique pourquoi, donne la date de reprise et propose « Me prévenir ».
  * Les adresses /telecharger/<système> (functions/telecharger/[os].js) suivent
  * le même réglage : un lien partagé ailleurs ne télécharge plus rien non plus.
  */
 import site from '../data/site.json'
+import downloads from '../data/downloads.json'
 import { dateFr } from './format.js'
 
-const d = site.downloads || {}
+const d = downloads || {}
 
 export const downloadsOpen = d.open !== false
 

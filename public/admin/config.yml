@@ -1,4 +1,6 @@
-# Administration du site Jema (Sveltia CMS) — https://<domaine>/admin
+# Administration du site Jema (Sveltia CMS) : https://jema.app/admin
+# Mode d'emploi pour l'éditeur : bouton « Mode d'emploi » dans l'admin (public/admin/aide/).
+# Mode d'emploi technique : docs/manuel (PDF).
 #
 # Connexion : « Se connecter avec un jeton d'accès » GitHub (fine-grained token,
 # droit Contents: Read and write sur ce dépôt). Le bouton « Se connecter avec
@@ -10,12 +12,18 @@ backend:
   # Branche de test. Passer à `main` au lancement : chaque publication y sera
   # mise en ligne automatiquement.
   branch: bulle
+  commit_messages:
+    create: "contenu : ajoute {{collection}} « {{slug}} »"
+    update: "contenu : modifie {{collection}} « {{slug}} »"
+    delete: "contenu : supprime {{collection}} « {{slug}} »"
+    uploadMedia: "contenu : ajoute l'image {{path}}"
+    deleteMedia: "contenu : supprime l'image {{path}}"
   # base_url: https://sveltia-cms-auth.<compte>.workers.dev
 
 locale: fr
+app_title: Jema · Administration du site
 site_url: https://jema.app
 display_url: https://jema.app
-app_title: Jema · Administration du site
 logo:
   src: /favicon.svg
 
@@ -23,12 +31,48 @@ media_folder: public/images/uploads
 public_folder: /images/uploads
 
 collections:
+  # ───────────── Téléchargements (interrupteur) ─────────────
+  - name: telechargements
+    label: Téléchargements
+    icon: download
+    description: Ouvrir ou mettre en pause les téléchargements de Jema. Le site reste en ligne.
+    files:
+      - name: telechargements
+        label: Ouvrir ou mettre en pause
+        file: src/data/downloads.json
+        editor: { preview: false }
+        fields:
+          - name: open
+            label: Téléchargements ouverts
+            widget: boolean
+            default: true
+            hint: "Activé : tout le monde peut télécharger Jema. Désactivé : les boutons sont remplacés par le message ci-dessous et un lien « Me prévenir », y compris pour les liens déjà partagés ailleurs. Visible sur le site environ 1 minute après « Enregistrer »."
+          - name: title
+            label: Titre affiché pendant la pause
+            widget: string
+            default: "Les téléchargements reprennent bientôt."
+          - name: reason
+            label: Pourquoi ? (vu par les visiteurs)
+            widget: text
+            required: false
+            hint: "Une ou deux phrases, du point de vue du visiteur. Exemple : Nous préparons la version 4.1 à partir de vos retours : elle corrige l'export et ajoute la relecture par chapitre."
+          - name: until
+            label: Reprise prévue le
+            widget: datetime
+            time_format: false
+            date_format: "DD/MM/YYYY"
+            format: "YYYY-MM-DD"
+            required: false
+            hint: "Laisser vide si la date n'est pas encore connue."
+
+  - divider: true
+
   # ───────────── Nouveautés (une entrée par version) ─────────────
   - name: versions
     label: Nouveautés
     label_singular: Version
     icon: new_releases
-    description: Une entrée par version publiée. Écrivez du côté de l'auteur, une ligne par changement, le plus important en premier.
+    description: Une fiche par version publiée de Jema. Une ligne par changement, le plus important en premier.
     folder: src/content/versions
     create: true
     identifier_field: version
@@ -36,16 +80,16 @@ collections:
     summary: "v{{version}} · {{titre}}"
     sortable_fields: [date, version]
     fields:
-      - { name: version, label: "Numéro de version", widget: string, hint: "Exemple : 4.1.0 (sans le v)" }
+      - { name: version, label: "Numéro de version", widget: string, pattern: ['^\d+\.\d+\.\d+$', "Format attendu : 4.1.0 (trois nombres, sans le v)"], hint: "Exemple : 4.1.0 (sans le v). Doit correspondre à la version publiée sur GitHub." }
       - { name: date, label: "Date de publication", widget: datetime, time_format: false, date_format: "DD/MM/YYYY", format: "YYYY-MM-DD" }
       - { name: canal, label: "Canal", widget: select, options: ["bêta", "stable"], default: "bêta" }
-      - { name: titre, label: "Titre-promesse", widget: string, hint: "Une phrase. Exemple : Jema se souvient de vos chronologies" }
-      - { name: resume, label: "Résumé", widget: text, hint: "Deux lignes : ce qui change pour l'auteur." }
-      - { name: brouillon, label: "Brouillon (non publié)", widget: boolean, default: false, required: false }
+      - { name: titre, label: "Titre-promesse", widget: string, hint: "Une phrase, ce que l'auteur y gagne. Exemple : Jema se souvient de vos chronologies." }
+      - { name: resume, label: "Résumé", widget: text, hint: "Deux lignes : ce qui change pour l'auteur. Affiché sur l'accueil et dans la liste des nouveautés." }
+      - { name: brouillon, label: "Brouillon (non publié)", widget: boolean, default: false, required: false, hint: "Activé : la fiche est enregistrée mais n'apparaît pas sur le site." }
       - name: body
         label: Notes de version
         widget: markdown
-        hint: "Gardez les rubriques ; supprimez celles qui sont vides."
+        hint: "Gardez les rubriques, supprimez celles qui sont vides. Une ligne par changement, en commençant par ce que l'auteur peut faire."
         default: |
           ## Nouveau
 
@@ -72,7 +116,7 @@ collections:
     label: Journal
     label_singular: Article
     icon: edit_note
-    description: Annonces, coulisses et conseils d'écriture. Les articles en brouillon ne sont pas publiés.
+    description: Annonces, coulisses et conseils d'écriture.
     folder: src/content/journal
     create: true
     identifier_field: titre
@@ -83,8 +127,8 @@ collections:
       - { name: titre, label: "Titre", widget: string }
       - { name: date, label: "Date", widget: datetime, time_format: false, date_format: "DD/MM/YYYY", format: "YYYY-MM-DD" }
       - { name: categorie, label: "Catégorie", widget: select, options: ["Annonce", "Coulisses", "Conseil", "Version"], default: "Annonce" }
-      - { name: resume, label: "Résumé", widget: text, hint: "Affiché dans la liste du journal et dans les aperçus de partage." }
-      - { name: brouillon, label: "Brouillon (non publié)", widget: boolean, default: false, required: false }
+      - { name: resume, label: "Résumé", widget: text, hint: "Une ou deux phrases. Affiché dans la liste du journal et dans les aperçus de partage (réseaux sociaux)." }
+      - { name: brouillon, label: "Brouillon (non publié)", widget: boolean, default: false, required: false, hint: "Activé : l'article est enregistré mais n'apparaît pas sur le site." }
       - { name: body, label: "Texte", widget: markdown }
 
   # ───────────── Pages (Bêta, FAQ, légal) ─────────────
@@ -92,57 +136,56 @@ collections:
     label: Pages
     label_singular: Page
     icon: description
-    description: "Pages « info » : adresse /nom-du-fichier. Pages « légal » : /legal/nom-du-fichier."
+    description: "Pages d'information (adresse /nom-du-fichier) et pages légales (/legal/nom-du-fichier)."
     folder: src/content/pages
     create: true
     identifier_field: title
     slug: "{{slug}}"
     fields:
       - { name: title, label: "Titre", widget: string }
-      - { name: description, label: "Description (moteurs de recherche)", widget: text, required: false }
+      - { name: description, label: "Description (moteurs de recherche)", widget: text, required: false, hint: "Une phrase qui résume la page, affichée par Google sous le titre." }
       - { name: section, label: "Type", widget: select, options: [{ label: "Information", value: "info" }, { label: "Légal", value: "legal" }], default: "info" }
-      - { name: updated, label: "Dernière mise à jour", widget: datetime, time_format: false, date_format: "DD/MM/YYYY", format: "YYYY-MM-DD" }
+      - { name: updated, label: "Dernière mise à jour", widget: datetime, time_format: false, date_format: "DD/MM/YYYY", format: "YYYY-MM-DD", hint: "Pensez à la changer à chaque modification d'une page légale." }
       - { name: body, label: "Contenu", widget: markdown }
+
+  - divider: true
+
+  # ───────────── Bandeau d'annonce ─────────────
+  - name: bandeau
+    label: Bandeau
+    icon: campaign
+    description: Une ligne en haut de toutes les pages. Pendant une pause des téléchargements, le bandeau l'annonce de lui-même.
+    files:
+      - name: bandeau
+        label: Modifier le bandeau
+        file: src/data/banner.json
+        editor: { preview: false }
+        fields:
+          - { name: enabled, label: "Afficher le bandeau", widget: boolean, default: false }
+          - { name: text, label: "Texte", widget: string, required: false, hint: "Court : une ligne sur ordinateur. Exemple : La version 4.1 est disponible." }
+          - { name: linkLabel, label: "Texte du lien", widget: string, required: false, hint: "Exemple : Voir les nouveautés" }
+          - { name: link, label: "Lien", widget: string, required: false, hint: "Adresse d'une page du site, par exemple /nouveautes/4-1-0 ou /journal" }
 
   # ───────────── Réglages du site ─────────────
   - name: reglages
     label: Réglages du site
     icon: tune
-    description: Téléchargements, bandeau d'annonce, bêta, contact et mesure d'audience.
+    description: Bêta, contact, configuration requise, version de secours et mesure d'audience. À modifier rarement.
     files:
-      - name: site
-        label: Réglages généraux
+      - name: reglages
+        label: Modifier les réglages
         file: src/data/site.json
+        editor: { preview: false }
         fields:
-          - name: downloads
-            label: Téléchargements
-            widget: object
-            hint: "Décochez « Ouverts » pour mettre les téléchargements en pause : les boutons sont remplacés par un message et un lien « Me prévenir », y compris pour les liens déjà partagés. Le site reste en ligne. Prise d'effet environ 1 minute après l'enregistrement."
-            fields:
-              - { name: open, label: "Ouverts", widget: boolean, default: true }
-              - { name: title, label: "Titre affiché pendant la pause", widget: string, default: "Les téléchargements reprennent bientôt." }
-              - { name: reason, label: "Raison (une ou deux phrases, du point de vue du visiteur)", widget: text, required: false, hint: "Exemple : Nous préparons la version 4.1 à partir de vos retours : elle corrige l'export et ajoute la relecture par chapitre." }
-              - { name: until, label: "Reprise prévue le", widget: datetime, time_format: false, date_format: "DD/MM/YYYY", format: "YYYY-MM-DD", required: false, hint: "Laisser vide si la date n'est pas encore connue." }
-          - name: banner
-            label: Bandeau d'annonce (en haut de toutes les pages)
-            widget: object
-            fields:
-              - { name: enabled, label: "Afficher le bandeau", widget: boolean, default: false }
-              - { name: text, label: "Texte", widget: string, required: false }
-              - { name: linkLabel, label: "Texte du lien", widget: string, required: false }
-              - { name: link, label: "Lien (ex. /nouveautes/4-1-0)", widget: string, required: false }
           - name: beta
             label: Bêta
             widget: object
             fields:
               - { name: active, label: "Bêta en cours", widget: boolean }
               - { name: label, label: "Pastille", widget: string }
-              - { name: start, label: "Début", widget: string }
-              - { name: end, label: "Fin", widget: string }
-          - { name: fallbackVersion, label: "Version de secours (si GitHub ne répond pas)", widget: string, hint: "Exemple : v4.0.0" }
-          - { name: releasesRepo, label: "Dépôt GitHub des versions", widget: string }
-          - { name: contactEmail, label: "E-mail de contact", widget: string }
-          - { name: siteUrl, label: "Adresse du site", widget: string }
+              - { name: start, label: "Début (AAAA-MM-JJ)", widget: string }
+              - { name: end, label: "Fin (AAAA-MM-JJ)", widget: string }
+          - { name: contactEmail, label: "E-mail de contact", widget: string, hint: "Reçoit les demandes « Me prévenir » et les messages de contact." }
           - name: requirements
             label: Configuration requise
             widget: object
@@ -150,9 +193,13 @@ collections:
               - { name: ram, label: "Mémoire (phrase complète)", widget: string }
               - { name: ramShort, label: "Mémoire (version courte)", widget: string }
               - { name: os, label: "Systèmes", widget: string }
+          - { name: fallbackVersion, label: "Version de secours", widget: string, hint: "Utilisée seulement si GitHub ne répond pas. Exemple : v4.0.0. À mettre à jour à chaque nouvelle version." }
+          - { name: releasesRepo, label: "Dépôt GitHub des versions", widget: string, hint: "Ne pas modifier sans raison : c'est là que le site cherche les fichiers d'installation." }
+          - { name: siteUrl, label: "Adresse du site", widget: string, hint: "Ne pas modifier sans raison." }
           - name: analytics
             label: Mesure d'audience (Umami)
             widget: object
+            collapsed: true
             fields:
               - { name: umamiWebsiteId, label: "Identifiant du site Umami", widget: string, required: false, hint: "Vide = mesure désactivée." }
               - { name: umamiSrc, label: "Adresse du script Umami", widget: string }
