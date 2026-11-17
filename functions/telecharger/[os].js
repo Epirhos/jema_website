@@ -49,6 +49,8 @@ async function track(request, name, data) {
   const id = site.analytics?.umamiWebsiteId
   if (!id) return
   const url = new URL(request.url)
+  // Seul le vrai domaine est mesuré (pas les aperçus *.pages.dev).
+  if (url.hostname !== new URL(site.siteUrl).hostname) return
   try {
     await fetch('https://cloud.umami.is/api/send', {
       method: 'POST',

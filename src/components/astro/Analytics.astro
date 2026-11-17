@@ -10,11 +10,13 @@
  */
 import site from '../../data/site.json'
 const { umamiWebsiteId, umamiSrc } = site.analytics
+// Seul le vrai domaine est mesuré : les aperçus Cloudflare et les tests locaux ne faussent pas les chiffres.
+const domain = new URL(site.siteUrl).hostname
 ---
 
 {umamiWebsiteId && (
   <>
-    <script is:inline defer src={umamiSrc} data-website-id={umamiWebsiteId} data-do-not-track="true"></script>
+    <script is:inline defer src={umamiSrc} data-website-id={umamiWebsiteId} data-domains={domain} data-do-not-track="true"></script>
     <script is:inline>
       ;(function () {
         var track = function (name, data) { if (window.umami && window.umami.track) window.umami.track(name, data) }
