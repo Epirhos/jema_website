@@ -1,0 +1,61 @@
+/*
+ * Habillage de l'admin (Sveltia CMS) aux couleurs du site : papier chaud,
+ * encre, accent indigo Jema, Inter pour l'interface, Newsreader pour les titres.
+ * Les polices sont servies depuis /admin/fonts : aucune requête externe.
+ */
+@font-face { font-family: 'Inter'; font-weight: 400; font-display: swap; src: url('fonts/inter-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Inter'; font-weight: 500; font-display: swap; src: url('fonts/inter-latin-500-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Inter'; font-weight: 600; font-display: swap; src: url('fonts/inter-latin-600-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Inter'; font-weight: 700; font-display: swap; src: url('fonts/inter-latin-700-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Newsreader'; font-weight: 500; font-display: swap; src: url('fonts/newsreader-latin-500-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Newsreader'; font-weight: 500; font-style: italic; font-display: swap; src: url('fonts/newsreader-latin-500-italic.woff2') format('woff2'); }
+@font-face { font-family: 'Merriweather'; font-weight: 400; font-display: swap; src: url('fonts/merriweather-latin-400-normal.woff2') format('woff2'); }
+
+/* Commun aux deux modes */
+:root:root {
+  --sui-base-hue: 38 !important;
+  --sui-font-family-default: 'Inter', system-ui, sans-serif !important;
+  --sui-control-medium-border-radius: 8px !important;
+  --sui-textbox-border-radius: 8px !important;
+}
+
+/* Mode clair : le bureau et la feuille du site */
+:root:root[data-theme='light'],
+:root:root:not([data-theme]) {
+  --sui-background-color-1-hsl: 40 60% 99% !important;   /* feuille   #fdfbf7 */
+  --sui-background-color-2-hsl: 42 38% 96.5% !important; /* panneaux  #f3f0e8 */
+  --sui-background-color-3-hsl: 43 24% 93% !important;
+  --sui-background-color-4-hsl: 43 21% 90% !important;   /* bureau    #ebe7de */
+  --sui-background-color-5-hsl: 40 14% 81% !important;
+  --sui-foreground-color-1-hsl: 30 12% 10% !important;   /* encre     #1d1a17 */
+  --sui-foreground-color-2-hsl: 32 8% 24% !important;
+  --sui-foreground-color-3-hsl: 35 6% 36% !important;    /* gris      #635d54 */
+  --sui-primary-accent-color: hsl(243 57% 51%) !important;        /* indigo #4338ca */
+  --sui-primary-accent-color-light: hsl(243 62% 60%) !important;
+  --sui-primary-accent-color-dark: hsl(243 60% 40%) !important;
+  --sui-primary-accent-color-text: hsl(243 57% 47%) !important;
+  --sui-focus-ring-color: hsl(243 57% 51% / 45%) !important;
+}
+
+/* Mode sombre : encre et papier inversés, indigo adouci */
+:root:root[data-theme='dark'] {
+  --sui-background-color-1-hsl: 30 10% 8% !important;
+  --sui-background-color-2-hsl: 30 9% 10% !important;
+  --sui-background-color-3-hsl: 30 8% 13% !important;
+  --sui-background-color-4-hsl: 30 8% 17% !important;
+  --sui-background-color-5-hsl: 30 7% 30% !important;
+  --sui-foreground-color-1-hsl: 40 40% 95% !important;
+  --sui-primary-accent-color: hsl(234 89% 74%) !important;       /* #818cf8 */
+  --sui-primary-accent-color-light: hsl(234 89% 80%) !important;
+  --sui-primary-accent-color-dark: hsl(239 70% 62%) !important;
+  --sui-primary-accent-color-text: hsl(234 89% 78%) !important;
+  --sui-primary-accent-color-inverted: hsl(30 12% 10%) !important;
+  --sui-focus-ring-color: hsl(234 89% 74% / 45%) !important;
+}
+
+/* Titres de l'interface en Newsreader, comme sur le site */
+h1, h2, [role='dialog'] h2, .sui.headline {
+  font-family: 'Newsreader', Georgia, serif !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.01em;
+}

@@ -1,7 +1,17 @@
 ---
 /** Bandeau d'annonce global, piloté par src/data/site.json (éditable depuis l'admin). */
 import site from '../../data/site.json'
-const { enabled, text, link, linkLabel } = site.banner
+import { url } from '../../lib/url.js'
+import { downloadsOpen, resumeDate } from '../../lib/downloads.js'
+
+// Téléchargements en pause : le bandeau l'annonce de lui-même (priorité sur le texte libre).
+const paused = !downloadsOpen
+const text = paused
+  ? (resumeDate ? `Téléchargements en pause · reprise prévue le ${resumeDate}.` : 'Téléchargements en pause : la date de reprise sera annoncée ici.')
+  : site.banner.text
+const link = paused ? url('/#telecharger') : site.banner.link
+const linkLabel = paused ? 'Me prévenir à la reprise' : site.banner.linkLabel
+const enabled = paused || site.banner.enabled
 ---
 
 {
@@ -16,7 +26,14 @@ const { enabled, text, link, linkLabel } = site.banner
 }
 
 <style>
-  .banner { background: var(--jema); color: #fff; padding-top: calc(64px + env(safe-area-inset-top, 0px)); }
+  .banner {
+    /* Sous la barre fixe (64 px), sans la colorer. La marge négative compense le
+       décalage que chaque page prévoit déjà pour la barre : pas de double espace. */
+    --nav: calc(64px + env(safe-area-inset-top, 0px));
+    position: relative; z-index: 2;
+    margin-top: var(--nav); margin-bottom: calc(-1 * var(--nav));
+    background: var(--jema); color: #fff;
+  }
   p { margin: 0; padding-top: 10px; padding-bottom: 10px; display: flex; flex-wrap: wrap; gap: 4px 12px; justify-content: center; font-size: 14px; }
   a { color: #fff; font-weight: 700; }
 </style>

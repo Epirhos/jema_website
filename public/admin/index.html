@@ -4,11 +4,19 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#ebe7de" />
     <title>Jema · Administration du site</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/admin/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/admin/theme.css" />
   </head>
   <body>
     <!-- Sveltia CMS : publier versions, annonces et pages sans toucher au code.
          Chaque enregistrement crée un commit sur GitHub ; Cloudflare reconstruit le site. -->
     <script src="https://unpkg.com/@sveltia/cms@0.256.1/dist/sveltia-cms.js"></script>
+    <script>
+      // Aperçu des contenus avec la mise en page du site.
+      if (window.CMS && CMS.registerPreviewStyle) CMS.registerPreviewStyle('/admin/preview.css')
+    </script>
   </body>
 </html>

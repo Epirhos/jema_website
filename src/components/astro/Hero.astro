@@ -9,6 +9,7 @@ import { url } from '../../lib/url.js'
 import Mascot from './Mascot.astro'
 import { getCollection } from 'astro:content'
 import { versionSlug } from '../../lib/format.js'
+import { downloadsOpen, resumeDate, pauseTitle, pauseReason, notifyHref } from '../../lib/downloads.js'
 
 const latest = (await getCollection('versions', (v) => !v.data.brouillon))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())[0]
@@ -24,7 +25,21 @@ const latest = (await getCollection('versions', (v) => !v.data.brouillon))
         <strong>Vous gardez le dernier mot. Vos pages ne quittent jamais votre ordinateur.</strong>
       </p>
 
-      <div class="cta">
+      {!downloadsOpen && (
+        <div class="cta paused">
+          <a class="btn-big btn-notify" href={notifyHref} data-umami-event="pause-me-prevenir">
+            <span class="os-ico" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+            </span>
+            <span>
+              <span class="t1">Me prévenir à la reprise</span>
+              <span class="t2">{resumeDate ? `Téléchargements en pause · reprise prévue le ${resumeDate}` : 'Téléchargements en pause'}</span>
+            </span>
+          </a>
+          <p class="os"><b>{pauseTitle}</b> {pauseReason} <a href={url('/#telecharger')}>En savoir plus</a></p>
+        </div>
+      )}
+      <div class="cta" hidden={!downloadsOpen}>
         <!-- Ordinateur : lien direct vers le fichier du système détecté (complété par le script). -->
         <a class="btn-big" href={url('/#telecharger')} data-hero-dl data-umami-event="hero-telecharger">
           <span class="os-ico" data-hero-ico aria-hidden="true">
@@ -94,6 +109,10 @@ const latest = (await getCollection('versions', (v) => !v.data.brouillon))
   .sub { font-size: 18px; line-height: 1.55; color: var(--mute); max-width: 46ch; margin: 0; }
   .sub strong { color: var(--ink); font-weight: 600; }
   .cta { display: grid; gap: 10px; justify-items: start; }
+  .cta[hidden] { display: none; }
+  .paused .os { max-width: 52ch; line-height: 1.5; }
+  .paused .os b { color: var(--ink); }
+  .btn-notify { background: var(--jema); }
   .os { margin: 0; font-size: 13.5px; color: var(--mute); }
   .os a { color: var(--ink); text-underline-offset: 3px; }
   .proofs { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 14px; }
@@ -130,9 +149,12 @@ const latest = (await getCollection('versions', (v) => !v.data.brouillon))
 <script>
   import site from '../../data/site.json'
   import { latestRelease, detectOS, OS_LABEL } from '../../lib/releases.js'
+  import { downloadsOpen } from '../../lib/downloads.js'
+  import { url } from '../../lib/url.js'
 
-  // 1) Bouton : système détecté → lien direct. Téléphone → « M'envoyer le lien ».
-  const os = detectOS()
+  // 1) Bouton : système détecté → /telecharger/<système> (redirige vers le fichier).
+  //    Téléphone → « M'envoyer le lien ». En pause : rien à faire, l'encart est déjà là.
+  const os = downloadsOpen ? detectOS() : null
   const dl = document.querySelector<HTMLAnchorElement>('[data-hero-dl]')
   const mail = document.querySelector<HTMLAnchorElement>('[data-hero-mail]')
   const meta = document.querySelector('[data-hero-meta]')
@@ -146,13 +168,13 @@ const latest = (await getCollection('versions', (v) => !v.data.brouillon))
     mail.hidden = false
   } else if (os && os !== 'mobile' && dl) {
     if (ICONS[os] && ico) ico.innerHTML = ICONS[os]
-    latestRelease(site.releasesRepo, site.fallbackVersion).then(({ version, urls }) => {
+    latestRelease(site.releasesRepo, site.fallbackVersion).then(({ version }) => {
       // Linux : deux formats, on laisse choisir dans la section Télécharger.
       if (os === 'linux') {
         if (meta) meta.textContent = `pour Linux · ${version} · .deb ou AppImage`
         return
       }
-      dl.href = os === 'windows' ? urls.windows : urls.mac
+      dl.href = url(`/telecharger/${os}`)
       dl.dataset.umamiEventOs = os
       if (meta) meta.textContent = `pour ${OS_LABEL[os]} · ${version} · bêta jusqu'au 20 février 2027`
     })

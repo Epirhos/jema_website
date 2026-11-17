@@ -1,15 +1,17 @@
 ---
 /** Télécharger : un fichier par système, liens complétés depuis la dernière version GitHub. */
 import site from '../../data/site.json'
+import { url } from '../../lib/url.js'
+import { downloadsOpen, resumeDate, pauseTitle, pauseReason, notifyHref } from '../../lib/downloads.js'
 
-const n = site.fallbackVersion.replace(/^v/, '')
-const base = `https://github.com/${site.releasesRepo}/releases/download/${site.fallbackVersion}`
+// Chaque bouton passe par /telecharger/<clé> (functions/telecharger/[os].js),
+// qui redirige vers le fichier de la dernière version, ou ici-même en cas de pause.
 const PLATFORMS = [
-  { os: 'windows', name: 'Windows', meta: 'Windows 10 et 11, 64 bits', files: [{ key: 'windows', label: 'Télécharger le .exe', href: `${base}/jema-editor-${n}-setup.exe` }] },
-  { os: 'mac', name: 'macOS', meta: 'Apple Silicon et Intel', files: [{ key: 'mac', label: 'Télécharger le .dmg', href: `${base}/jema-editor-${n}.dmg` }] },
+  { os: 'windows', name: 'Windows', meta: 'Windows 10 et 11, 64 bits', files: [{ key: 'windows', label: 'Télécharger le .exe' }] },
+  { os: 'mac', name: 'macOS', meta: 'Apple Silicon et Intel', files: [{ key: 'mac', label: 'Télécharger le .dmg' }] },
   { os: 'linux', name: 'Linux', meta: 'x86_64', files: [
-    { key: 'deb', label: '.deb (Ubuntu, Mint)', href: `${base}/jema-editor_${n}_amd64.deb` },
-    { key: 'appimage', label: 'AppImage (portable)', href: `${base}/jema-editor-${n}.AppImage` }
+    { key: 'deb', label: '.deb (Ubuntu, Mint)' },
+    { key: 'appimage', label: 'AppImage (portable)' }
   ] }
 ]
 ---
@@ -22,14 +24,28 @@ const PLATFORMS = [
       <p class="lead">Gratuit pendant la bêta, jusqu'au 20 février 2027. Version <span data-dl-version>{site.fallbackVersion}</span>.</p>
     </div>
 
-    <div class="cards">
+    {!downloadsOpen && (
+      <div class="sheet pause" data-reveal>
+        <span class="pill">Téléchargements en pause</span>
+        <h3>{pauseTitle}</h3>
+        {pauseReason && <p>{pauseReason}</p>}
+        <p class="when">{resumeDate ? <>Reprise prévue le <b>{resumeDate}</b>.</> : <>La date de reprise sera annoncée dans le <a href={url('/journal')}>journal</a>.</>}</p>
+        <div class="acts">
+          <a class="btn btn--ink" href={notifyHref} data-umami-event="pause-me-prevenir">Me prévenir à la reprise</a>
+          <a class="btn btn--line" href={url('/nouveautes')}>Voir ce qui change</a>
+        </div>
+        <p class="small">Vous avez déjà Jema ? Vos manuscrits restent sur votre ordinateur et continuent de s'ouvrir normalement.</p>
+      </div>
+    )}
+
+    <div class="cards" hidden={!downloadsOpen}>
       {PLATFORMS.map((p) => (
         <article class="card" data-os-card={p.os} data-reveal>
           <h3>{p.name}</h3>
           <p class="meta">{p.meta}</p>
           <div class="files">
             {p.files.map((f, i) => (
-              <a class={`btn ${i === 0 ? 'btn--ink' : 'btn--line'}`} href={f.href} data-dl={f.key} data-umami-event="telecharger" data-umami-event-fichier={f.key}>
+              <a class={`btn ${i === 0 ? 'btn--ink' : 'btn--line'}`} href={url(`/telecharger/${f.key}`)} data-dl={f.key} data-umami-event="telecharger" data-umami-event-fichier={f.key}>
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
                 {f.label}
               </a>
@@ -64,6 +80,14 @@ const PLATFORMS = [
 <style>
   .dl { padding: clamp(56px, 8vw, 96px) 0; }
   .head { display: grid; gap: 10px; max-width: 760px; margin-bottom: 28px; }
+  .cards[hidden] { display: none; }
+  .pause { padding: clamp(24px, 4vw, 40px); display: grid; gap: 10px; justify-items: start; max-width: 760px; border-top: 3px solid var(--ochre); }
+  .pause h3 { font-size: clamp(26px, 3vw, 34px); }
+  .pause p { margin: 0; color: var(--ink-2); font-size: 16px; line-height: 1.55; }
+  .pause .when b { color: var(--ink); }
+  .pause .acts { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+  .pause .small { font-size: 14px; color: var(--mute); }
+  .pill { font: 700 10.5px var(--f-ui); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ochre); background: var(--ochre-soft); padding: 5px 10px; border-radius: 999px; }
   .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
   .card { background: var(--paper); border-radius: 6px; border-top: 3px solid var(--rule); padding: 22px; display: grid; gap: 8px; align-content: start; box-shadow: 0 10px 26px rgba(60, 40, 20, 0.07); position: relative; }
   .card.is-mine { border-top-color: var(--jema); box-shadow: 0 0 0 2px var(--jema), 0 14px 34px rgba(67, 56, 202, 0.16); }
@@ -91,11 +115,7 @@ const PLATFORMS = [
     mine.classList.add('is-mine')
     mine.querySelector<HTMLElement>('.here')!.hidden = false
   }
-  latestRelease(site.releasesRepo, site.fallbackVersion).then(({ version, urls }) => {
-    document.querySelectorAll<HTMLAnchorElement>('[data-dl]').forEach((a) => {
-      const u = (urls as Record<string, string>)[a.dataset.dl!]
-      if (u) a.href = u
-    })
+  latestRelease(site.releasesRepo, site.fallbackVersion).then(({ version }) => {
     const v = document.querySelector('[data-dl-version]')
     if (v) v.textContent = version
   })

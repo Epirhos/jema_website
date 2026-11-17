@@ -15,7 +15,9 @@ backend:
 locale: fr
 site_url: https://jema.app
 display_url: https://jema.app
-logo_url: /favicon.svg
+app_title: Jema · Administration du site
+logo:
+  src: /favicon.svg
 
 media_folder: public/images/uploads
 public_folder: /images/uploads
@@ -25,6 +27,7 @@ collections:
   - name: versions
     label: Nouveautés
     label_singular: Version
+    icon: new_releases
     description: Une entrée par version publiée. Écrivez du côté de l'auteur, une ligne par changement, le plus important en premier.
     folder: src/content/versions
     create: true
@@ -68,6 +71,8 @@ collections:
   - name: journal
     label: Journal
     label_singular: Article
+    icon: edit_note
+    description: Annonces, coulisses et conseils d'écriture. Les articles en brouillon ne sont pas publiés.
     folder: src/content/journal
     create: true
     identifier_field: titre
@@ -86,6 +91,7 @@ collections:
   - name: pages
     label: Pages
     label_singular: Page
+    icon: description
     description: "Pages « info » : adresse /nom-du-fichier. Pages « légal » : /legal/nom-du-fichier."
     folder: src/content/pages
     create: true
@@ -101,11 +107,22 @@ collections:
   # ───────────── Réglages du site ─────────────
   - name: reglages
     label: Réglages du site
+    icon: tune
+    description: Téléchargements, bandeau d'annonce, bêta, contact et mesure d'audience.
     files:
       - name: site
         label: Réglages généraux
         file: src/data/site.json
         fields:
+          - name: downloads
+            label: Téléchargements
+            widget: object
+            hint: "Décochez « Ouverts » pour mettre les téléchargements en pause : les boutons sont remplacés par un message et un lien « Me prévenir », y compris pour les liens déjà partagés. Le site reste en ligne. Prise d'effet environ 1 minute après l'enregistrement."
+            fields:
+              - { name: open, label: "Ouverts", widget: boolean, default: true }
+              - { name: title, label: "Titre affiché pendant la pause", widget: string, default: "Les téléchargements reprennent bientôt." }
+              - { name: reason, label: "Raison (une ou deux phrases, du point de vue du visiteur)", widget: text, required: false, hint: "Exemple : Nous préparons la version 4.1 à partir de vos retours : elle corrige l'export et ajoute la relecture par chapitre." }
+              - { name: until, label: "Reprise prévue le", widget: datetime, time_format: false, date_format: "DD/MM/YYYY", format: "YYYY-MM-DD", required: false, hint: "Laisser vide si la date n'est pas encore connue." }
           - name: banner
             label: Bandeau d'annonce (en haut de toutes les pages)
             widget: object

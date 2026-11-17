@@ -2,6 +2,12 @@
   "contactEmail": "editor.jema@gmail.com",
   "releasesRepo": "Epirhos/jema-releases",
   "fallbackVersion": "v4.0.0",
+  "downloads": {
+    "open": true,
+    "title": "Les téléchargements reprennent bientôt.",
+    "reason": "Nous préparons la prochaine version de Jema à partir de vos retours.",
+    "until": ""
+  },
   "beta": {
     "active": true,
     "start": "2026-11-20",
