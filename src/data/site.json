@@ -1,31 +1,31 @@
 {
-  "contactEmail": "editor.jema@gmail.com",
-  "releasesRepo": "Epirhos/jema-releases",
-  "fallbackVersion": "v4.0.0",
   "downloads": {
-    "open": true,
+    "open": false,
     "title": "Les téléchargements reprennent bientôt.",
-    "reason": "Nous préparons la prochaine version de Jema à partir de vos retours.",
-    "until": ""
-  },
-  "beta": {
-    "active": true,
-    "start": "2026-11-20",
-    "end": "2027-02-20",
-    "label": "Bêta ouverte · gratuite jusqu'au 20 février 2027"
-  },
-  "requirements": {
-    "ram": "8 Go de mémoire vive minimum pour l'assistant IA",
-    "os": "Windows 10/11 (64 bits) · macOS (Apple Silicon et Intel) · Linux x86_64",
-    "ramShort": "8 Go de RAM conseillés"
+    "reason": "Nous écrivons la prochaine version de Jema à partir de vos retours.",
+    "until": "2026-11-23"
   },
   "banner": {
-    "enabled": false,
-    "text": "",
+    "enabled": true,
+    "text": "Les téléchargements reprennent bientôt. Jema en réécriture de son code.",
     "linkLabel": "",
     "link": ""
   },
+  "beta": {
+    "active": true,
+    "label": "Bêta ouverte · gratuite jusqu'au 20 février 2027",
+    "start": "2026-11-20",
+    "end": "2027-02-20"
+  },
+  "fallbackVersion": "v4.0.0",
+  "releasesRepo": "Epirhos/jema-releases",
+  "contactEmail": "editor.jema@gmail.com",
   "siteUrl": "https://jema.app",
+  "requirements": {
+    "ram": "8 Go de mémoire vive minimum pour l'assistant IA",
+    "ramShort": "8 Go de RAM conseillés",
+    "os": "Windows 10/11 (64 bits) · macOS (Apple Silicon et Intel) · Linux x86_64"
+  },
   "analytics": {
     "umamiWebsiteId": "b98343b4-8574-4b68-a029-30f95db7cf88",
     "umamiSrc": "https://cloud.umami.is/script.js"
