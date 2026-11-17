@@ -1,51 +1,25 @@
-# Jema — Site officiel
+# Jema — Site officiel (jema.app)
 
-Site d'annonce et de téléchargement de **Jema**, l'éditeur littéraire augmenté par l'IA locale.
-Slogan : _« Racontez, on s'occupe du reste. »_
+Site d'annonce et de téléchargement de **Jema**, le logiciel d'écriture avec IA locale.
+Slogan : _« Racontez, Jema s'occupe du reste. »_
 
-Site **statique** Astro : HTML pré-rendu (référencement), JavaScript chargé seulement là où il sert
-(démo interactive, téléchargements, menu). Design repris de l'application (thèmes Clair / Sombre /
-Éditorial, verre dépoli, Inter + Merriweather auto-hébergées).
+- **Publier un contenu** (version, article, pause des téléchargements, bandeau) : `jema.app/admin`,
+  bouton « Mode d'emploi » en bas à droite.
+- **Tout le reste** (installation, code, hébergement, domaine, dépannage) :
+  [`docs/manuel/Manuel-site-Jema.pdf`](docs/manuel/Manuel-site-Jema.pdf).
 
 ## Démarrer
 
 ```bash
-npm install
-npm run dev      # http://localhost:4321
-npm run build    # site statique → dist/
-npm run preview  # sert le build
+npm ci
+npm run dev        # http://localhost:4321
+npm run build      # site final → dist/ (à lancer avant chaque envoi)
+npm run preview    # sert dist/
+npm run sync:guide # recopie le mode d'emploi depuis jema-editor_v2
+npm run manuel     # régénère le PDF du manuel depuis docs/manuel/manuel.html
 ```
 
-Variables de build (facultatives) :
+Stack : Astro 5 (statique) · React (barre de navigation) · Tailwind 3 + `src/styles/global.css` ·
+Sveltia CMS (`public/admin`) · Cloudflare Pages + Function (`functions/telecharger`) · Umami.
 
-| Variable | Rôle | Défaut |
-|---|---|---|
-| `SITE_URL` | domaine public (balises canoniques, sitemap) | `https://jema.app` |
-| `BASE_PATH` | sous-dossier de publication | `/` (GitHub Pages : `/jema_website/`) |
-
-## Modifier le contenu
-
-| Quoi | Où |
-|---|---|
-| Email, dépôt des versions, dates de bêta, configuration requise, bandeau d'annonce | `src/data/site.json` |
-| Pages légales (Markdown) | `src/content/pages/*.md` |
-| Accueil (sections) | `src/pages/index.astro` + `src/components/` |
-
-## Structure
-
-```
-src/
-  layouts/Base.astro        # <head>, thème sans flash, navigation, bandeau, footer
-  layouts/Prose.astro       # gabarit des pages de texte
-  pages/                    # index, legal/[slug], 404
-  content/pages/            # pages Markdown (légal…)
-  content.config.ts         # schémas des contenus
-  data/site.json            # réglages éditables
-  components/astro/         # sections statiques (Hero, Features, Footer, Banner)
-  components/*.jsx          # îlots React : Navbar, Showcase (démo Tiptap), Download, Contact
-  lib/                      # url() (base), thème partagé, plugin rehype
-```
-
-## Section Licence (monétisation)
-
-`src/components/Pricing.jsx` existe mais n'est pas monté tant que le modèle économique n'est pas arrêté.
+Branches : `main` = production (jema.app), `bulle` = test (bulle.jema.pages.dev).

@@ -1,0 +1,657 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<title>Site Jema · Manuel technique</title>
+<!--
+  Source du manuel. Pour régénérer le PDF : npm run manuel
+  (scripts/manuel-pdf.mjs, nécessite Microsoft Edge ou Google Chrome installé).
+-->
+<style>
+  @font-face { font-family: 'Inter'; font-weight: 400; src: url('../../public/admin/fonts/inter-latin-400-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Inter'; font-weight: 500; src: url('../../public/admin/fonts/inter-latin-500-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Inter'; font-weight: 600; src: url('../../public/admin/fonts/inter-latin-600-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Inter'; font-weight: 700; src: url('../../public/admin/fonts/inter-latin-700-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Newsreader'; font-weight: 500; src: url('../../public/admin/fonts/newsreader-latin-500-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Newsreader'; font-weight: 500; font-style: italic; src: url('../../public/admin/fonts/newsreader-latin-500-italic.woff2') format('woff2'); }
+  @font-face { font-family: 'Merriweather'; font-weight: 400; src: url('../../public/admin/fonts/merriweather-latin-400-normal.woff2') format('woff2'); }
+
+  :root { --desk: #ebe7de; --desk-2: #f3f0e8; --paper: #fdfbf7; --ink: #1d1a17; --ink-2: #3a3530; --mute: #635d54; --rule: #d8d2c5; --jema: #4338ca; --jema-soft: #e8e6fb; --ochre: #9b4a1e; --ochre-soft: #f4e6dc; }
+  @page { size: A4; margin: 18mm 17mm 20mm; }
+  @page :first { margin: 0; }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { margin: 0; color: var(--ink); background: #fff; font: 400 10.3pt/1.55 'Inter', sans-serif; }
+  h1, h2, h3, h4 { font-family: 'Newsreader', Georgia, serif; font-weight: 500; letter-spacing: -0.01em; line-height: 1.15; color: var(--ink); }
+  h2 { font-size: 25pt; margin: 0 0 4mm; }
+  h3 { font-size: 15pt; margin: 7mm 0 2mm; break-after: avoid; }
+  h4 { font-size: 12pt; margin: 5mm 0 1.5mm; break-after: avoid; }
+  p { margin: 0 0 2.6mm; }
+  a { color: var(--jema); text-decoration: none; }
+  ul, ol { margin: 0 0 3mm; padding-left: 6mm; }
+  li { margin: 0.8mm 0; }
+  b, strong { font-weight: 600; }
+  code, .mono { font: 500 8.8pt/1.45 Consolas, 'Cascadia Mono', ui-monospace, monospace; }
+  code { background: var(--desk-2); padding: 0.2mm 1.2mm; border-radius: 1mm; }
+  pre { font: 500 8.6pt/1.5 Consolas, 'Cascadia Mono', ui-monospace, monospace; background: #1f1c19; color: #f3ede2; padding: 3.5mm 4mm; border-radius: 2mm; margin: 2mm 0 4mm; white-space: pre-wrap; break-inside: avoid; }
+  pre .c { color: #a39a8d; }
+  .kicker { font: 700 7.5pt 'Inter', sans-serif; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ochre); }
+  table { width: 100%; border-collapse: collapse; margin: 2mm 0 4mm; font-size: 9.2pt; break-inside: auto; }
+  tr { break-inside: avoid; }
+  th, td { text-align: left; vertical-align: top; padding: 1.8mm 2.2mm; border-bottom: 0.3mm solid var(--rule); }
+  th { font: 700 7pt 'Inter', sans-serif; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mute); border-bottom-color: var(--ink); }
+  td:first-child { font-weight: 500; }
+  .note { margin: 3mm 0 4mm; padding: 3mm 4mm; border-left: 1mm solid var(--jema); background: var(--jema-soft); border-radius: 0 2mm 2mm 0; break-inside: avoid; font-size: 9.6pt; }
+  .note.warn { border-left-color: var(--ochre); background: var(--ochre-soft); }
+  .note b:first-child { display: block; margin-bottom: 0.6mm; }
+  ol.steps { counter-reset: s; list-style: none; padding: 0; }
+  ol.steps > li { counter-increment: s; position: relative; padding-left: 9mm; margin: 2mm 0; break-inside: avoid; }
+  ol.steps > li::before { content: counter(s); position: absolute; left: 0; top: 0.2mm; width: 5.6mm; height: 5.6mm; border-radius: 50%; background: var(--ink); color: var(--paper); font: 700 8pt/5.6mm 'Inter', sans-serif; text-align: center; }
+  .chapter { break-before: page; }
+  .chap-head { border-bottom: 0.4mm solid var(--ink); padding-bottom: 3mm; margin-bottom: 5mm; }
+  .chap-head .kicker { display: block; margin-bottom: 1.5mm; }
+  .chap-head p { color: var(--mute); margin: 1mm 0 0; font-size: 10.5pt; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; }
+  .box { border: 0.3mm solid var(--rule); border-radius: 2mm; padding: 3mm 4mm; background: var(--paper); break-inside: avoid; }
+  .check li { list-style: none; position: relative; padding-left: 6mm; }
+  .check { padding-left: 0; }
+  .check li::before { content: ''; position: absolute; left: 0; top: 1.2mm; width: 3.2mm; height: 3.2mm; border: 0.35mm solid var(--ink); border-radius: 0.8mm; }
+
+  /* Couverture */
+  .cover { height: 297mm; padding: 26mm 22mm; background: var(--desk); display: grid; grid-template-rows: auto 1fr auto; position: relative; overflow: hidden; }
+  .cover .brand { display: flex; align-items: center; gap: 4mm; font: 500 20pt 'Newsreader', serif; }
+  .cover .sheet { align-self: center; background: var(--paper); border-radius: 3mm; padding: 16mm 15mm; box-shadow: 0 8mm 20mm rgba(60, 40, 20, 0.12); }
+  .cover h1 { font-size: 40pt; margin: 4mm 0 5mm; }
+  .cover h1 em { color: var(--jema); }
+  .cover .lead { font-size: 13pt; color: var(--mute); max-width: 125mm; }
+  .cover .meta { font-size: 9.5pt; color: var(--mute); display: flex; gap: 10mm; }
+  .cover .meta b { display: block; color: var(--ink); }
+
+  /* Sommaire */
+  .toc ol { list-style: none; padding: 0; columns: 2; column-gap: 10mm; }
+  .toc li { margin: 0 0 2.4mm; break-inside: avoid; font-size: 10.5pt; }
+  .toc li span { color: var(--ochre); font: 700 8pt 'Inter', sans-serif; margin-right: 2mm; }
+
+  /* Schéma */
+  .flow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm 6mm; margin: 4mm 0 5mm; }
+  .flow .n { border-radius: 2mm; padding: 3mm 3.5mm; background: var(--paper); border: 0.3mm solid var(--rule); font-size: 8.8pt; position: relative; }
+  .flow .n b { display: block; font: 500 12pt 'Newsreader', serif; margin-bottom: 0.6mm; }
+  .flow .n.k { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .flow .n.k b { color: var(--paper); }
+  .flow .n.j { border-color: var(--jema); box-shadow: inset 0 0 0 0.3mm var(--jema); }
+  .arrow { font-size: 8pt; color: var(--mute); text-align: center; align-self: center; }
+</style>
+</head>
+<body>
+
+<!-- ═════════════════════ COUVERTURE ═════════════════════ -->
+<section class="cover">
+  <div class="brand">
+    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#4338ca" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg>
+    Jema
+  </div>
+  <div class="sheet">
+    <span class="kicker">Manuel technique du site jema.app</span>
+    <h1>Reconstruire, maintenir,<br /><em>mettre à jour le site.</em></h1>
+    <p class="lead">Tout ce qu'il faut savoir pour faire vivre le site de Jema sans aide extérieure : comptes, installation, contenus, téléchargements, administration, mesure d'audience, hébergement, dépannage.</p>
+  </div>
+  <div class="meta">
+    <div><b>Version du manuel</b>1.0 · 17 novembre 2026</div>
+    <div><b>Dépôt</b>github.com/Epirhos/jema_website</div>
+    <div><b>Source</b>docs/manuel/manuel.html</div>
+  </div>
+</section>
+
+<!-- ═════════════════════ SOMMAIRE ═════════════════════ -->
+<section class="chapter toc">
+  <div class="chap-head"><span class="kicker">Sommaire</span><h2>Ce que contient ce manuel</h2>
+    <p>Pour publier un contenu (version, article, pause des téléchargements), le mode d'emploi intégré à l'admin suffit : bouton « Mode d'emploi » sur <code>jema.app/admin</code>. Ce manuel couvre tout le reste.</p></div>
+  <ol>
+    <li><span>01</span>Le site en une page</li>
+    <li><span>02</span>Comptes, accès et secrets</li>
+    <li><span>03</span>Installer le projet sur un ordinateur</li>
+    <li><span>04</span>Comment le site est construit</li>
+    <li><span>05</span>Les contenus (Markdown)</li>
+    <li><span>06</span>Les réglages (fichiers JSON)</li>
+    <li><span>07</span>Modifier l'accueil et les textes fixes</li>
+    <li><span>08</span>Identité visuelle</li>
+    <li><span>09</span>Captures de l'application</li>
+    <li><span>10</span>Téléchargements et versions</li>
+    <li><span>11</span>Mode d'emploi de l'application</li>
+    <li><span>12</span>L'administration (Sveltia CMS)</li>
+    <li><span>13</span>Mesure d'audience (Umami)</li>
+    <li><span>14</span>Hébergement et domaine (Cloudflare, Name.com)</li>
+    <li><span>15</span>Branches et mise en ligne</li>
+    <li><span>16</span>Mettre à jour les dépendances</li>
+    <li><span>17</span>Obligations légales</li>
+    <li><span>18</span>Dépannage</li>
+    <li><span>19</span>Aide-mémoire</li>
+    <li><span>20</span>Reste à faire au lancement</li>
+  </ol>
+</section>
+
+<!-- ═════════════════════ 01 ═════════════════════ -->
+<section class="chapter">
+  <div class="chap-head"><span class="kicker">Chapitre 01</span><h2>Le site en une page</h2>
+    <p>Un site statique : des pages HTML fabriquées à l'avance, servies par Cloudflare. Pas de serveur à entretenir, pas de base de données.</p></div>
+
+  <div class="flow">
+    <div class="n k"><b>Vous</b>dans l'admin <code style="background:#3a3530;color:#f3ede2">/admin</code> ou dans le code</div>
+    <div class="arrow">enregistre un commit →</div>
+    <div class="n"><b>GitHub</b>dépôt <code>Epirhos/jema_website</code> : le code et les contenus</div>
+    <div class="n j"><b>jema.app</b>le site que voient les visiteurs</div>
+    <div class="arrow">← publie en 1 à 2 min</div>
+    <div class="n"><b>Cloudflare Pages</b>reconstruit le site à chaque commit (<code>npm run build</code>)</div>
+    <div class="n"><b>Umami Cloud</b>reçoit les mesures d'audience de jema.app, sans cookie</div>
+    <div class="arrow">jema.app y prend les fichiers d'installation →</div>
+    <div class="n"><b>GitHub Releases</b>dépôt <code>Epirhos/jema-releases</code> : les fichiers d'installation</div>
+  </div>
+
+  <h3>Les briques</h3>
+  <table>
+    <tr><th>Brique</th><th>Rôle</th><th>Où</th></tr>
+    <tr><td>Astro 5</td><td>Fabrique le site : pages, contenus Markdown, images optimisées (WebP).</td><td><code>src/</code>, <code>astro.config.mjs</code></td></tr>
+    <tr><td>React 18</td><td>Seulement pour la barre de navigation (menu mobile).</td><td><code>src/components/Navbar.jsx</code></td></tr>
+    <tr><td>Tailwind 3 + CSS</td><td>Mise en forme. L'identité est surtout dans <code>global.css</code>.</td><td><code>src/styles/global.css</code></td></tr>
+    <tr><td>Sveltia CMS</td><td>L'administration sans code, qui écrit dans le dépôt GitHub.</td><td><code>public/admin/</code></td></tr>
+    <tr><td>Cloudflare Pages</td><td>Hébergement, construction automatique, aperçus par branche, HTTPS.</td><td>tableau de bord Cloudflare</td></tr>
+    <tr><td>Pages Function</td><td>Les adresses <code>/telecharger/&lt;système&gt;</code> : redirection vers le bon fichier, ou vers la pause.</td><td><code>functions/telecharger/[os].js</code></td></tr>
+    <tr><td>Umami Cloud</td><td>Visites, provenance, temps, clics, téléchargements. Sans cookie.</td><td>cloud.umami.is</td></tr>
+  </table>
+
+  <h3>Les pages</h3>
+  <table>
+    <tr><th>Adresse</th><th>Contenu</th><th>Fichier</th></tr>
+    <tr><td><code>/</code></td><td>Accueil : promesse, téléchargement, visite de l'atelier, fonctions, contact</td><td><code>src/pages/index.astro</code></td></tr>
+    <tr><td><code>/nouveautes</code>, <code>/nouveautes/4-0-0</code></td><td>Notes de version</td><td><code>src/pages/nouveautes/</code></td></tr>
+    <tr><td><code>/journal</code>, <code>/journal/&lt;date-titre&gt;</code></td><td>Articles</td><td><code>src/pages/journal/</code></td></tr>
+    <tr><td><code>/guide</code>, <code>/guide/&lt;fiche&gt;</code></td><td>Mode d'emploi de l'app (copié depuis l'app)</td><td><code>src/pages/guide/</code></td></tr>
+    <tr><td><code>/beta</code>, <code>/faq</code>, <code>/&lt;page&gt;</code></td><td>Pages d'information</td><td><code>src/pages/[slug].astro</code></td></tr>
+    <tr><td><code>/legal/…</code></td><td>Mentions légales, confidentialité, licence bêta</td><td><code>src/pages/legal/[slug].astro</code></td></tr>
+    <tr><td><code>/telecharger/&lt;os&gt;</code></td><td>Redirection de téléchargement (pas une page)</td><td><code>functions/telecharger/[os].js</code></td></tr>
+    <tr><td><code>/admin</code>, <code>/admin/aide</code></td><td>Administration et son mode d'emploi</td><td><code>public/admin/</code></td></tr>
+  </table>
+</section>
+
+<!-- ═════════════════════ 02 ═════════════════════ -->
+<section class="chapter">
+  <div class="chap-head"><span class="kicker">Chapitre 02</span><h2>Comptes, accès et secrets</h2>
+    <p>Sans ces accès, rien n'est possible. Gardez ce tableau à jour (dans un gestionnaire de mots de passe, pas dans le dépôt).</p></div>
+  <table>
+    <tr><th>Service</th><th>Sert à</th><th>Ce qu'il faut y retrouver</th></tr>
+    <tr><td>GitHub · compte <b>Epirhos</b></td><td>Code du site, de l'app et des versions</td><td>Dépôts <code>jema_website</code>, <code>jema-editor_v2</code>, <code>jema-releases</code>. Activez la double authentification.</td></tr>
+    <tr><td>Cloudflare</td><td>Héberger et construire le site ; DNS de jema.app</td><td>Projet Pages <code>jema</code> ; zone DNS <code>jema.app</code> une fois le domaine relié.</td></tr>
+    <tr><td>Name.com</td><td>Location du nom <code>jema.app</code></td><td>Date de renouvellement. Offert un an via le GitHub Student Pack, <b>payant ensuite</b> : activez le renouvellement automatique ou notez la date.</td></tr>
+    <tr><td>Umami Cloud</td><td>Statistiques</td><td>Site <code>jema.app</code>, identifiant <code>b98343b4-…-30f95db7cf88</code> (copié dans <code>site.json</code>).</td></tr>
+    <tr><td>Gmail · editor.jema@gmail.com</td><td>Contact public</td><td>Reçoit les messages et les demandes « Me prévenir ».</td></tr>
+  </table>
+
+  <h3>Les secrets</h3>
+  <table>
+    <tr><th>Secret</th><th>Où il vit</th><th>Durée</th><th>Si perdu ou fuité</th></tr>
+    <tr><td>Jeton de l'admin</td><td>Votre navigateur (après la première connexion)</td><td>90 jours</td><td>GitHub → Settings → Developer settings → Fine-grained tokens → Revoke, puis en créer un nouveau (droit <i>Contents : Read and write</i> sur <code>jema_website</code> seulement).</td></tr>
+    <tr><td><code>GH_RELEASE_TOKEN</code></td><td>Secret du dépôt <code>jema-editor_v2</code> (Settings → Secrets → Actions)</td><td>Selon sa création</td><td>Recréer un jeton avec écriture sur <code>jema-releases</code> et remplacer le secret. Sans lui, la publication des versions échoue.</td></tr>
+  </table>
+  <div class="note warn"><b>Règle d'or</b>Aucun secret dans le dépôt du site : il est public. <code>site.json</code> ne contient que des valeurs publiques (l'identifiant Umami n'est pas un secret, il est visible dans chaque page).</div>
+</section>
+
+<!-- ═════════════════════ 03 ═════════════════════ -->
+<section class="chapter">
+  <div class="chap-head"><span class="kicker">Chapitre 03</span><h2>Installer le projet sur un ordinateur</h2>
+    <p>Pour modifier le code, tester avant de publier, ou tout reconstruire depuis zéro.</p></div>
+  <h3>Prérequis</h3>
+  <ul>
+    <li><b>Git</b> : git-scm.com. Sous Windows, il fournit aussi « Git Bash ».</li>
+    <li><b>Node.js 22 LTS</b> (minimum 20.3) : nodejs.org. Vérifiez avec <code>node -v</code>.</li>
+    <li>Un éditeur de code (VS Code conseillé).</li>
+  </ul>
+  <h3>Première installation</h3>
+<pre>git clone https://github.com/Epirhos/jema_website.git
+cd jema_website
+git checkout bulle            <span class="c"># branche de test (main = production)</span>
+npm ci                        <span class="c"># installe exactement les versions de package-lock.json</span>
+npm run dev                   <span class="c"># site de travail : http://localhost:4321</span></pre>
+  <h3>Les commandes</h3>
+  <table>
+    <tr><th>Commande</th><th>Effet</th></tr>
+    <tr><td><code>npm run dev</code></td><td>Site de travail qui se recharge à chaque modification. L'admin et <code>/telecharger/…</code> n'y fonctionnent pas (voir ci-dessous).</td></tr>
+    <tr><td><code>npm run build</code></td><td>Fabrique le site final dans <code>dist/</code>. <b>À lancer avant chaque envoi</b> : si ça échoue ici, ça échouera sur Cloudflare.</td></tr>
+    <tr><td><code>npm run preview</code></td><td>Sert <code>dist/</code> pour vérifier le résultat final.</td></tr>
+    <tr><td><code>npm run sync:guide</code></td><td>Recopie le mode d'emploi depuis l'app (chapitre 11).</td></tr>
+    <tr><td><code>npm run manuel</code></td><td>Régénère ce PDF depuis <code>docs/manuel/manuel.html</code>.</td></tr>
+  </table>
+  <div class="note"><b>Tester la fonction de téléchargement en local</b><code>npx wrangler pages dev dist</code> (outil officiel de Cloudflare, téléchargé à la demande) sert le site <i>avec</i> la fonction <code>/telecharger/…</code>. Le plus simple reste l'aperçu de branche sur Cloudflare (chapitre 15).</div>
+  <h3>Variables de construction</h3>
+  <table>
+    <tr><th>Variable</th><th>Rôle</th><th>Valeur</th></tr>
+    <tr><td><code>SITE_URL</code></td><td>Adresse publique : liens canoniques, sitemap</td><td><code>https://jema.app</code> (par défaut)</td></tr>
+    <tr><td><code>BASE_PATH</code></td><td>Sous-dossier de publication</td><td><code>/</code> (par défaut). Ne servait qu'à l'ancien hébergement GitHub Pages.</td></tr>
+  </table>
+  <div class="note warn"><b>Windows et Git Bash</b>Git Bash transforme les chemins commençant par <code>/</code>. Pour tester <code>BASE_PATH</code>, préfixez : <code>MSYS_NO_PATHCONV=1 BASE_PATH=/x/ npm run build</code>.</div>
+</section>
+
+<!-- ═════════════════════ 04 ═════════════════════ -->
+<section class="chapter">
+  <div class="chap-head"><span class="kicker">Chapitre 04</span><h2>Comment le site est construit</h2></div>
+<pre>jema_website/
+├─ astro.config.mjs          <span class="c">adresse du site, intégrations (React, Tailwind, sitemap)</span>
+├─ tailwind.config.js        <span class="c">configuration Tailwind (peu utilisée)</span>
+├─ functions/telecharger/[os].js  <span class="c">Cloudflare : /telecharger/windows|mac|deb|appimage</span>
+├─ public/                   <span class="c">copié tel quel dans le site</span>
+│  ├─ admin/                 <span class="c">l'administration (chapitre 12)</span>
+│  │  ├─ index.html          <span class="c">charge Sveltia + bouton « Mode d'emploi »</span>
+│  │  ├─ config.yml          <span class="c">rubriques et champs de l'admin</span>
+│  │  ├─ theme.css · preview.css · fonts/ · aide/
+│  ├─ images/uploads/        <span class="c">images envoyées depuis l'admin</span>
+│  ├─ favicon.svg · robots.txt
+├─ scripts/
+│  ├─ sync-guide.mjs         <span class="c">copie le mode d'emploi de l'app</span>
+│  └─ manuel-pdf.mjs         <span class="c">fabrique ce PDF</span>
+├─ docs/manuel/              <span class="c">ce manuel (source + PDF)</span>
+└─ src/
+   ├─ pages/                 <span class="c">une page = un fichier ; [slug] = page générée par contenu</span>
+   ├─ layouts/               <span class="c">Base (head, barre, bandeau, pied), Prose (texte), Listing (listes)</span>
+   ├─ components/            <span class="c">Navbar.jsx, Logo.jsx + astro/ (sections de l'accueil)</span>
+   ├─ content/               <span class="c">versions/, journal/, pages/, guide/ (Markdown)</span>
+   ├─ content.config.ts      <span class="c">schéma de chaque type de contenu</span>
+   ├─ data/                  <span class="c">site.json, downloads.json, banner.json, guide-parcours.json</span>
+   ├─ assets/captures/       <span class="c">captures de l'app (converties en WebP au build)</span>
+   ├─ lib/                   <span class="c">releases.js, downloads.js, url.js, format.js, rehype-base.mjs</span>
+   └─ styles/global.css      <span class="c">identité visuelle</span></pre>
+  <h3>Principes à respecter</h3>
+  <ul>
+    <li><b>Statique d'abord.</b> Chaque page est du HTML lisible sans JavaScript. Les scripts ne font qu'améliorer (système détecté, version à jour).</li>
+    <li><b>Une source par information.</b> Les réglages vivent dans <code>src/data/</code>, les textes longs dans <code>src/content/</code>, le mode d'emploi dans l'app. Ne recopiez pas une information à deux endroits.</li>
+    <li><b>Liens internes</b> : dans un composant, passez par <code>url('/chemin')</code> (<code>src/lib/url.js</code>). Dans le Markdown, écrivez simplement <code>/chemin</code>.</li>
+  </ul>
+</section>
+
+<!-- ═════════════════════ 05 ═════════════════════ -->
+<section class="chapter">
+  <div class="chap-head"><span class="kicker">Chapitre 05</span><h2>Les contenus (Markdown)</h2>
+    <p>Chaque contenu est un fichier texte : un en-tête entre deux lignes <code>---</code>, puis le texte. L'admin écrit ces fichiers ; on peut aussi les écrire à la main.</p></div>
+  <table>
+    <tr><th>Type</th><th>Dossier</th><th>Champs de l'en-tête</th><th>Adresse</th></tr>
+    <tr><td>Nouveautés</td><td><code>src/content/versions</code></td><td><code>version</code> (4.1.0), <code>date</code>, <code>canal</code> (bêta|stable), <code>titre</code>, <code>resume</code>, <code>brouillon</code></td><td><code>/nouveautes/4-1-0</code> (tiré du champ version)</td></tr>
+    <tr><td>Journal</td><td><code>src/content/journal</code></td><td><code>titre</code>, <code>date</code>, <code>resume</code>, <code>categorie</code> (Annonce|Coulisses|Conseil|Version), <code>brouillon</code></td><td><code>/journal/&lt;nom du fichier&gt;</code></td></tr>
+    <tr><td>Pages</td><td><code>src/content/pages</code></td><td><code>title</code>, <code>description</code>, <code>section</code> (info|legal), <code>updated</code></td><td><code>/&lt;fichier&gt;</code> ou <code>/legal/&lt;fichier&gt;</code></td></tr>
+    <tr><td>Guide</td><td><code>src/content/guide</code></td><td>Généré : ne pas modifier ici (chapitre 11)</td><td><code>/guide/&lt;fiche&gt;</code></td></tr>
+  </table>
+  <h4>Exemple : une version écrite à la main</h4>
+<pre>---
+version: "4.1.0"
+date: 2026-12-12
+canal: bêta
+titre: "Jema se souvient de vos chronologies"
+resume: "Deux lignes sur ce qui change pour l'auteur."
+brouillon: false
+---
+
+## Nouveau
+
+- Ce que l'auteur peut faire maintenant.
+
+## Corrigé
+
+- L'export Word conserve les notes de bas de page.</pre>
+  <ul>
+    <li>Dates au format <code>AAAA-MM-JJ</code>. Mettez les textes entre guillemets s'ils contiennent « : ».</li>
+    <li>Un champ manquant ou mal écrit fait <b>échouer la construction</b> avec un message qui nomme le fichier : c'est voulu, rien de cassé n'est publié.</li>
+    <li>Les schémas sont dans <code>src/content.config.ts</code>. Ajouter un champ = l'ajouter là, dans <code>public/admin/config.yml</code> et dans la page qui l'affiche.</li>
+  </ul>
+</section>
+
+<!-- ═════════════════════ 06 ═════════════════════ -->
+<section class="chapter">
+  <div class="chap-head"><span class="kicker">Chapitre 06</span><h2>Les réglages (fichiers JSON)</h2>
+    <p>Tous modifiables depuis l'admin. Ils sont lus au moment de la construction : un changement est en ligne une à deux minutes après l'enregistrement.</p></div>
+  <h3><code>src/data/downloads.json</code> · admin « Téléchargements »</h3>
+  <table>
+    <tr><th>Champ</th><th>Effet</th></tr>
+    <tr><td><code>open</code></td><td><code>true</code> : téléchargements ouverts. <code>false</code> : pause partout (boutons, bandeau, section, adresses <code>/telecharger/…</code>).</td></tr>
+    <tr><td><code>title</code>, <code>reason</code></td><td>Titre et explication affichés pendant la pause.</td></tr>
+    <tr><td><code>until</code></td><td>Date de reprise <code>AAAA-MM-JJ</code>, ou vide.</td></tr>
+  </table>
+  <h3><code>src/data/banner.json</code> · admin « Bandeau »</h3>
+  <p><code>enabled</code>, <code>text</code>, <code>linkLabel</code>, <code>link</code>. Pendant une pause, le bandeau de pause prend la place de ce bandeau.</p>
+  <h3><code>src/data/site.json</code> · admin « Réglages du site »</h3>
+  <table>
+    <tr><th>Champ</th><th>Utilisé par</th></tr>
+    <tr><td><code>beta</code> {active, label, start, end}</td><td>Pastilles et mentions de la bêta.</td></tr>
+    <tr><td><code>contactEmail</code></td><td>Contact, « Me prévenir », pages légales.</td></tr>
+    <tr><td><code>requirements</code> {ram, ramShort, os}</td><td>Accueil et section Télécharger.</td></tr>
+    <tr><td><code>fallbackVersion</code></td><td>Version affichée et liens de secours si GitHub ne répond pas. <b>À mettre à jour à chaque version.</b></td></tr>
+    <tr><td><code>releasesRepo</code></td><td>Dépôt où chercher les fichiers d'installation (<code>Epirhos/jema-releases</code>).</td></tr>
+    <tr><td><code>siteUrl</code></td><td>Adresse publique ; Umami ne mesure que ce domaine.</td></tr>
+    <tr><td><code>analytics</code> {umamiWebsiteId, umamiSrc}</td><td>Mesure d'audience. Identifiant vide = aucune mesure.</td></tr>
+  </table>
+  <p><code>src/data/guide-parcours.json</code> est généré par <code>npm run sync:guide</code> : ne pas le modifier.</p>
+</section>
+
+<!-- ═════════════════════ 07 ═════════════════════ -->
+<section class="chapter">
+  <div class="chap-head"><span class="kicker">Chapitre 07</span><h2>Modifier l'accueil et les textes fixes</h2>
+    <p>Les textes de l'accueil sont dans le code (ils changent rarement et demandent du soin). Chaque section est un fichier.</p></div>
+  <table>
+    <tr><th>Section</th><th>Fichier</th><th>Contient</th></tr>
+    <tr><td>Barre du haut</td><td><code>src/components/Navbar.jsx</code></td><td>Liens du menu (<code>LINKS</code>), bouton Télécharger / « Bientôt de retour ».</td></tr>
+    <tr><td>Premier écran</td><td><code>astro/Hero.astro</code></td><td>Slogan « Racontez, Jema s'occupe du reste. », sous-titre, gros bouton, page annotée, preuves.</td></tr>
+    <tr><td>Comment ça marche</td><td><code>astro/Steps.astro</code></td><td>Les 3 étapes (<code>#comment</code>).</td></tr>
+    <tr><td>Visite de l'atelier</td><td><code>astro/Tour.astro</code></td><td>Captures × thèmes (chapitre 09).</td></tr>
+    <tr><td>Fonctions</td><td><code>astro/Atelier.astro</code></td><td>Les 6 fonctions présentées.</td></tr>
+    <tr><td>Télécharger</td><td><code>astro/Download.astro</code></td><td>Cartes par système, encart de pause, aide à l'installation.</td></tr>
+    <tr><td>Contact</td><td><code>astro/Contact.astro</code></td><td>Formulaire (ouvre un e-mail prérempli).</td></tr>
+    <tr><td>Pied de page</td><td><code>astro/Footer.astro</code></td><td>Liens <code>PRODUCT</code> et légaux.</td></tr>
+    <tr><td>Titre de l'onglet, partage</td><td><code>src/layouts/Base.astro</code></td><td>Titre et description par défaut, balises Open Graph.</td></tr>
+  </table>
+  <h4>Ajouter un lien dans le menu ou le pied de page</h4>
+<pre><span class="c">// src/components/astro/Footer.astro (ou LINKS dans Navbar.jsx)</span>
+{ href: url('/ma-page'), label: 'Ma page' },</pre>
+  <div class="note"><b>Règle des 2 secondes</b>Le premier écran doit dire en un regard ce qu'est Jema et comment la télécharger. Avant de modifier le Hero, demandez-vous si quelqu'un qui lit en diagonale comprend encore les deux.</div>
+</section>
+
+<!-- ═════════════════════ 08 ═════════════════════ -->
+<section class="chapter">
+  <div class="chap-head"><span class="kicker">Chapitre 08</span><h2>Identité visuelle</h2>
+    <p>Direction « Manuscrit » : une feuille posée sur un bureau, Jema qui annote dans la marge. Même ADN que l'application, sans la copier (sauf les captures, qui doivent être exactes).</p></div>
+  <div class="two">
+    <div>
+      <h4>Couleurs (<code>src/styles/global.css</code>, <code>:root</code>)</h4>
+      <table>
+        <tr><td><code>--desk</code> #ebe7de</td><td>Le bureau (fond)</td></tr>
+        <tr><td><code>--paper</code> #fdfbf7</td><td>La feuille</td></tr>
+        <tr><td><code>--ink</code> #1d1a17</td><td>Texte, bouton principal</td></tr>
+        <tr><td><code>--mute</code> #635d54</td><td>Texte secondaire</td></tr>
+        <tr><td><code>--jema</code> #4338ca</td><td>Jema, l'IA, les liens</td></tr>
+        <tr><td><code>--ochre</code> #9b4a1e</td><td>Surtitres, corrections</td></tr>
+        <tr><td><code>--rule</code></td><td>Filets</td></tr>
+      </table>
+    </div>
+    <div>
+      <h4>Polices (auto-hébergées, @fontsource)</h4>
+      <table>
+        <tr><td>Newsreader</td><td>Titres (<code>--f-disp</code>)</td></tr>
+        <tr><td>Inter</td><td>Interface (<code>--f-ui</code>)</td></tr>
+        <tr><td>Merriweather</td><td>Texte de manuscrit (<code>--f-read</code>)</td></tr>
+      </table>
+      <h4>Classes utiles</h4>
+      <p><code>.wrap</code> (largeur), <code>.kicker</code> (surtitre ocre), <code>.display</code> / <code>.h2</code> / <code>.lead</code>, <code>.btn .btn--ink</code> / <code>.btn--line</code>, <code>.btn-big</code>, <code>.sheet</code> (feuille), <code>.note</code> (remarque de marge), <code>.prose-jema</code> (texte Markdown), <code>data-reveal</code> (apparition au défilement).</p>
+    </div>
+  </div>
+  <ul>
+    <li><b>Logo</b> : <code>src/components/Logo.jsx</code> (pile de feuilles + « Jema ») ; icône d'onglet <code>public/favicon.svg</code>. Mascotte : <code>astro/Mascot.astro</code>.</li>
+    <li><b>L'admin</b> reprend les mêmes valeurs dans <code>public/admin/theme.css</code> (variables <code>--j-*</code>) : modifiez les deux ensemble.</li>
+    <li><b>Accessibilité</b> : contraste du texte au moins 4,5:1, focus visible, zones cliquables d'au moins 44 px, animations coupées si l'utilisateur le demande (<code>prefers-reduced-motion</code>).</li>
+  </ul>
+</section>
+
+<!-- ═════════════════════ 09 ═════════════════════ -->
+<section class="chapter">
+  <div class="chap-head"><span class="kicker">Chapitre 09</span><h2>Captures de l'application</h2>
+    <p>La visite de l'atelier montre de vraies captures de Jema. Une capture qui ne ressemble pas à l'application est pire que pas de capture : refaites-les quand l'interface change.</p></div>
+  <h3>Le projet de démonstration</h3>
+  <p>« L'Atelier de reliure » : 4 chapitres (La crue, Ilyès, Le registre, La clé), 5 personnages (Maëlle Guérin, Ilyès Benali, Armand, Lucienne Benali, Yves Guérin), 2 lieux, et une incohérence volontaire (le cahier de 1974 relié à Rennes alors que Lucienne était à Saint-Malo) pour montrer la Continuité. Il se trouve dans <code>Documents/Jema Univers/L'Atelier de reliure</code>.</p>
+  <h3>Refaire une capture</h3>
+  <ol class="steps">
+    <li>Ouvrez Jema (version installée), le projet de démonstration, fenêtre en <b>1440 × 900</b> (ou plein écran sur un écran de cette taille).</li>
+    <li>Pour chaque vue et chaque thème (Clair, Sombre, Éditorial), capturez la fenêtre.</li>
+    <li>Nommez <code>&lt;vue&gt;-&lt;thème&gt;.png</code> : <code>ecrire-light.png</code>, <code>univers-dark.png</code>, <code>constellation-editorial.png</code>…</li>
+    <li>Déposez-les dans <code>src/assets/captures/</code> (elles remplacent les anciennes), puis <code>npm run build</code>. Astro les convertit en WebP.</li>
+  </ol>
+  <h3>Ajouter une vue</h3>
+  <p>Ajoutez une ligne au tableau <code>VIEWS</code> de <code>src/components/astro/Tour.astro</code> (<code>id</code>, <code>label</code>, <code>caption</code>) et déposez au minimum <code>&lt;id&gt;-light.png</code>. Une vue sans capture « light » est ignorée automatiquement.</p>
+</section>
+
+<!-- ═════════════════════ 10 ═════════════════════ -->
+<section class="chapter">
+  <div class="chap-head"><span class="kicker">Chapitre 10</span><h2>Téléchargements et versions</h2>
+    <p>Le site ne fabrique jamais les fichiers d'installation : il les trouve sur GitHub.</p></div>
+  <h3>La chaîne complète</h3>
+  <ol class="steps">
+    <li>Dans <code>jema-editor_v2</code>, un tag <code>v4.1.0</code> poussé sur GitHub déclenche <code>.github/workflows/build-app.yml</code> : compilation Windows, macOS, Linux.</li>
+    <li>Les fichiers sont publiés comme « Release » dans <code>Epirhos/jema-releases</code> (secret <code>GH_RELEASE_TOKEN</code>).</li>
+    <li>Sur le site, chaque bouton pointe vers <code>/telecharger/windows</code>, <code>/mac</code>, <code>/deb</code> ou <code>/appimage</code>.</li>
+    <li>La fonction Cloudflare (<code>functions/telecharger/[os].js</code>) lit la dernière Release publique (API GitHub, mise en cache 10 min) et redirige vers le fichier. Les Releases en brouillon ou « pre-release » sont ignorées.</li>
+    <li>Si GitHub ne répond pas, elle reconstruit l'adresse depuis <code>fallbackVersion</code>. Si les téléchargements sont en pause, elle renvoie vers <code>/#telecharger</code>.</li>
+  </ol>
+  <h3>Noms de fichiers attendus</h3>
+  <table>
+    <tr><th>Système</th><th>Repéré par</th><th>Nom produit par electron-builder</th></tr>
+    <tr><td>Windows</td><td>fin en <code>.exe</code></td><td><code>jema-editor-4.1.0-setup.exe</code></td></tr>
+    <tr><td>macOS</td><td><code>.dmg</code></td><td><code>jema-editor-4.1.0.dmg</code></td></tr>
+    <tr><td>Linux .deb</td><td><code>.deb</code></td><td><code>jema-editor_4.1.0_amd64.deb</code></td></tr>
+    <tr><td>Linux AppImage</td><td><code>.appimage</code></td><td><code>jema-editor-4.1.0.AppImage</code></td></tr>
+  </table>
+  <div class="note warn"><b>Ne changez pas ces noms à la légère</b>Ils dépendent de <code>name</code> dans le <code>package.json</code> de l'app et d'<code>artifactName</code> dans <code>electron-builder.yml</code>. Si vous les changez, adaptez <code>fallbackUrl()</code> dans la fonction et <code>fallbackUrls()</code> dans <code>src/lib/releases.js</code>.</div>
+  <h3>Publier une version : la liste</h3>
+  <ul class="check">
+    <li>La CI de l'app (<code>ci.yml</code>) est verte ; l'app est testée en local.</li>
+    <li>Tag <code>vX.Y.Z</code> poussé ; la Release apparaît dans <code>jema-releases</code> avec les 4 fichiers (et les <code>latest*.yml</code> des mises à jour automatiques).</li>
+    <li>Admin → Nouveautés → nouvelle fiche <code>X.Y.Z</code> (le numéro doit correspondre).</li>
+    <li>Admin → Réglages → Version de secours = <code>vX.Y.Z</code>.</li>
+    <li>Captures refaites si l'interface a changé (chapitre 09).</li>
+    <li>Facultatif : bandeau « La version X.Y est disponible », article de journal.</li>
+    <li>Vérifier sur le site : les 4 adresses <code>/telecharger/…</code> donnent la nouvelle version.</li>
+  </ul>
+  <h3>Retirer une version défectueuse</h3>
+  <p>Admin → Téléchargements → pause (le site explique). Puis sur GitHub, <code>jema-releases</code> → la Release → Edit → <i>Save as draft</i> : elle disparaît du site <b>et</b> des mises à jour automatiques de l'app, qui reviennent à la précédente Release publique.</p>
+</section>
+
+<!-- ═════════════════════ 11 ═════════════════════ -->
+<section class="chapter">
+  <div class="chap-head"><span class="kicker">Chapitre 11</span><h2>Mode d'emploi de l'application</h2>
+    <p>Une seule source : <code>jema-editor_v2/docs/guide/</code>. Le site en garde une copie, mise à jour par un script.</p></div>
+<pre>npm run sync:guide                                  <span class="c"># si les deux dépôts sont côte à côte</span>
+npm run sync:guide -- "C:\chemin\vers\jema-editor_v2"   <span class="c"># sinon</span></pre>
+  <ul>
+    <li>Recopie chaque fiche <code>docs/guide/*.md</code> vers <code>src/content/guide/</code> et le sommaire <code>_parcours.md</code> vers <code>src/data/guide-parcours.json</code>.</li>
+    <li>Remplace les jetons <code>[[id]]</code> par le raccourci clavier lu dans <code>src/renderer/src/lib/commands.js</code> de l'app (affiché en touches).</li>
+    <li>Signale les raccourcis inconnus. Les fichiers générés sont enregistrés dans le dépôt : Cloudflare n'a pas besoin du dépôt de l'app.</li>
+  </ul>
+  <p>À faire après chaque version de l'app qui modifie le guide, puis <code>npm run build</code>, commit, envoi.</p>
+</section>
+
+<!-- ═════════════════════ 12 ═════════════════════ -->
+<section class="chapter">
+  <div class="chap-head"><span class="kicker">Chapitre 12</span><h2>L'administration (Sveltia CMS)</h2>
+    <p>Une application web chargée par <code>public/admin/index.html</code>, qui lit et écrit les fichiers du dépôt par l'API GitHub. Aucun serveur à nous.</p></div>
+  <table>
+    <tr><th>Fichier</th><th>Rôle</th></tr>
+    <tr><td><code>public/admin/index.html</code></td><td>Charge Sveltia (version épinglée <b>0.256.1</b> via unpkg), le thème, et ajoute le bouton « Mode d'emploi ».</td></tr>
+    <tr><td><code>public/admin/config.yml</code></td><td>Dépôt et branche, rubriques, champs, aides, messages de commit.</td></tr>
+    <tr><td><code>public/admin/theme.css</code></td><td>Habillage aux couleurs du site (variables <code>--sui-*</code> + quelques sélecteurs).</td></tr>
+    <tr><td><code>public/admin/preview.css</code></td><td>Mise en page de l'aperçu des contenus.</td></tr>
+    <tr><td><code>public/admin/aide/</code></td><td>Mode d'emploi de l'admin (page HTML + captures). L'ouvrir sur la bonne fiche : la table <code>SECTIONS</code> d'<code>index.html</code>.</td></tr>
+  </table>
+  <h3>Ajouter un champ</h3>
+  <ol class="steps">
+    <li>Déclarez-le dans <code>src/content.config.ts</code> (contenus) ou utilisez-le depuis le JSON (réglages).</li>
+    <li>Ajoutez-le dans <code>config.yml</code> (<code>name</code>, <code>label</code>, <code>widget</code>, <code>hint</code>). Widgets courants : string, text, markdown, boolean, datetime, select, object, image.</li>
+    <li>Affichez-le dans la page ou le composant concerné. Construisez, vérifiez, envoyez.</li>
+  </ol>
+  <h3>Mettre à jour Sveltia</h3>
+  <p>Changez le numéro dans l'adresse du script (<code>@sveltia/cms@0.256.1</code>). Testez sur l'aperçu de branche (chapitre 15) : connexion, ouverture d'une fiche, enregistrement. Si l'habillage se dégrade, c'est un sélecteur de <code>theme.css</code> qui a changé : l'admin reste utilisable, corrigez à loisir.</p>
+  <h3>Banc d'essai sans jeton</h3>
+  <p>Pour travailler l'apparence de l'admin sans toucher au dépôt : copiez <code>public/admin</code> dans un dossier de test, remplacez le <code>backend</code> de <code>config.yml</code> par <code>name: test-repo</code>, ajoutez dans <code>index.html</code> <code>&lt;link rel="cms-seed-url" href="/seed/manifest.json"&gt;</code> (un fichier <code>{"files":["src/data/site.json", …]}</code> à côté des fichiers à charger), servez le dossier et cliquez « Start Demo ». Les modifications restent dans le navigateur.</p>
+  <h3>Connexion</h3>
+  <ul>
+    <li><b>Aujourd'hui</b> : jeton d'accès GitHub (voir chapitre 02 et la fiche « Bien démarrer » du mode d'emploi).</li>
+    <li><b>Plus tard</b>, bouton « Se connecter avec GitHub » : déployer le relais gratuit <code>sveltia-cms-auth</code> sur Cloudflare Workers (instructions sur github.com/sveltia/sveltia-cms-auth), créer une « OAuth App » GitHub pointant vers lui, puis renseigner <code>base_url</code> dans <code>config.yml</code>.</li>
+  </ul>
+</section>
+
+<!-- ═════════════════════ 13 ═════════════════════ -->
+<section class="chapter">
+  <div class="chap-head"><span class="kicker">Chapitre 13</span><h2>Mesure d'audience (Umami)</h2>
+    <p>Sans cookie, sans bannière de consentement. Ne mesure que <code>jema.app</code> (attribut <code>data-domains</code>) : les aperçus et le site de travail ne faussent pas les chiffres.</p></div>
+  <p>Automatique : visites, pages vues, provenance (sites, campagnes UTM), pays, appareils, temps passé. En plus, ces <b>événements</b> :</p>
+  <table>
+    <tr><th>Événement</th><th>Quand</th><th>Où</th></tr>
+    <tr><td><code>lecture</code> {profondeur, page}</td><td>25, 50, 75, 100 % de la page lus</td><td><code>Analytics.astro</code></td></tr>
+    <tr><td><code>section-vue</code> {section}</td><td>Une section de l'accueil vraiment vue (40 % à l'écran)</td><td><code>Analytics.astro</code></td></tr>
+    <tr><td><code>fichier</code> {os}</td><td>Un fichier d'installation demandé, même depuis un lien partagé</td><td>fonction Cloudflare</td></tr>
+    <tr><td><code>fichier-en-pause</code> {os}</td><td>Quelqu'un a voulu télécharger pendant une pause</td><td>fonction Cloudflare</td></tr>
+    <tr><td><code>hero-telecharger</code>, <code>nav-telecharger</code>, <code>telecharger</code>, <code>version-telecharger</code></td><td>Clics sur les boutons de téléchargement</td><td>composants</td></tr>
+    <tr><td><code>hero-envoyer-lien</code></td><td>Sur téléphone, « M'envoyer le lien »</td><td><code>Hero.astro</code></td></tr>
+    <tr><td><code>hero-accepter</code>, <code>hero-ignorer</code></td><td>Essai de la page annotée</td><td><code>Hero.astro</code></td></tr>
+    <tr><td><code>hero-nouveautes</code></td><td>Clic sur « Nouveau · vX »</td><td><code>Hero.astro</code></td></tr>
+    <tr><td><code>visite-vue</code>, <code>visite-theme</code></td><td>Onglets de la visite de l'atelier</td><td><code>Tour.astro</code></td></tr>
+    <tr><td><code>pause-me-prevenir</code>, <code>nav-pause</code></td><td>Demandes de rappel pendant une pause</td><td>composants</td></tr>
+    <tr><td><code>contact-envoyer</code></td><td>Envoi du formulaire de contact</td><td><code>Contact.astro</code></td></tr>
+  </table>
+  <p><b>Ajouter un événement</b> : sur n'importe quel lien ou bouton, <code>data-umami-event="nom"</code> (et <code>data-umami-event-cle="valeur"</code> pour un détail). Il apparaît dans Umami → Événements.</p>
+  <p><b>Lire les chiffres</b> : taux de téléchargement = <code>fichier</code> ÷ visiteurs ; repérer où l'on décroche avec <code>lecture</code> et <code>section-vue</code> ; comparer les sources (référents) qui amènent des téléchargements.</p>
+</section>
+
+<!-- ═════════════════════ 14 ═════════════════════ -->
+<section class="chapter">
+  <div class="chap-head"><span class="kicker">Chapitre 14</span><h2>Hébergement et domaine</h2></div>
+  <h3>Le projet Cloudflare Pages</h3>
+  <table>
+    <tr><th>Réglage</th><th>Valeur</th></tr>
+    <tr><td>Dépôt</td><td><code>Epirhos/jema_website</code></td></tr>
+    <tr><td>Production branch</td><td><code>main</code></td></tr>
+    <tr><td>Framework · Build command · Output</td><td>Astro · <code>npm run build</code> · <code>dist</code></td></tr>
+    <tr><td>Variables</td><td><code>SITE_URL=https://jema.app</code>, <code>NODE_VERSION=22</code></td></tr>
+    <tr><td>Build watch paths (inclure)</td><td><code>src/*</code>, <code>public/*</code>, <code>functions/*</code>, <code>package.json</code>, <code>package-lock.json</code>, <code>astro.config.mjs</code>, <code>tailwind.config.js</code></td></tr>
+  </table>
+  <ul>
+    <li><b>Aperçus</b> : chaque branche a son adresse, <code>https://&lt;branche&gt;.jema.pages.dev</code> (ici <code>bulle.jema.pages.dev</code>). Les adresses à chiffres (<code>73840432.jema.pages.dev</code>) sont des versions figées.</li>
+    <li><b>Revenir en arrière</b> : Workers &amp; Pages → <code>jema</code> → Deployments → une version précédente → <i>Rollback to this deployment</i>. Immédiat, sans toucher au code.</li>
+    <li><b>Offre gratuite</b> : 500 constructions par mois, bande passante illimitée, 100 000 appels de fonction par jour. Aucune carte bancaire nécessaire.</li>
+  </ul>
+  <h3>Relier jema.app (une seule fois)</h3>
+  <ol class="steps">
+    <li>Cloudflare → <i>Add a domain</i> → <code>jema.app</code>, offre Free. Notez les deux serveurs de noms affichés.</li>
+    <li>Name.com → My Domains → <code>jema.app</code> → Nameservers : remplacez les serveurs existants par ceux de Cloudflare.</li>
+    <li>Attendez l'e-mail « jema.app is now active » (15 min à 24 h).</li>
+    <li>Pages → <code>jema</code> → Custom domains → ajoutez <code>jema.app</code> puis <code>www.jema.app</code>. HTTPS est automatique (obligatoire en <code>.app</code>).</li>
+  </ol>
+  <div class="note"><b>Une adresse e-mail @jema.app plus tard ?</b>Les réglages DNS se font alors chez Cloudflare (enregistrements MX), plus chez Name.com. Cloudflare Email Routing peut rediriger gratuitement vers Gmail.</div>
+</section>
+
+<!-- ═════════════════════ 15 ═════════════════════ -->
+<section class="chapter">
+  <div class="chap-head"><span class="kicker">Chapitre 15</span><h2>Branches et mise en ligne</h2></div>
+  <table>
+    <tr><th>Branche</th><th>Rôle</th><th>Visible sur</th></tr>
+    <tr><td><code>main</code></td><td>Production</td><td><code>jema.app</code> (et <code>jema.pages.dev</code>)</td></tr>
+    <tr><td><code>bulle</code></td><td>Test : nouveautés en préparation</td><td><code>bulle.jema.pages.dev</code></td></tr>
+  </table>
+  <h3>Faire une modification de code</h3>
+<pre>git checkout bulle && git pull
+<span class="c"># … modifications …</span>
+npm run build                       <span class="c"># doit finir par « Complete! »</span>
+git add -A && git commit -m "fix(site): ce qui change"
+git push                            <span class="c"># aperçu sur bulle.jema.pages.dev en ~1 min</span></pre>
+  <p>Quand l'aperçu est validé, fusionnez dans <code>main</code> (Pull Request sur GitHub : <i>Compare &amp; pull request</i>, puis <i>Merge</i>). La production se met à jour seule.</p>
+  <div class="note warn"><b>L'admin écrit dans une branche précise</b>Le champ <code>branch</code> de <code>config.yml</code> décide où vont les publications de l'admin. Tant qu'il vaut <code>bulle</code>, rien de ce qui est publié depuis l'admin n'arrive sur jema.app. Si vous modifiez le code en même temps que quelqu'un publie depuis l'admin, faites <code>git pull</code> avant <code>git push</code>.</div>
+</section>
+
+<!-- ═════════════════════ 16 ═════════════════════ -->
+<section class="chapter">
+  <div class="chap-head"><span class="kicker">Chapitre 16</span><h2>Mettre à jour les dépendances</h2>
+    <p>Une fois par trimestre suffit. Toujours sur <code>bulle</code>, jamais directement sur <code>main</code>.</p></div>
+<pre>npm outdated                 <span class="c"># liste ce qui est périmé</span>
+npm update                   <span class="c"># mises à jour mineures (sans risque en principe)</span>
+npx @astrojs/upgrade         <span class="c"># Astro et ses intégrations, y compris versions majeures</span>
+npm run build && npm run preview</pre>
+  <h3>Vérifier après une mise à jour</h3>
+  <ul class="check">
+    <li>La construction se termine sans erreur ni avertissement nouveau.</li>
+    <li>Accueil : bouton de téléchargement (système détecté), page annotée (Accepter / Ignorer), visite (onglets, thèmes), menu mobile.</li>
+    <li>Pages : nouveautés, journal, guide, FAQ, légales, 404.</li>
+    <li>Aperçu Cloudflare : <code>/telecharger/windows</code> redirige, <code>/admin</code> s'ouvre et enregistre.</li>
+  </ul>
+  <div class="note"><b>Changements majeurs à prévoir</b>Tailwind 4 et React 19 demandent des adaptations : à faire comme un petit projet, pas comme une mise à jour de routine. Les polices <code>@fontsource</code> copiées pour l'admin (<code>public/admin/fonts</code>) ne se mettent pas à jour seules ; ce n'est pas nécessaire.</div>
+</section>
+
+<!-- ═════════════════════ 17 ═════════════════════ -->
+<section class="chapter">
+  <div class="chap-head"><span class="kicker">Chapitre 17</span><h2>Obligations légales</h2>
+    <p>Site édité en France : loi pour la confiance dans l'économie numérique (LCEN) et RGPD.</p></div>
+  <table>
+    <tr><th>Page</th><th>À mettre à jour quand</th></tr>
+    <tr><td>Mentions légales</td><td>L'éditeur, l'adresse de contact ou l'hébergeur changent.</td></tr>
+    <tr><td>Confidentialité</td><td>Un outil qui reçoit des données des visiteurs est ajouté ou retiré (hébergeur, mesure d'audience, formulaire, police externe, vidéo intégrée…).</td></tr>
+    <tr><td>Licence bêta</td><td>Les conditions d'utilisation de la bêta évoluent ; à remplacer à la sortie de la version stable.</td></tr>
+  </table>
+  <ul>
+    <li>Ajoutez la date dans le champ « Dernière mise à jour » à chaque modification.</li>
+    <li>Tant qu'aucun cookie ni traceur n'est déposé, aucune bannière de consentement n'est nécessaire. Ajouter un outil qui en dépose (vidéo YouTube, publicité, chat) impose une bannière : préférez des alternatives sans cookie.</li>
+  </ul>
+</section>
+
+<!-- ═════════════════════ 18 ═════════════════════ -->
+<section class="chapter">
+  <div class="chap-head"><span class="kicker">Chapitre 18</span><h2>Dépannage</h2></div>
+  <table>
+    <tr><th>Symptôme</th><th>Cause probable</th><th>Solution</th></tr>
+    <tr><td>Construction rouge sur Cloudflare</td><td>Contenu invalide (champ manquant, date mal écrite) ou erreur de code</td><td>Ouvrir le déploiement → journal : le nom du fichier fautif y figure. Corriger dans l'admin ou le code. En urgence : Rollback.</td></tr>
+    <tr><td>Une modification n'apparaît pas</td><td>Construction en cours, cache du navigateur, ou mauvaise branche</td><td>Attendre 2 min, Ctrl+F5. Vérifier la branche de l'admin (<code>config.yml</code>).</td></tr>
+    <tr><td><code>/telecharger/…</code> renvoie une erreur 404</td><td>Fonction absente du déploiement</td><td>Vérifier que <code>functions/</code> est à la racine du dépôt et inclus dans les « Build watch paths ».</td></tr>
+    <tr><td>Le téléchargement donne une ancienne version</td><td>Cache de 10 min, ou Release marquée « pre-release » ou brouillon</td><td>Attendre 10 min ; vérifier la Release dans <code>jema-releases</code>.</td></tr>
+    <tr><td>Fichier introuvable sur GitHub (404)</td><td>Nom de fichier différent de ceux attendus</td><td>Chapitre 10, « Noms de fichiers attendus ».</td></tr>
+    <tr><td>Admin : « Bad credentials » ou page de connexion en boucle</td><td>Jeton expiré ou révoqué</td><td>Nouveau jeton (chapitre 02).</td></tr>
+    <tr><td>Admin : page blanche</td><td>unpkg indisponible ou version de Sveltia retirée</td><td>Recharger plus tard ; sinon remplacer l'adresse par <code>https://cdn.jsdelivr.net/npm/@sveltia/cms@0.256.1/dist/sveltia-cms.js</code>.</td></tr>
+    <tr><td>Umami ne compte rien</td><td>Domaine différent de <code>siteUrl</code>, bloqueur de publicité, signal « Ne pas suivre »</td><td>Normal sur les aperçus. Sur jema.app, vérifier l'identifiant dans les réglages.</td></tr>
+    <tr><td>Images de la visite absentes</td><td>Pas de fichier <code>&lt;vue&gt;-light.png</code></td><td>Chapitre 09.</td></tr>
+    <tr><td><code>npm run build</code> échoue après une mise à jour</td><td>Version incompatible</td><td><code>git checkout package.json package-lock.json</code> puis <code>npm ci</code> pour revenir en arrière.</td></tr>
+  </table>
+</section>
+
+<!-- ═════════════════════ 19 ═════════════════════ -->
+<section class="chapter">
+  <div class="chap-head"><span class="kicker">Chapitre 19</span><h2>Aide-mémoire</h2></div>
+  <div class="two">
+    <div class="box">
+      <h4>Je veux…</h4>
+      <table>
+        <tr><td>Mettre en pause</td><td>Admin → Téléchargements</td></tr>
+        <tr><td>Annoncer une version</td><td>Admin → Nouveautés + Réglages (version de secours)</td></tr>
+        <tr><td>Écrire un article</td><td>Admin → Journal</td></tr>
+        <tr><td>Afficher une annonce</td><td>Admin → Bandeau</td></tr>
+        <tr><td>Changer le slogan</td><td><code>Hero.astro</code> + <code>Base.astro</code></td></tr>
+        <tr><td>Ajouter un lien de menu</td><td><code>Navbar.jsx</code> / <code>Footer.astro</code></td></tr>
+        <tr><td>Changer une couleur</td><td><code>global.css</code> + <code>admin/theme.css</code></td></tr>
+        <tr><td>Refaire les captures</td><td><code>src/assets/captures/</code></td></tr>
+        <tr><td>Mettre à jour le guide</td><td><code>npm run sync:guide</code></td></tr>
+        <tr><td>Annuler un déploiement</td><td>Cloudflare → Deployments → Rollback</td></tr>
+      </table>
+    </div>
+    <div class="box">
+      <h4>Adresses</h4>
+      <table>
+        <tr><td>Site</td><td>jema.app</td></tr>
+        <tr><td>Aperçu de test</td><td>bulle.jema.pages.dev</td></tr>
+        <tr><td>Admin</td><td>jema.app/admin</td></tr>
+        <tr><td>Code du site</td><td>github.com/Epirhos/jema_website</td></tr>
+        <tr><td>Versions</td><td>github.com/Epirhos/jema-releases</td></tr>
+        <tr><td>Statistiques</td><td>cloud.umami.is</td></tr>
+        <tr><td>Hébergement</td><td>dash.cloudflare.com</td></tr>
+        <tr><td>Domaine</td><td>name.com</td></tr>
+        <tr><td>Sveltia CMS</td><td>github.com/sveltia/sveltia-cms</td></tr>
+        <tr><td>Astro</td><td>docs.astro.build</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════════════════ 20 ═════════════════════ -->
+<section class="chapter">
+  <div class="chap-head"><span class="kicker">Chapitre 20</span><h2>Reste à faire au lancement</h2>
+    <p>État au 17 novembre 2026. Cochez au fur et à mesure.</p></div>
+  <ul class="check">
+    <li>Domaine <code>jema.app</code> relié à Cloudflare (chapitre 14), puis vérifier <code>https://jema.app</code> et <code>https://www.jema.app</code>.</li>
+    <li>Relire les textes rédigés à partir du code : fiche v4.0.0, annonce de la bêta, FAQ.</li>
+    <li>Captures « Jema en action » (réponse de Jema, Continuité) depuis l'app installée, à ajouter à la visite.</li>
+    <li>Dans <code>public/admin/config.yml</code> : <code>branch: main</code>.</li>
+    <li>Supprimer <code>.github/workflows/deploy.yml</code> (ancien hébergement GitHub Pages) et désactiver GitHub Pages dans les réglages du dépôt.</li>
+    <li>Fusionner <code>bulle</code> dans <code>main</code> : le nouveau site passe en production.</li>
+    <li>Vérifier dans Umami les premières visites et l'événement <code>fichier</code>.</li>
+    <li>Plus tard : vrai formulaire de contact et « Me prévenir » (Web3Forms ou fonction Cloudflare), connexion à l'admin par bouton GitHub, courtes vidéos de l'app.</li>
+  </ul>
+</section>
+
+</body>
+</html>
