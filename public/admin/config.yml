@@ -185,7 +185,7 @@ collections:
               - { name: label, label: "Pastille", widget: string }
               - { name: start, label: "Début (AAAA-MM-JJ)", widget: string }
               - { name: end, label: "Fin (AAAA-MM-JJ)", widget: string }
-          - { name: contactEmail, label: "E-mail de contact", widget: string, hint: "Reçoit les demandes « Me prévenir » et les messages de contact." }
+          - { name: contactEmail, label: "E-mail de contact", widget: string, readonly: true, hint: "Verrouillé par sécurité : modifiable seulement dans le code (scripts/garde.mjs), pour qu'un accès volé à l'admin ne puisse pas détourner les messages des visiteurs." }
           - name: requirements
             label: Configuration requise
             widget: object
@@ -194,12 +194,12 @@ collections:
               - { name: ramShort, label: "Mémoire (version courte)", widget: string }
               - { name: os, label: "Systèmes", widget: string }
           - { name: fallbackVersion, label: "Version de secours", widget: string, hint: "Utilisée seulement si GitHub ne répond pas. Exemple : v4.0.0. À mettre à jour à chaque nouvelle version." }
-          - { name: releasesRepo, label: "Dépôt GitHub des versions", widget: string, hint: "Ne pas modifier sans raison : c'est là que le site cherche les fichiers d'installation." }
-          - { name: siteUrl, label: "Adresse du site", widget: string, hint: "Ne pas modifier sans raison." }
+          - { name: releasesRepo, label: "Dépôt GitHub des versions", widget: string, readonly: true, hint: "Verrouillé par sécurité : les téléchargements ne peuvent venir que de ce dépôt." }
+          - { name: siteUrl, label: "Adresse du site", widget: string, readonly: true, hint: "Verrouillé par sécurité." }
           - name: analytics
             label: Mesure d'audience (Umami)
             widget: object
             collapsed: true
             fields:
               - { name: umamiWebsiteId, label: "Identifiant du site Umami", widget: string, required: false, hint: "Vide = mesure désactivée." }
-              - { name: umamiSrc, label: "Adresse du script Umami", widget: string }
+              - { name: umamiSrc, label: "Adresse du script Umami", widget: string, readonly: true, hint: "Verrouillé par sécurité : seul le script officiel d'Umami est autorisé." }

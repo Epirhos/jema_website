@@ -1,0 +1,148 @@
+# Sentinelle : surveille le dépôt et le site en ligne, et prévient en cas d'anomalie.
+#
+# Comment elle prévient : elle ouvre un ticket (« issue ») étiqueté « sentinelle » qui
+# mentionne le propriétaire du dépôt → e-mail de GitHub + notification de l'appli GitHub.
+# Facultatif : notification push sur téléphone via ntfy.sh si le secret ALERTE_NTFY
+# (https://ntfy.sh/<sujet-secret>) existe dans Settings → Secrets and variables → Actions.
+#
+# Pourquoi ici : un jeton d'admin volé (droit « Contents ») ne peut PAS modifier les
+# fichiers de .github/workflows (il faudrait le droit « Workflows »). Les valeurs
+# attendues ci-dessous sont donc hors de portée d'un accès volé à l'admin.
+# Elles doivent rester identiques à ATTENDU dans scripts/garde.mjs.
+name: Sentinelle
+
+on:
+  push:
+    branches: ['**']
+  schedule:
+    - cron: '17 */6 * * *'   # toutes les 6 heures
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+env:
+  DEPOT_VERSIONS: Epirhos/jema-releases
+  EMAIL_CONTACT: editor.jema@gmail.com
+  SITE_URL: https://jema.app
+  UMAMI_SRC: https://cloud.umami.is/script.js
+  SITES_SURVEILLES: https://jema.app https://bulle.jema.pages.dev
+
+jobs:
+  # ───────── À chaque envoi : qu'est-ce qui a changé ? ─────────
+  depot:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Examiner les changements
+        env:
+          AVANT: ${{ github.event.before }}
+          APRES: ${{ github.sha }}
+          BRANCHE: ${{ github.ref_name }}
+          AUTEUR: ${{ github.actor }}
+        run: |
+          set -u
+          if ! git cat-file -e "$AVANT^{commit}" 2>/dev/null; then AVANT="$(git rev-list --max-parents=0 "$APRES" | tail -1)"; fi
+          : > rapport.md
+
+          # 1) Fichiers sensibles (code des téléchargements, sécurité, admin, construction).
+          SENSIBLES=$(git diff --name-only "$AVANT" "$APRES" | grep -E '^(functions/|scripts/|src/server/|src/lib/(releases|downloads|url)\.js|src/components/astro/(Download|Hero|Contact|Analytics|Banner)\.astro|src/components/Navbar\.jsx|src/layouts/Base\.astro|public/admin/(index\.html|config\.yml|theme\.css)|public/_headers|package(-lock)?\.json|astro\.config\.mjs|\.github/)' || true)
+          if [ -n "$SENSIBLES" ]; then
+            { echo "### Fichiers sensibles modifiés"; echo; echo "$SENSIBLES" | sed 's/^/- `/; s/$/`/'; echo; } >> rapport.md
+          fi
+
+          # 2) Publications de l'admin (« contenu : … ») qui touchent autre chose que des contenus.
+          for c in $(git log --format='%H' --grep='^contenu : ' "$AVANT..$APRES"); do
+            HORS=$(git diff-tree --no-commit-id --name-only -r "$c" | grep -vE '^(src/content/|src/data/(site|banner|downloads)\.json$|public/images/uploads/)' || true)
+            if [ -n "$HORS" ]; then
+              { echo "### Publication de l'admin hors contenus (commit ${c:0:7})"; echo; echo "Un enregistrement fait depuis l'admin a modifié du code : signe possible d'un jeton volé."; echo; echo "$HORS" | sed 's/^/- `/; s/$/`/'; echo; } >> rapport.md
+            fi
+          done
+
+          # 3) Réglages sensibles.
+          for v in "releasesRepo:$DEPOT_VERSIONS" "contactEmail:$EMAIL_CONTACT" "siteUrl:$SITE_URL"; do
+            cle="${v%%:*}"; attendu="${v#*:}"
+            reel=$(jq -r ".$cle" src/data/site.json)
+            if [ "$reel" != "$attendu" ]; then echo "- Réglage \`$cle\` = \`$reel\` (attendu : \`$attendu\`)" >> rapport.md; fi
+          done
+          if [ "$(jq -r '.analytics.umamiSrc' src/data/site.json)" != "$UMAMI_SRC" ]; then echo "- Script de mesure d'audience modifié" >> rapport.md; fi
+          if ! grep -q "const DEPOT = '$DEPOT_VERSIONS'" 'functions/telecharger/[os].js'; then echo "- Le dépôt écrit en dur dans la fonction de téléchargement a changé" >> rapport.md; fi
+
+          if [ -s rapport.md ]; then
+            {
+              echo "Envoi sur la branche \`$BRANCHE\` par \`$AUTEUR\` : [voir les changements](${{ github.server_url }}/${{ github.repository }}/compare/${AVANT:0:12}...${APRES:0:12})."
+              echo
+              cat rapport.md
+              echo
+              echo "**Si c'est vous**, rien à faire : fermez ce ticket. **Sinon** : révoquez le jeton de l'admin (GitHub → Settings → Developer settings → Fine-grained tokens), changez votre mot de passe GitHub, puis annulez le déploiement dans Cloudflare (Deployments → Rollback). Voir le manuel, chapitre « Sécurité »."
+            } > alerte.md
+            echo "TITRE=Changement sensible sur $BRANCHE" >> "$GITHUB_ENV"
+          fi
+
+      - name: Prévenir
+        if: env.TITRE != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NTFY: ${{ secrets.ALERTE_NTFY }}
+          PROPRIO: ${{ github.repository_owner }}
+        run: |
+          gh label create sentinelle --color B60205 --description "Alertes de la sentinelle" --force -R "$GITHUB_REPOSITORY"
+          printf '\n\n@%s\n' "$PROPRIO" >> alerte.md
+          gh issue create -R "$GITHUB_REPOSITORY" --title "⚠️ Sentinelle : $TITRE" --label sentinelle --body-file alerte.md
+          if [ -n "$NTFY" ]; then curl -s -H "Title: Jema : $TITRE" -H "Priority: high" -H "Tags: warning" -d "Voir les tickets « sentinelle » du dépôt jema_website." "$NTFY" > /dev/null || true; fi
+
+  # ───────── Toutes les 6 heures : le site en ligne est-il intact ? ─────────
+  site:
+    if: github.event_name != 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Contrôler les sites en ligne
+        run: |
+          : > rapport.md
+          for SITE in $SITES_SURVEILLES; do
+            if ! curl -sf -o accueil.html --max-time 20 "$SITE/"; then
+              echo "Site $SITE injoignable : ignoré (domaine pas encore relié, ou panne passagère)."
+              continue
+            fi
+            # Téléchargements : uniquement le dépôt officiel, ou la pause.
+            for os in windows mac deb appimage; do
+              cible=$(curl -s -o /dev/null -w '%{redirect_url}' --max-time 20 "$SITE/telecharger/$os")
+              case "$cible" in
+                "https://github.com/$DEPOT_VERSIONS/releases/download/"*|"$SITE/#telecharger") ;;
+                *) echo "- $SITE/telecharger/$os redirige vers \`$cible\`" >> rapport.md ;;
+              esac
+            done
+            # Adresses e-mail : uniquement celle du contact.
+            for m in $(grep -oiE 'mailto:[^?"'"'"' >]+' accueil.html | sort -u); do
+              [ "${m#mailto:}" = "$EMAIL_CONTACT" ] || echo "- $SITE : adresse e-mail inattendue \`$m\`" >> rapport.md
+            done
+            # Scripts externes : uniquement la mesure d'audience.
+            for s in $(grep -oiE '<script[^>]+src="https?://[^"]+"' accueil.html | grep -oE 'https?://[^"]+' | sort -u); do
+              [ "$s" = "$UMAMI_SRC" ] || echo "- $SITE : script externe inattendu \`$s\`" >> rapport.md
+            done
+            # En-têtes de sécurité présents.
+            curl -sI --max-time 20 "$SITE/" | grep -qi '^content-security-policy:' || echo "- $SITE : politique de sécurité (CSP) absente" >> rapport.md
+          done
+          if [ -s rapport.md ]; then
+            { echo "Contrôle automatique du site en ligne :"; echo; cat rapport.md; echo; echo "Vérifiez le dernier déploiement Cloudflare (Deployments) et revenez à une version saine si besoin (Rollback). Voir le manuel, chapitre « Sécurité »."; } > alerte.md
+            echo "TITRE=Site en ligne modifié" >> "$GITHUB_ENV"
+          fi
+
+      - name: Prévenir
+        if: env.TITRE != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NTFY: ${{ secrets.ALERTE_NTFY }}
+          PROPRIO: ${{ github.repository_owner }}
+        run: |
+          gh label create sentinelle --color B60205 --description "Alertes de la sentinelle" --force -R "$GITHUB_REPOSITORY"
+          EXISTANT=$(gh issue list -R "$GITHUB_REPOSITORY" --label sentinelle --state open --search "$TITRE in:title" --json number --jq '.[0].number')
+          printf '\n\n@%s\n' "$PROPRIO" >> alerte.md
+          if [ -n "$EXISTANT" ]; then gh issue comment "$EXISTANT" -R "$GITHUB_REPOSITORY" --body-file alerte.md
+          else gh issue create -R "$GITHUB_REPOSITORY" --title "🚨 Sentinelle : $TITRE" --label sentinelle --body-file alerte.md; fi
+          if [ -n "$NTFY" ]; then curl -s -H "Title: Jema : $TITRE" -H "Priority: urgent" -H "Tags: rotating_light" -d "Voir les tickets « sentinelle » du dépôt jema_website." "$NTFY" > /dev/null || true; fi

@@ -1,21 +1,15 @@
 /**
- * Dernière version publiée sur GitHub + lien direct par système.
- * Repli sans réseau : liens construits depuis `fallbackVersion` (site.json).
- * Le résultat est mis en cache pour la session (Hero et section Télécharger
- * partagent un seul appel à l'API GitHub).
+ * Numéro de la dernière version publiée sur GitHub, pour l'affichage.
+ *
+ * SÉCURITÉ : le navigateur ne construit plus aucune adresse de fichier. Tous les
+ * boutons passent par /telecharger/<système> (functions/telecharger/[os].js), qui
+ * seul décide vers quel fichier rediriger, et uniquement dans le dépôt officiel.
+ *
+ * Le résultat est gardé pour la session (Hero et section Télécharger partagent
+ * un seul appel à l'API GitHub). Repli sans réseau : `fallbackVersion` (site.json).
  */
-const CACHE_KEY = 'jema-latest-release'
-
-function fallbackUrls(repo, tag) {
-  const n = tag.replace(/^v/, '')
-  const base = `https://github.com/${repo}/releases/download/${tag}`
-  return {
-    windows: `${base}/jema-editor-${n}-setup.exe`,
-    mac: `${base}/jema-editor-${n}.dmg`,
-    appimage: `${base}/jema-editor-${n}.AppImage`,
-    deb: `${base}/jema-editor_${n}_amd64.deb`
-  }
-}
+const CACHE_KEY = 'jema-latest-version'
+const VERSION_SURE = /^v\d+\.\d+\.\d+$/
 
 let pending = null
 
@@ -24,31 +18,17 @@ export function latestRelease(repo, fallbackVersion) {
   pending = (async () => {
     try {
       const cached = sessionStorage.getItem(CACHE_KEY)
-      if (cached) return JSON.parse(cached)
+      if (cached && VERSION_SURE.test(cached)) return { version: cached, live: true }
     } catch { /* stockage indisponible */ }
-    const fallback = { version: fallbackVersion, urls: fallbackUrls(repo, fallbackVersion), live: false }
     try {
       const res = await fetch(`https://api.github.com/repos/${repo}/releases/latest`)
-      if (!res.ok) return fallback
-      const data = await res.json()
-      const assets = Array.isArray(data.assets) ? data.assets : []
-      const find = (ext) => assets.find((a) => (a.name || '').toLowerCase().endsWith(ext))?.browser_download_url
-      const tag = data.tag_name || fallbackVersion
-      const fb = fallbackUrls(repo, tag)
-      const result = {
-        version: tag,
-        live: true,
-        urls: {
-          windows: find('.exe') || fb.windows,
-          mac: find('.dmg') || fb.mac,
-          appimage: find('.appimage') || fb.appimage,
-          deb: find('.deb') || fb.deb
-        }
-      }
-      try { sessionStorage.setItem(CACHE_KEY, JSON.stringify(result)) } catch { /* ignoré */ }
-      return result
+      if (!res.ok) throw new Error(String(res.status))
+      const tag = (await res.json()).tag_name
+      if (!VERSION_SURE.test(tag)) throw new Error('version illisible')
+      try { sessionStorage.setItem(CACHE_KEY, tag) } catch { /* ignoré */ }
+      return { version: tag, live: true }
     } catch {
-      return fallback
+      return { version: fallbackVersion, live: false }
     }
   })()
   return pending

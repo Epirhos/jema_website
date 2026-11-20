@@ -246,10 +246,9 @@
           <table>
             <tr><th>Réglage</th><th>Quand le changer</th></tr>
             <tr><td><b>Bêta</b></td><td>Dates et pastille de la bêta ; désactivez « Bêta en cours » à la fin de la bêta.</td></tr>
-            <tr><td><b>E-mail de contact</b></td><td>Si l'adresse de contact change. Elle reçoit les demandes « Me prévenir ».</td></tr>
             <tr><td><b>Configuration requise</b></td><td>Si la mémoire nécessaire ou les systèmes pris en charge changent.</td></tr>
             <tr><td><b>Version de secours</b></td><td><b>À chaque nouvelle version</b> (voir <a href="#versions">Publier une version</a>).</td></tr>
-            <tr><td><b>Dépôt GitHub des versions</b>, <b>Adresse du site</b></td><td>Jamais sans raison technique : une erreur casse les téléchargements.</td></tr>
+            <tr><td><b>E-mail de contact</b>, <b>Dépôt GitHub des versions</b>, <b>Adresse du site</b></td><td><b>Verrouillés</b> par sécurité : visibles mais non modifiables ici, pour qu'un accès volé à l'admin ne puisse ni détourner les messages des visiteurs ni faire télécharger autre chose que Jema. Pour les changer : manuel technique, chapitre « Sécurité ».</td></tr>
             <tr><td><b>Mesure d'audience</b></td><td>Identifiant Umami. Vide = plus aucune mesure.</td></tr>
           </table>
           <a class="top" href="#bienvenue">↑ Haut de page</a>
@@ -280,6 +279,7 @@
             <tr><td>« Enregistrer » reste grisé</td><td>Rien n'a changé, ou un champ obligatoire (marqué d'une étoile ocre) est vide ou mal rempli : il est signalé en rouge.</td></tr>
             <tr><td>L'admin affiche une page blanche</td><td>Rechargez. Si cela persiste, essayez un autre navigateur et consultez le manuel technique (chapitre Admin).</td></tr>
           </table>
+          <div class="note warn"><b>« Publication bloquée » ou un ticket « Sentinelle »</b>Le site refuse de publier un contenu qui contient un script, un formulaire, un lien vers un fichier à télécharger hébergé ailleurs, ou une autre adresse e-mail que celle du contact. Retirez l'élément signalé et enregistrez à nouveau. Un ticket « Sentinelle » sur GitHub signale un changement sensible : si ce n'est pas vous, suivez le manuel technique, chapitre « Sécurité ».</div>
           <p>Pour tout ce qui touche au code, à l'hébergement ou au domaine : <b>manuel technique</b>, fichier <code>docs/manuel/Manuel-site-Jema.pdf</code> du dépôt.</p>
           <a class="top" href="#bienvenue">↑ Haut de page</a>
         </section>

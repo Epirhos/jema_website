@@ -127,6 +127,7 @@
     <li><span>18</span>Dépannage</li>
     <li><span>19</span>Aide-mémoire</li>
     <li><span>20</span>Reste à faire au lancement</li>
+    <li><span>21</span>Sécurité et alertes</li>
   </ol>
 </section>
 
@@ -219,6 +220,7 @@ npm run dev                   <span class="c"># site de travail : http://localho
     <tr><td><code>npm run preview</code></td><td>Sert <code>dist/</code> pour vérifier le résultat final.</td></tr>
     <tr><td><code>npm run sync:guide</code></td><td>Recopie le mode d'emploi depuis l'app (chapitre 11).</td></tr>
     <tr><td><code>npm run manuel</code></td><td>Régénère ce PDF depuis <code>docs/manuel/manuel.html</code>.</td></tr>
+    <tr><td><code>node scripts/garde.mjs source</code></td><td>Lance seul le contrôle de sécurité des réglages et contenus (il tourne aussi automatiquement avant et après chaque <code>npm run build</code>).</td></tr>
   </table>
   <div class="note"><b>Tester la fonction de téléchargement en local</b><code>npx wrangler pages dev dist</code> (outil officiel de Cloudflare, téléchargé à la demande) sert le site <i>avec</i> la fonction <code>/telecharger/…</code>. Le plus simple reste l'aperçu de branche sur Cloudflare (chapitre 15).</div>
   <h3>Variables de construction</h3>
@@ -323,6 +325,7 @@ brouillon: false
     <tr><td><code>fallbackVersion</code></td><td>Version affichée et liens de secours si GitHub ne répond pas. <b>À mettre à jour à chaque version.</b></td></tr>
     <tr><td><code>releasesRepo</code></td><td>Dépôt où chercher les fichiers d'installation (<code>Epirhos/jema-releases</code>).</td></tr>
     <tr><td><code>siteUrl</code></td><td>Adresse publique ; Umami ne mesure que ce domaine.</td></tr>
+    <tr><td colspan="2"><i><code>contactEmail</code>, <code>releasesRepo</code>, <code>siteUrl</code> et <code>analytics.umamiSrc</code> sont verrouillés : affichés mais non modifiables dans l'admin, et contrôlés à chaque construction (chapitre 21).</i></td></tr>
     <tr><td><code>analytics</code> {umamiWebsiteId, umamiSrc}</td><td>Mesure d'audience. Identifiant vide = aucune mesure.</td></tr>
   </table>
   <p><code>src/data/guide-parcours.json</code> est généré par <code>npm run sync:guide</code> : ne pas le modifier.</p>
@@ -470,7 +473,7 @@ npm run sync:guide -- "C:\chemin\vers\jema-editor_v2"   <span class="c"># sinon<
     <li>Affichez-le dans la page ou le composant concerné. Construisez, vérifiez, envoyez.</li>
   </ol>
   <h3>Mettre à jour Sveltia</h3>
-  <p>Changez le numéro dans l'adresse du script (<code>@sveltia/cms@0.256.1</code>). Testez sur l'aperçu de branche (chapitre 15) : connexion, ouverture d'une fiche, enregistrement. Si l'habillage se dégrade, c'est un sélecteur de <code>theme.css</code> qui a changé : l'admin reste utilisable, corrigez à loisir.</p>
+  <p>Changez le numéro dans l'adresse du script (<code>@sveltia/cms@0.256.1</code>) <b>et</b> son empreinte <code>integrity</code>, sans quoi le navigateur refusera le script. Calcul de l'empreinte (Git Bash) : <code>curl -sL &lt;adresse&gt; | openssl dgst -sha384 -binary | openssl base64 -A</code>, à préfixer par <code>sha384-</code>. Testez sur l'aperçu de branche (chapitre 15) : connexion, ouverture d'une fiche, enregistrement. Si l'habillage se dégrade, c'est un sélecteur de <code>theme.css</code> qui a changé : l'admin reste utilisable, corrigez à loisir.</p>
   <h3>Banc d'essai sans jeton</h3>
   <p>Pour travailler l'apparence de l'admin sans toucher au dépôt : copiez <code>public/admin</code> dans un dossier de test, remplacez le <code>backend</code> de <code>config.yml</code> par <code>name: test-repo</code>, ajoutez dans <code>index.html</code> <code>&lt;link rel="cms-seed-url" href="/seed/manifest.json"&gt;</code> (un fichier <code>{"files":["src/data/site.json", …]}</code> à côté des fichiers à charger), servez le dossier et cliquez « Start Demo ». Les modifications restent dans le navigateur.</p>
   <h3>Connexion</h3>
@@ -649,8 +652,56 @@ npm run build && npm run preview</pre>
     <li>Supprimer <code>.github/workflows/deploy.yml</code> (ancien hébergement GitHub Pages) et désactiver GitHub Pages dans les réglages du dépôt.</li>
     <li>Fusionner <code>bulle</code> dans <code>main</code> : le nouveau site passe en production.</li>
     <li>Vérifier dans Umami les premières visites et l'événement <code>fichier</code>.</li>
+    <li>Sécurité (chapitre 21) : double authentification partout, verrou du domaine, notifications Cloudflare, sujet ntfy, règle de limitation sur <code>/telecharger/*</code>.</li>
     <li>Plus tard : vrai formulaire de contact et « Me prévenir » (Web3Forms ou fonction Cloudflare), connexion à l'admin par bouton GitHub, courtes vidéos de l'app.</li>
   </ul>
+</section>
+
+<!-- ═════════════════════ 21 ═════════════════════ -->
+<section class="chapter">
+  <div class="chap-head"><span class="kicker">Chapitre 21</span><h2>Sécurité et alertes</h2>
+    <p>Objectif : qu'on ne puisse pas faire télécharger autre chose que Jema, détourner les messages des visiteurs, injecter du code ou faire tomber le site, et être prévenu de toute tentative.</p></div>
+  <h3>Les protections en place</h3>
+  <table>
+    <tr><th>Menace</th><th>Protection</th><th>Où</th></tr>
+    <tr><td>Remplacer le fichier téléchargé</td><td>Le navigateur ne connaît aucune adresse de fichier : tout passe par <code>/telecharger/…</code>. La fonction a le dépôt <code>Epirhos/jema-releases</code> écrit en dur et refuse toute adresse hors de <code>github.com/Epirhos/jema-releases/releases/download/</code> (alerte si cela arrive).</td><td><code>functions/telecharger/[os].js</code></td></tr>
+    <tr><td>Détourner les e-mails des visiteurs</td><td>Le site ne collecte aucune adresse : le contact ouvre la messagerie du visiteur vers <code>editor.jema@gmail.com</code>. Cette adresse est verrouillée dans l'admin et contrôlée à chaque construction ; toute autre adresse <code>mailto:</code> bloque la publication.</td><td><code>scripts/garde.mjs</code></td></tr>
+    <tr><td>Injecter un script, un faux formulaire, un lien piégé</td><td>Les contenus ne peuvent contenir ni script, ni cadre, ni formulaire, ni lien <code>javascript:</code>, ni lien vers un exécutable hébergé ailleurs : la construction échoue et rien n'est publié. Dans le navigateur, une politique de sécurité (CSP) n'autorise que les scripts présents à la construction et la mesure d'audience.</td><td><code>scripts/garde.mjs</code>, <code>dist/_headers</code></td></tr>
+    <tr><td>Script de l'admin modifié chez unpkg</td><td>Empreinte <code>integrity</code> : le navigateur refuse un fichier différent.</td><td><code>public/admin/index.html</code></td></tr>
+    <tr><td>Afficher le site dans un cadre piégé</td><td><code>X-Frame-Options: DENY</code> et <code>frame-ancestors 'none'</code>.</td><td><code>dist/_headers</code></td></tr>
+    <tr><td>Saturation (DDoS)</td><td>Cloudflare absorbe les attaques sur les pages (statiques, sans limite). La fonction de téléchargement a un quota gratuit de 100 000 appels par jour : au-delà, seuls les boutons échouent, le site reste en ligne. Ajouter la règle de limitation ci-dessous.</td><td>Cloudflare</td></tr>
+  </table>
+
+  <h3>Les alertes</h3>
+  <table>
+    <tr><th>Alerte</th><th>Déclencheur</th><th>Où elle arrive</th></tr>
+    <tr><td>Sentinelle · dépôt</td><td>Tout envoi qui modifie un fichier sensible ; toute publication de l'admin qui touche autre chose que des contenus (signe d'un jeton volé) ; tout réglage verrouillé modifié.</td><td>Ticket GitHub « sentinelle » (e-mail) + ntfy</td></tr>
+    <tr><td>Sentinelle · site en ligne</td><td>Toutes les 6 h : liens de téléchargement, adresses e-mail, scripts externes et en-têtes de sécurité de jema.app et de l'aperçu.</td><td>Ticket GitHub + ntfy</td></tr>
+    <tr><td>Garde de construction</td><td>Réglage, contenu ou page construite dangereux : la publication est bloquée.</td><td>E-mail Cloudflare « échec de déploiement »</td></tr>
+    <tr><td>Rapports du navigateur</td><td>Un visiteur a reçu une page qui tentait de charger un script ou une connexion non autorisés.</td><td>ntfy (via <code>/securite/rapport</code>)</td></tr>
+    <tr><td>Fonction de téléchargement</td><td>Adresse de fichier refusée, réglage de dépôt suspect.</td><td>ntfy</td></tr>
+  </table>
+  <div class="note"><b>La sentinelle est hors de portée d'un jeton volé</b>Ses valeurs attendues sont dans <code>.github/workflows/sentinelle.yml</code>. Un jeton d'admin (droit <i>Contents</i>) ne peut pas modifier ce dossier. Ne donnez <b>jamais</b> le droit <i>Workflows</i> au jeton de l'admin. La surveillance toutes les 6 h ne tourne que depuis <code>main</code> ; GitHub la met en pause après 60 jours sans activité sur le dépôt (un e-mail prévient, un clic la relance).</div>
+
+  <h3>À régler une fois (dans les comptes)</h3>
+  <ol class="steps">
+    <li><b>Double authentification</b> sur GitHub, Cloudflare, Name.com, Umami et Gmail. C'est la protection la plus importante : presque toutes les attaques passent par un compte volé.</li>
+    <li><b>Notifications push ntfy</b> : installez l'application ntfy (Android, iOS) et abonnez-vous à un sujet long et secret, par exemple <code>jema-alerte-7f3k9q2m</code>. Ajoutez ensuite son adresse <code>https://ntfy.sh/jema-alerte-7f3k9q2m</code> dans Cloudflare (Workers &amp; Pages → jema → Settings → Variables and Secrets → <code>ALERTE_NTFY</code>, type Secret) et dans GitHub (dépôt → Settings → Secrets and variables → Actions → <code>ALERTE_NTFY</code>).</li>
+    <li><b>Notifications Cloudflare</b> : Notifications → Add → <i>Pages</i> → « Deployment status », projet <code>jema</code>, évènements « Failed » et « Success » en production. Un déploiement que vous n'avez pas fait = alerte.</li>
+    <li><b>Après le domaine</b> : Security → WAF → Rate limiting rules → une règle « si le chemin commence par <code>/telecharger/</code>, plus de 20 requêtes en 10 s par IP → bloquer 10 s ». Activez aussi Security → Bots → <i>Bot Fight Mode</i>, et DNS → <i>DNSSEC</i>.</li>
+    <li><b>Chez Name.com</b> : vérifiez que le <i>Transfer Lock</i> du domaine est actif.</li>
+    <li><b>Sur GitHub</b> : Settings → Branches → règle sur <code>main</code> : interdire les « force push » et la suppression.</li>
+  </ol>
+
+  <h3>En cas d'alerte</h3>
+  <ol class="steps">
+    <li>Si c'est vous (modification de code, réglage voulu) : fermez le ticket.</li>
+    <li>Sinon, dans l'ordre : Cloudflare → Deployments → <i>Rollback</i> vers la dernière version saine ; révoquez le jeton de l'admin ; changez le mot de passe GitHub et vérifiez Settings → Sessions et Security log ; mettez les téléchargements en pause si un fichier est en cause.</li>
+    <li>Annulez le commit fautif (GitHub → le commit → <i>Revert</i>), puis recréez un jeton.</li>
+  </ol>
+  <h3>Changer légitimement une valeur verrouillée</h3>
+  <p>Par exemple une nouvelle adresse de contact : modifiez-la dans <code>src/data/site.json</code>, dans <code>ATTENDU</code> de <code>scripts/garde.mjs</code> et dans <code>env</code> de <code>.github/workflows/sentinelle.yml</code> (et dans la fonction de téléchargement s'il s'agit du dépôt des versions). La sentinelle ouvrira un ticket : normal, fermez-le.</p>
+  <div class="note warn"><b>Limite honnête</b>Rien ne protège contre quelqu'un qui contrôle à la fois votre compte GitHub <i>et</i> votre compte Cloudflare : d'où la double authentification. La meilleure garantie pour les utilisateurs reste la <b>signature numérique</b> de l'application (Windows et macOS), à prévoir pour la version stable : un fichier modifié ne serait alors plus reconnu comme venant de vous.</div>
 </section>
 
 </body>

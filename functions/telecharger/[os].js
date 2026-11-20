@@ -9,29 +9,36 @@
  * Chaque passage est compté dans Umami (événement « fichier » ou « fichier-en-pause »),
  * y compris quand le lien a été partagé hors du site.
  *
- * Le réglage est lu dans src/data/downloads.json au moment de la publication :
- * basculer l'interrupteur dans l'admin republie le site et cette fonction.
+ * SÉCURITÉ : le dépôt des versions est écrit ici en dur (DEPOT), pas lu dans les
+ * réglages. Même si quelqu'un modifiait les réglages du site, cette fonction ne
+ * redirigerait jamais ailleurs que vers les fichiers de github.com/Epirhos/jema-releases.
+ * Toute anomalie déclenche une alerte (src/server/alerte.js).
+ * Le contrôle de construction (scripts/garde.mjs) vérifie que DEPOT n'a pas changé.
  */
 import site from '../../src/data/site.json'
 import downloads from '../../src/data/downloads.json'
+import { alerter } from '../../src/server/alerte.js'
 
+const DEPOT = 'Epirhos/jema-releases'
+const PREFIXE = `https://github.com/${DEPOT}/releases/download/`
 const EXT = { windows: '.exe', mac: '.dmg', deb: '.deb', appimage: '.appimage' }
 const CACHE_SECONDS = 600
+const VERSION_SURE = /^v\d+\.\d+\.\d+$/
 
 function fallbackUrl(os, tag) {
-  const n = tag.replace(/^v/, '')
-  const base = `https://github.com/${site.releasesRepo}/releases/download/${tag}`
-  return {
-    windows: `${base}/jema-editor-${n}-setup.exe`,
-    mac: `${base}/jema-editor-${n}.dmg`,
-    appimage: `${base}/jema-editor-${n}.AppImage`,
-    deb: `${base}/jema-editor_${n}_amd64.deb`
+  const t = VERSION_SURE.test(tag) ? tag : 'v4.0.0'
+  const n = t.slice(1)
+  return PREFIXE + {
+    windows: `${t}/jema-editor-${n}-setup.exe`,
+    mac: `${t}/jema-editor-${n}.dmg`,
+    appimage: `${t}/jema-editor-${n}.AppImage`,
+    deb: `${t}/jema-editor_${n}_amd64.deb`
   }[os]
 }
 
 /** Dernière version GitHub, mise en cache 10 min (l'API publique limite les appels). */
 async function latestAssetUrl(os) {
-  const api = `https://api.github.com/repos/${site.releasesRepo}/releases/latest`
+  const api = `https://api.github.com/repos/${DEPOT}/releases/latest`
   try {
     const res = await fetch(api, {
       headers: { 'User-Agent': 'jema-site', Accept: 'application/vnd.github+json' },
@@ -43,6 +50,16 @@ async function latestAssetUrl(os) {
     return asset?.browser_download_url || fallbackUrl(os, data.tag_name || site.fallbackVersion)
   } catch {
     return fallbackUrl(os, site.fallbackVersion)
+  }
+}
+
+/** Une adresse de fichier n'est acceptée que si elle pointe vers le dépôt officiel. */
+function estSure(url) {
+  try {
+    const u = new URL(url)
+    return u.protocol === 'https:' && u.hostname === 'github.com' && u.href.startsWith(PREFIXE) && !u.href.includes('..')
+  } catch {
+    return false
   }
 }
 
@@ -78,7 +95,7 @@ async function track(request, name, data) {
 const redirect = (location) =>
   new Response(null, { status: 302, headers: { Location: location, 'Cache-Control': 'no-store' } })
 
-export async function onRequestGet({ request, params, waitUntil }) {
+export async function onRequestGet({ request, params, env, waitUntil }) {
   const os = String(params.os || '').toLowerCase()
   const origin = new URL(request.url).origin
   if (!EXT[os]) return redirect(`${origin}/#telecharger`)
@@ -88,7 +105,15 @@ export async function onRequestGet({ request, params, waitUntil }) {
     return redirect(`${origin}/#telecharger`)
   }
 
-  const target = await latestAssetUrl(os)
+  let target = await latestAssetUrl(os)
+  if (!estSure(target)) {
+    // Ne devrait jamais arriver : on refuse, on sert le fichier de secours et on alerte.
+    waitUntil(alerter(env, 'Téléchargement : adresse refusée', `Système ${os}. Adresse proposée : ${target}`))
+    target = fallbackUrl(os, site.fallbackVersion)
+  }
+  if (site.releasesRepo !== DEPOT) {
+    waitUntil(alerter(env, 'Réglage suspect', `Le réglage « Dépôt GitHub des versions » vaut « ${site.releasesRepo} ». Il est ignoré : seul ${DEPOT} est utilisé.`))
+  }
   waitUntil(track(request, 'fichier', { os }))
   return redirect(target)
 }

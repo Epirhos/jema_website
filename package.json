@@ -6,7 +6,9 @@
   "description": "Site officiel de Jema — annonces, nouveautés et téléchargement.",
   "scripts": {
     "dev": "astro dev",
+    "prebuild": "node scripts/garde.mjs source",
     "build": "astro build",
+    "postbuild": "node scripts/garde.mjs dist",
     "preview": "astro preview",
     "astro": "astro",
     "sync:guide": "node scripts/sync-guide.mjs",
