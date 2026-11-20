@@ -11,7 +11,7 @@ Créer, ordonner, importer et régler les chapitres de votre manuscrit.
 Rail › Chapitres affiche ou réduit la colonne de gauche de l'écran Écrire.
 
 ## Pas à pas
-1. « + » crée un chapitre ; « Importer » en fait entrer un depuis un fichier DOCX, Markdown, PDF, HTML, RTF ou texte.
+1. « Nouveau chapitre » en crée un. La petite flèche à sa droite propose « Importer un fichier… » : DOCX, Markdown, PDF, HTML, RTF ou texte.
 2. Glissez un chapitre par sa poignée pour le déplacer, ou sélectionnez-le et utilisez <kbd>Alt</kbd>+<kbd>↑ / ↓</kbd>.
 3. L'ordre est enregistré aussitôt ; « Annuler » apparaît quelques secondes pour revenir en arrière.
 4. L'engrenage d'une ligne (ou un clic droit) ouvre les réglages du chapitre : titre, résumé, objectif de mots, état.
