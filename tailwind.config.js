@@ -1,4 +1,8 @@
-/** @type {import('tailwindcss').Config} */
+/**
+ * Tailwind 3 : peu utilisé, l'identité visuelle est surtout dans src/styles/global.css.
+ * `content` liste les fichiers où chercher les classes (les autres sont retirées du CSS final).
+ * @type {import('tailwindcss').Config}
+ */
 export default {
   darkMode: 'class',
   content: ['./src/**/*.{astro,js,jsx,md,mdx}'],

@@ -91,12 +91,12 @@
     Jema
   </div>
   <div class="sheet">
-    <span class="kicker">Manuel technique du site jema.app</span>
+    <span class="kicker">Manuel technique du site jema.software</span>
     <h1>Reconstruire, maintenir,<br /><em>mettre à jour le site.</em></h1>
     <p class="lead">Tout ce qu'il faut savoir pour faire vivre le site de Jema sans aide extérieure : comptes, installation, contenus, téléchargements, administration, mesure d'audience, hébergement, dépannage.</p>
   </div>
   <div class="meta">
-    <div><b>Version du manuel</b>1.0 · 17 novembre 2026</div>
+    <div><b>Version du manuel</b>1.1 · 21 novembre 2026 (lancement)</div>
     <div><b>Dépôt</b>github.com/Epirhos/jema_website</div>
     <div><b>Source</b>docs/manuel/manuel.html</div>
   </div>
@@ -105,7 +105,7 @@
 <!-- ═════════════════════ SOMMAIRE ═════════════════════ -->
 <section class="chapter toc">
   <div class="chap-head"><span class="kicker">Sommaire</span><h2>Ce que contient ce manuel</h2>
-    <p>Pour publier un contenu (version, article, pause des téléchargements), le mode d'emploi intégré à l'admin suffit : bouton « Mode d'emploi » sur <code>jema.app/admin</code>. Ce manuel couvre tout le reste.</p></div>
+    <p>Pour publier un contenu (version, article, pause des téléchargements), le mode d'emploi intégré à l'admin suffit : bouton « Mode d'emploi » sur <code>jema.software/admin</code>. Ce manuel couvre tout le reste.</p></div>
   <ol>
     <li><span>01</span>Le site en une page</li>
     <li><span>02</span>Comptes, accès et secrets</li>
@@ -140,11 +140,11 @@
     <div class="n k"><b>Vous</b>dans l'admin <code style="background:#3a3530;color:#f3ede2">/admin</code> ou dans le code</div>
     <div class="arrow">enregistre un commit →</div>
     <div class="n"><b>GitHub</b>dépôt <code>Epirhos/jema_website</code> : le code et les contenus</div>
-    <div class="n j"><b>jema.app</b>le site que voient les visiteurs</div>
+    <div class="n j"><b>jema.software</b>le site que voient les visiteurs</div>
     <div class="arrow">← publie en 1 à 2 min</div>
     <div class="n"><b>Cloudflare Pages</b>reconstruit le site à chaque commit (<code>npm run build</code>)</div>
-    <div class="n"><b>Umami Cloud</b>reçoit les mesures d'audience de jema.app, sans cookie</div>
-    <div class="arrow">jema.app y prend les fichiers d'installation →</div>
+    <div class="n"><b>Umami Cloud</b>reçoit les mesures d'audience de jema.software, sans cookie</div>
+    <div class="arrow">jema.software y prend les fichiers d'installation →</div>
     <div class="n"><b>GitHub Releases</b>dépôt <code>Epirhos/jema-releases</code> : les fichiers d'installation</div>
   </div>
 
@@ -158,7 +158,9 @@
     <tr><td>Cloudflare Pages</td><td>Hébergement, construction automatique, aperçus par branche, HTTPS.</td><td>tableau de bord Cloudflare</td></tr>
     <tr><td>Pages Function</td><td>Les adresses <code>/telecharger/&lt;système&gt;</code> : redirection vers le bon fichier, ou vers la pause.</td><td><code>functions/telecharger/[os].js</code></td></tr>
     <tr><td>Umami Cloud</td><td>Visites, provenance, temps, clics, téléchargements. Sans cookie.</td><td>cloud.umami.is</td></tr>
+    <tr><td>Garde et sentinelle</td><td>Contrôles de sécurité à chaque construction et toutes les 6 h ; alertes (chapitre 21).</td><td><code>scripts/garde.mjs</code>, <code>.github/workflows/sentinelle.yml</code></td></tr>
   </table>
+  <div class="note"><b>Suivi d'architecture</b>Le fichier <code>docs/ARCHITECTURE.md</code> décrit l'architecture en vigueur, les flux de données et le <b>journal des décisions</b> (pourquoi chaque choix a été fait, avec sa date). Toute évolution de structure, de sécurité ou de service tiers s'y consigne : une ligne datée dans le journal, et la mise à jour de ce manuel si la procédure change.</div>
 
   <h3>Les pages</h3>
   <table>
@@ -181,16 +183,18 @@
   <table>
     <tr><th>Service</th><th>Sert à</th><th>Ce qu'il faut y retrouver</th></tr>
     <tr><td>GitHub · compte <b>Epirhos</b></td><td>Code du site, de l'app et des versions</td><td>Dépôts <code>jema_website</code>, <code>jema-editor_v2</code>, <code>jema-releases</code>. Activez la double authentification.</td></tr>
-    <tr><td>Cloudflare</td><td>Héberger et construire le site ; DNS de jema.app</td><td>Projet Pages <code>jema</code> ; zone DNS <code>jema.app</code> une fois le domaine relié.</td></tr>
-    <tr><td>Name.com</td><td>Location du nom <code>jema.app</code></td><td>Date de renouvellement. Offert un an via le GitHub Student Pack, <b>payant ensuite</b> : activez le renouvellement automatique ou notez la date.</td></tr>
-    <tr><td>Umami Cloud</td><td>Statistiques</td><td>Site <code>jema.app</code>, identifiant <code>b98343b4-…-30f95db7cf88</code> (copié dans <code>site.json</code>).</td></tr>
+    <tr><td>Cloudflare</td><td>Héberger et construire le site ; DNS de jema.software</td><td>Projet Pages <code>jema</code> ; zone DNS <code>jema.software</code> une fois le domaine relié.</td></tr>
+    <tr><td>Name.com</td><td>Location du nom <code>jema.software</code></td><td>Enregistré le 19/11/2026, <b>expire le 19/11/2027</b>. Offert un an via le GitHub Student Pack, <b>payant ensuite</b> : activez le renouvellement automatique. Un domaine expiré peut être racheté par n'importe qui, qui servirait alors ses propres fichiers à vos utilisateurs.</td></tr>
+    <tr><td>Umami Cloud</td><td>Statistiques</td><td>Site <code>jema.software</code>, identifiant <code>b98343b4-…-30f95db7cf88</code> (copié dans <code>site.json</code>).</td></tr>
     <tr><td>Gmail · editor.jema@gmail.com</td><td>Contact public</td><td>Reçoit les messages et les demandes « Me prévenir ».</td></tr>
+    <tr><td>ntfy (application)</td><td>Alertes de sécurité sur téléphone</td><td>Sujet secret ; son adresse est le secret <code>ALERTE_NTFY</code> (chapitre 21).</td></tr>
   </table>
 
   <h3>Les secrets</h3>
   <table>
     <tr><th>Secret</th><th>Où il vit</th><th>Durée</th><th>Si perdu ou fuité</th></tr>
     <tr><td>Jeton de l'admin</td><td>Votre navigateur (après la première connexion)</td><td>90 jours</td><td>GitHub → Settings → Developer settings → Fine-grained tokens → Revoke, puis en créer un nouveau (droit <i>Contents : Read and write</i> sur <code>jema_website</code> seulement).</td></tr>
+    <tr><td><code>ALERTE_NTFY</code></td><td>Cloudflare (Settings → Variables and Secrets, type Secret) et GitHub (Settings → Secrets → Actions)</td><td>Illimitée</td><td>Créer un nouveau sujet dans l'appli ntfy et remplacer l'adresse aux deux endroits. Qui connaît le sujet peut lire et envoyer des alertes.</td></tr>
     <tr><td><code>GH_RELEASE_TOKEN</code></td><td>Secret du dépôt <code>jema-editor_v2</code> (Settings → Secrets → Actions)</td><td>Selon sa création</td><td>Recréer un jeton avec écriture sur <code>jema-releases</code> et remplacer le secret. Sans lui, la publication des versions échoue.</td></tr>
   </table>
   <div class="note warn"><b>Règle d'or</b>Aucun secret dans le dépôt du site : il est public. <code>site.json</code> ne contient que des valeurs publiques (l'identifiant Umami n'est pas un secret, il est visible dans chaque page).</div>
@@ -226,7 +230,7 @@ npm run dev                   <span class="c"># site de travail : http://localho
   <h3>Variables de construction</h3>
   <table>
     <tr><th>Variable</th><th>Rôle</th><th>Valeur</th></tr>
-    <tr><td><code>SITE_URL</code></td><td>Adresse publique : liens canoniques, sitemap</td><td><code>https://jema.app</code> (par défaut)</td></tr>
+    <tr><td><code>siteUrl</code> (dans <code>src/data/site.json</code>)</td><td>Adresse publique : liens canoniques, sitemap, mesure d'audience</td><td><code>https://jema.software</code>. Source unique depuis le 21/11/2026 : l'ancienne variable <code>SITE_URL</code> est ignorée.</td></tr>
     <tr><td><code>BASE_PATH</code></td><td>Sous-dossier de publication</td><td><code>/</code> (par défaut). Ne servait qu'à l'ancien hébergement GitHub Pages.</td></tr>
   </table>
   <div class="note warn"><b>Windows et Git Bash</b>Git Bash transforme les chemins commençant par <code>/</code>. Pour tester <code>BASE_PATH</code>, préfixez : <code>MSYS_NO_PATHCONV=1 BASE_PATH=/x/ npm run build</code>.</div>
@@ -238,17 +242,22 @@ npm run dev                   <span class="c"># site de travail : http://localho
 <pre>jema_website/
 ├─ astro.config.mjs          <span class="c">adresse du site, intégrations (React, Tailwind, sitemap)</span>
 ├─ tailwind.config.js        <span class="c">configuration Tailwind (peu utilisée)</span>
+├─ .github/workflows/sentinelle.yml  <span class="c">surveillance du dépôt et du site (chapitre 21)</span>
 ├─ functions/telecharger/[os].js  <span class="c">Cloudflare : /telecharger/windows|mac|deb|appimage</span>
+├─ functions/securite/rapport.js  <span class="c">Cloudflare : reçoit les rapports de sécurité des navigateurs</span>
 ├─ public/                   <span class="c">copié tel quel dans le site</span>
 │  ├─ admin/                 <span class="c">l'administration (chapitre 12)</span>
 │  │  ├─ index.html          <span class="c">charge Sveltia + bouton « Mode d'emploi »</span>
 │  │  ├─ config.yml          <span class="c">rubriques et champs de l'admin</span>
 │  │  ├─ theme.css · preview.css · fonts/ · aide/
 │  ├─ images/uploads/        <span class="c">images envoyées depuis l'admin</span>
+│  ├─ .well-known/security.txt  <span class="c">contact sécurité (norme RFC 9116)</span>
 │  ├─ favicon.svg · robots.txt
 ├─ scripts/
+│  ├─ garde.mjs             <span class="c">contrôles de sécurité + écrit dist/_headers (CSP)</span>
 │  ├─ sync-guide.mjs         <span class="c">copie le mode d'emploi de l'app</span>
 │  └─ manuel-pdf.mjs         <span class="c">fabrique ce PDF</span>
+├─ docs/ARCHITECTURE.md      <span class="c">suivi d'architecture et journal des décisions</span>
 ├─ docs/manuel/              <span class="c">ce manuel (source + PDF)</span>
 └─ src/
    ├─ pages/                 <span class="c">une page = un fichier ; [slug] = page générée par contenu</span>
@@ -259,6 +268,7 @@ npm run dev                   <span class="c"># site de travail : http://localho
    ├─ data/                  <span class="c">site.json, downloads.json, banner.json, guide-parcours.json</span>
    ├─ assets/captures/       <span class="c">captures de l'app (converties en WebP au build)</span>
    ├─ lib/                   <span class="c">releases.js, downloads.js, url.js, format.js, rehype-base.mjs</span>
+   ├─ server/alerte.js       <span class="c">envoi des alertes (fonctions Cloudflare uniquement)</span>
    └─ styles/global.css      <span class="c">identité visuelle</span></pre>
   <h3>Principes à respecter</h3>
   <ul>
@@ -486,7 +496,7 @@ npm run sync:guide -- "C:\chemin\vers\jema-editor_v2"   <span class="c"># sinon<
 <!-- ═════════════════════ 13 ═════════════════════ -->
 <section class="chapter">
   <div class="chap-head"><span class="kicker">Chapitre 13</span><h2>Mesure d'audience (Umami)</h2>
-    <p>Sans cookie, sans bannière de consentement. Ne mesure que <code>jema.app</code> (attribut <code>data-domains</code>) : les aperçus et le site de travail ne faussent pas les chiffres.</p></div>
+    <p>Sans cookie, sans bannière de consentement. Ne mesure que <code>jema.software</code> (attribut <code>data-domains</code>) : les aperçus et le site de travail ne faussent pas les chiffres.</p></div>
   <p>Automatique : visites, pages vues, provenance (sites, campagnes UTM), pays, appareils, temps passé. En plus, ces <b>événements</b> :</p>
   <table>
     <tr><th>Événement</th><th>Quand</th><th>Où</th></tr>
@@ -515,7 +525,7 @@ npm run sync:guide -- "C:\chemin\vers\jema-editor_v2"   <span class="c"># sinon<
     <tr><td>Dépôt</td><td><code>Epirhos/jema_website</code></td></tr>
     <tr><td>Production branch</td><td><code>main</code></td></tr>
     <tr><td>Framework · Build command · Output</td><td>Astro · <code>npm run build</code> · <code>dist</code></td></tr>
-    <tr><td>Variables</td><td><code>SITE_URL=https://jema.app</code>, <code>NODE_VERSION=22</code></td></tr>
+    <tr><td>Variables</td><td><code>NODE_VERSION=22</code> ; secret <code>ALERTE_NTFY</code>. Une ancienne variable <code>SITE_URL</code> peut être supprimée : elle est ignorée.</td></tr>
     <tr><td>Build watch paths (inclure)</td><td><code>src/*</code>, <code>public/*</code>, <code>functions/*</code>, <code>package.json</code>, <code>package-lock.json</code>, <code>astro.config.mjs</code>, <code>tailwind.config.js</code></td></tr>
   </table>
   <ul>
@@ -523,14 +533,16 @@ npm run sync:guide -- "C:\chemin\vers\jema-editor_v2"   <span class="c"># sinon<
     <li><b>Revenir en arrière</b> : Workers &amp; Pages → <code>jema</code> → Deployments → une version précédente → <i>Rollback to this deployment</i>. Immédiat, sans toucher au code.</li>
     <li><b>Offre gratuite</b> : 500 constructions par mois, bande passante illimitée, 100 000 appels de fonction par jour. Aucune carte bancaire nécessaire.</li>
   </ul>
-  <h3>Relier jema.app (une seule fois)</h3>
+  <h3>Relier jema.software (fait le 20/11/2026, pour mémoire)</h3>
   <ol class="steps">
-    <li>Cloudflare → <i>Add a domain</i> → <code>jema.app</code>, offre Free. Notez les deux serveurs de noms affichés.</li>
-    <li>Name.com → My Domains → <code>jema.app</code> → Nameservers : remplacez les serveurs existants par ceux de Cloudflare.</li>
-    <li>Attendez l'e-mail « jema.app is now active » (15 min à 24 h).</li>
-    <li>Pages → <code>jema</code> → Custom domains → ajoutez <code>jema.app</code> puis <code>www.jema.app</code>. HTTPS est automatique (obligatoire en <code>.app</code>).</li>
+    <li>Cloudflare → <i>Add a domain</i> → <code>jema.software</code>, offre Free. Notez les deux serveurs de noms affichés.</li>
+    <li>Name.com → My Domains → <code>jema.software</code> → Nameservers : remplacez les serveurs existants par ceux de Cloudflare.</li>
+    <li>Attendez l'e-mail « jema.software is now active » (15 min à 24 h).</li>
+    <li>Pages → <code>jema</code> → Custom domains → ajoutez <code>jema.software</code> puis <code>www.jema.software</code>. HTTPS est automatique.</li>
+    <li><b>Une seule adresse</b> : Rules → Redirect Rules → modèle <i>Redirect from WWW to root</i> (301). Sans cela, <code>www.jema.software</code> sert une copie du site, non mesurée par Umami.</li>
+    <li>DNS → Settings → <i>DNSSEC</i> activé, et enregistrement DS recopié chez Name.com (actif depuis le 20/11/2026). <i>Transfer Lock</i> actif chez Name.com.</li>
   </ol>
-  <div class="note"><b>Une adresse e-mail @jema.app plus tard ?</b>Les réglages DNS se font alors chez Cloudflare (enregistrements MX), plus chez Name.com. Cloudflare Email Routing peut rediriger gratuitement vers Gmail.</div>
+  <div class="note"><b>Une adresse e-mail @jema.software plus tard ?</b>Les réglages DNS se font alors chez Cloudflare (enregistrements MX), plus chez Name.com. Cloudflare Email Routing peut rediriger gratuitement vers Gmail.</div>
 </section>
 
 <!-- ═════════════════════ 15 ═════════════════════ -->
@@ -538,7 +550,7 @@ npm run sync:guide -- "C:\chemin\vers\jema-editor_v2"   <span class="c"># sinon<
   <div class="chap-head"><span class="kicker">Chapitre 15</span><h2>Branches et mise en ligne</h2></div>
   <table>
     <tr><th>Branche</th><th>Rôle</th><th>Visible sur</th></tr>
-    <tr><td><code>main</code></td><td>Production</td><td><code>jema.app</code> (et <code>jema.pages.dev</code>)</td></tr>
+    <tr><td><code>main</code></td><td>Production</td><td><code>jema.software</code> (et <code>jema.pages.dev</code>)</td></tr>
     <tr><td><code>bulle</code></td><td>Test : nouveautés en préparation</td><td><code>bulle.jema.pages.dev</code></td></tr>
   </table>
   <h3>Faire une modification de code</h3>
@@ -548,7 +560,7 @@ npm run build                       <span class="c"># doit finir par « Complete
 git add -A && git commit -m "fix(site): ce qui change"
 git push                            <span class="c"># aperçu sur bulle.jema.pages.dev en ~1 min</span></pre>
   <p>Quand l'aperçu est validé, fusionnez dans <code>main</code> (Pull Request sur GitHub : <i>Compare &amp; pull request</i>, puis <i>Merge</i>). La production se met à jour seule.</p>
-  <div class="note warn"><b>L'admin écrit dans une branche précise</b>Le champ <code>branch</code> de <code>config.yml</code> décide où vont les publications de l'admin. Tant qu'il vaut <code>bulle</code>, rien de ce qui est publié depuis l'admin n'arrive sur jema.app. Si vous modifiez le code en même temps que quelqu'un publie depuis l'admin, faites <code>git pull</code> avant <code>git push</code>.</div>
+  <div class="note warn"><b>L'admin écrit dans une branche précise</b>Le champ <code>branch</code> de <code>config.yml</code> décide où vont les publications de l'admin. Depuis le lancement il vaut <code>main</code> : chaque enregistrement est en ligne en 1 à 2 min. Les publications de l'admin arrivent donc sur <code>main</code> et pas sur <code>bulle</code> : avant de travailler sur <code>bulle</code>, faites <code>git merge origin/main</code> pour la remettre à jour, sinon la fusion suivante rapporterait d'anciens contenus en conflit.</div>
 </section>
 
 <!-- ═════════════════════ 16 ═════════════════════ -->
@@ -566,6 +578,7 @@ npm run build && npm run preview</pre>
     <li>Pages : nouveautés, journal, guide, FAQ, légales, 404.</li>
     <li>Aperçu Cloudflare : <code>/telecharger/windows</code> redirige, <code>/admin</code> s'ouvre et enregistre.</li>
   </ul>
+  <div class="note warn"><b>Audit de sécurité des dépendances</b><code>npm audit --omit=dev</code> à chaque mise à jour. Au 21/11/2026, il reste des alertes sur Astro 5 et ses outils de construction (esbuild, sharp, zod), corrigées seulement par Astro 7 (deux versions majeures). Elles concernent le serveur de développement et des fonctions serveur qu'un site statique n'utilise pas : le site publié n'est pas exposé. La migration vers Astro 7 est à faire comme un petit projet sur <code>bulle</code> (voir <code>docs/ARCHITECTURE.md</code>, décision D-11).</div>
   <div class="note"><b>Changements majeurs à prévoir</b>Tailwind 4 et React 19 demandent des adaptations : à faire comme un petit projet, pas comme une mise à jour de routine. Les polices <code>@fontsource</code> copiées pour l'admin (<code>public/admin/fonts</code>) ne se mettent pas à jour seules ; ce n'est pas nécessaire.</div>
 </section>
 
@@ -581,8 +594,32 @@ npm run build && npm run preview</pre>
   </table>
   <ul>
     <li>Ajoutez la date dans le champ « Dernière mise à jour » à chaque modification.</li>
-    <li>Tant qu'aucun cookie ni traceur n'est déposé, aucune bannière de consentement n'est nécessaire. Ajouter un outil qui en dépose (vidéo YouTube, publicité, chat) impose une bannière : préférez des alternatives sans cookie.</li>
+    <li>Tant qu'aucun cookie ni traceur n'est déposé, aucune bannière de consentement n'est nécessaire. Ajouter un outil qui en dépose (vidéo YouTube, publicité, chat) impose une bannière : préférez des alternatives sans cookie. C'est aussi pourquoi <i>Bot Fight Mode</i> de Cloudflare reste désactivé (il peut déposer un cookie).</li>
   </ul>
+  <h3>Registre des traitements (RGPD, article 30)</h3>
+  <p>Tenu ici et résumé dans la politique de confidentialité. Responsable du traitement : Dahirou Nounsi (Epirhos), editor.jema@gmail.com.</p>
+  <table>
+    <tr><th>Traitement</th><th>Données</th><th>Base légale</th><th>Durée</th><th>Destinataires</th></tr>
+    <tr><td>Affichage du site et sécurité</td><td>Adresse IP, navigateur, page demandée</td><td>Intérêt légitime (fournir et protéger le site)</td><td>Journaux techniques de Cloudflare, quelques jours</td><td>Cloudflare (États-Unis, Data Privacy Framework)</td></tr>
+    <tr><td>Mesure d'audience</td><td>Pages, provenance, pays, appareil, boutons utilisés ; sans cookie ni IP conservée</td><td>Intérêt légitime ; refus respecté (« Ne pas suivre », Global Privacy Control)</td><td>25 mois au plus</td><td>Umami Cloud (Umami Software, États-Unis)</td></tr>
+    <tr><td>Téléchargement</td><td>Adresse IP, navigateur</td><td>Exécution de la demande du visiteur</td><td>Selon GitHub</td><td>GitHub (États-Unis, Data Privacy Framework)</td></tr>
+    <tr><td>Rapports de sécurité</td><td>Adresse de la page et ressource bloquée, sans IP ni identifiant</td><td>Intérêt légitime (détecter les attaques)</td><td>Alerte non conservée par le site</td><td>ntfy.sh (sujet privé)</td></tr>
+    <tr><td>Échanges par courriel</td><td>Adresse, message</td><td>Intérêt légitime (répondre)</td><td>3 ans après le dernier échange</td><td>Google (Gmail)</td></tr>
+  </table>
+  <ul>
+    <li><b>Demande d'exercice de droits</b> : répondre sous un mois. Pour l'audience, Umami ne conserve rien qui permette de retrouver une personne : répondre que rien n'est détenu à son nom.</li>
+    <li><b>Violation de données</b> (compte GitHub ou Cloudflare piraté, fichier modifié servi aux visiteurs) : la consigner, et la notifier à la CNIL sous 72 h si elle présente un risque pour les visiteurs (cnil.fr → Notifier une violation).</li>
+    <li><b>Nouvel outil tiers</b> : l'ajouter à ce registre, à la politique de confidentialité, à la CSP (<code>scripts/garde.mjs</code>) et au journal des décisions.</li>
+  </ul>
+  <h3>Normes suivies</h3>
+  <table>
+    <tr><th>Référence</th><th>Application</th></tr>
+    <tr><td>OWASP Secure Headers, Top 10</td><td>CSP stricte à empreintes, HSTS, nosniff, Referrer-Policy, Permissions-Policy, anti-cadre ; aucune entrée utilisateur traitée par le serveur.</td></tr>
+    <tr><td>RFC 9116 (security.txt)</td><td><code>/.well-known/security.txt</code> : contact pour signaler une faille. Renouveler la date <code>Expires</code> chaque année (la sentinelle ne le fait pas).</td></tr>
+    <tr><td>Intégrité des sous-ressources (SRI)</td><td>Script de l'admin chargé avec empreinte <code>integrity</code>.</td></tr>
+    <tr><td>Recommandations CNIL (audience)</td><td>Mesure sans cookie, données agrégées, conservation limitée, domaine unique.</td></tr>
+    <tr><td>LCEN, article 6</td><td>Mentions légales : éditeur, directeur de la publication, hébergeurs.</td></tr>
+  </table>
 </section>
 
 <!-- ═════════════════════ 18 ═════════════════════ -->
@@ -597,7 +634,7 @@ npm run build && npm run preview</pre>
     <tr><td>Fichier introuvable sur GitHub (404)</td><td>Nom de fichier différent de ceux attendus</td><td>Chapitre 10, « Noms de fichiers attendus ».</td></tr>
     <tr><td>Admin : « Bad credentials » ou page de connexion en boucle</td><td>Jeton expiré ou révoqué</td><td>Nouveau jeton (chapitre 02).</td></tr>
     <tr><td>Admin : page blanche</td><td>unpkg indisponible ou version de Sveltia retirée</td><td>Recharger plus tard ; sinon remplacer l'adresse par <code>https://cdn.jsdelivr.net/npm/@sveltia/cms@0.256.1/dist/sveltia-cms.js</code>.</td></tr>
-    <tr><td>Umami ne compte rien</td><td>Domaine différent de <code>siteUrl</code>, bloqueur de publicité, signal « Ne pas suivre »</td><td>Normal sur les aperçus. Sur jema.app, vérifier l'identifiant dans les réglages.</td></tr>
+    <tr><td>Umami ne compte rien</td><td>Domaine différent de <code>siteUrl</code>, bloqueur de publicité, signal « Ne pas suivre »</td><td>Normal sur les aperçus. Sur jema.software, vérifier l'identifiant dans les réglages.</td></tr>
     <tr><td>Images de la visite absentes</td><td>Pas de fichier <code>&lt;vue&gt;-light.png</code></td><td>Chapitre 09.</td></tr>
     <tr><td><code>npm run build</code> échoue après une mise à jour</td><td>Version incompatible</td><td><code>git checkout package.json package-lock.json</code> puis <code>npm ci</code> pour revenir en arrière.</td></tr>
   </table>
@@ -625,9 +662,9 @@ npm run build && npm run preview</pre>
     <div class="box">
       <h4>Adresses</h4>
       <table>
-        <tr><td>Site</td><td>jema.app</td></tr>
+        <tr><td>Site</td><td>jema.software</td></tr>
         <tr><td>Aperçu de test</td><td>bulle.jema.pages.dev</td></tr>
-        <tr><td>Admin</td><td>jema.app/admin</td></tr>
+        <tr><td>Admin</td><td>jema.software/admin</td></tr>
         <tr><td>Code du site</td><td>github.com/Epirhos/jema_website</td></tr>
         <tr><td>Versions</td><td>github.com/Epirhos/jema-releases</td></tr>
         <tr><td>Statistiques</td><td>cloud.umami.is</td></tr>
@@ -643,16 +680,19 @@ npm run build && npm run preview</pre>
 <!-- ═════════════════════ 20 ═════════════════════ -->
 <section class="chapter">
   <div class="chap-head"><span class="kicker">Chapitre 20</span><h2>Reste à faire au lancement</h2>
-    <p>État au 17 novembre 2026. Cochez au fur et à mesure.</p></div>
+    <p>État au 21 novembre 2026, jour du lancement. Les points faits sont barrés.</p></div>
   <ul class="check">
-    <li>Domaine <code>jema.app</code> relié à Cloudflare (chapitre 14), puis vérifier <code>https://jema.app</code> et <code>https://www.jema.app</code>.</li>
+    <li><s>Domaine <code>jema.software</code> relié à Cloudflare, DNSSEC, verrou de transfert.</s> Reste : redirection <code>www</code> → <code>jema.software</code> (chapitre 14).</li>
     <li>Relire les textes rédigés à partir du code : fiche v4.0.0, annonce de la bêta, FAQ.</li>
     <li>Captures « Jema en action » (réponse de Jema, Continuité) depuis l'app installée, à ajouter à la visite.</li>
-    <li>Dans <code>public/admin/config.yml</code> : <code>branch: main</code>.</li>
-    <li>Supprimer <code>.github/workflows/deploy.yml</code> (ancien hébergement GitHub Pages) et désactiver GitHub Pages dans les réglages du dépôt.</li>
-    <li>Fusionner <code>bulle</code> dans <code>main</code> : le nouveau site passe en production.</li>
+    <li><s>Dans <code>public/admin/config.yml</code> : <code>branch: main</code>.</s></li>
+    <li><s>Supprimer <code>.github/workflows/deploy.yml</code> et désactiver GitHub Pages.</s></li>
+    <li><s>Fusionner <code>bulle</code> dans <code>main</code> : le nouveau site passe en production.</s></li>
+    <li>Umami : renseigner le domaine <code>jema.software</code> dans les réglages du site (affichage seulement, la mesure fonctionne sans).</li>
     <li>Vérifier dans Umami les premières visites et l'événement <code>fichier</code>.</li>
-    <li>Sécurité (chapitre 21) : double authentification partout, verrou du domaine, notifications Cloudflare, sujet ntfy, règle de limitation sur <code>/telecharger/*</code>.</li>
+    <li><s>Sécurité : double authentification, notifications Cloudflare, sujet ntfy, protection de <code>main</code>.</s> Vérifier la règle de limitation sur <code>/telecharger/*</code> (chapitre 21).</li>
+    <li>Avant le 19/11/2027 : renouveler le domaine ; avant le 01/11/2027 : nouvelle date <code>Expires</code> dans <code>security.txt</code>.</li>
+    <li>Migration Astro 7 (chapitre 16).</li>
     <li>Plus tard : vrai formulaire de contact et « Me prévenir » (Web3Forms ou fonction Cloudflare), connexion à l'admin par bouton GitHub, courtes vidéos de l'app.</li>
   </ul>
 </section>
@@ -668,6 +708,7 @@ npm run build && npm run preview</pre>
     <tr><td>Détourner les e-mails des visiteurs</td><td>Le site ne collecte aucune adresse : le contact ouvre la messagerie du visiteur vers <code>editor.jema@gmail.com</code>. Cette adresse est verrouillée dans l'admin et contrôlée à chaque construction ; toute autre adresse <code>mailto:</code> bloque la publication.</td><td><code>scripts/garde.mjs</code></td></tr>
     <tr><td>Injecter un script, un faux formulaire, un lien piégé</td><td>Les contenus ne peuvent contenir ni script, ni cadre, ni formulaire, ni lien <code>javascript:</code>, ni lien vers un exécutable hébergé ailleurs : la construction échoue et rien n'est publié. Dans le navigateur, une politique de sécurité (CSP) n'autorise que les scripts présents à la construction et la mesure d'audience.</td><td><code>scripts/garde.mjs</code>, <code>dist/_headers</code></td></tr>
     <tr><td>Script de l'admin modifié chez unpkg</td><td>Empreinte <code>integrity</code> : le navigateur refuse un fichier différent.</td><td><code>public/admin/index.html</code></td></tr>
+    <tr><td>Signaler une faille</td><td>Fichier <code>/.well-known/security.txt</code> (norme RFC 9116) : indique aux chercheurs en sécurité où écrire.</td><td><code>public/.well-known/</code></td></tr>
     <tr><td>Afficher le site dans un cadre piégé</td><td><code>X-Frame-Options: DENY</code> et <code>frame-ancestors 'none'</code>.</td><td><code>dist/_headers</code></td></tr>
     <tr><td>Saturation (DDoS)</td><td>Cloudflare absorbe les attaques sur les pages (statiques, sans limite). La fonction de téléchargement a un quota gratuit de 100 000 appels par jour : au-delà, seuls les boutons échouent, le site reste en ligne. Ajouter la règle de limitation ci-dessous.</td><td>Cloudflare</td></tr>
   </table>
@@ -676,7 +717,7 @@ npm run build && npm run preview</pre>
   <table>
     <tr><th>Alerte</th><th>Déclencheur</th><th>Où elle arrive</th></tr>
     <tr><td>Sentinelle · dépôt</td><td>Tout envoi qui modifie un fichier sensible ; toute publication de l'admin qui touche autre chose que des contenus (signe d'un jeton volé) ; tout réglage verrouillé modifié.</td><td>Ticket GitHub « sentinelle » (e-mail) + ntfy</td></tr>
-    <tr><td>Sentinelle · site en ligne</td><td>Toutes les 6 h : liens de téléchargement, adresses e-mail, scripts externes et en-têtes de sécurité de jema.app et de l'aperçu.</td><td>Ticket GitHub + ntfy</td></tr>
+    <tr><td>Sentinelle · site en ligne</td><td>Toutes les 6 h : liens de téléchargement, adresses e-mail, scripts externes et en-têtes de sécurité de jema.software et de l'aperçu.</td><td>Ticket GitHub + ntfy</td></tr>
     <tr><td>Garde de construction</td><td>Réglage, contenu ou page construite dangereux : la publication est bloquée.</td><td>E-mail Cloudflare « échec de déploiement »</td></tr>
     <tr><td>Rapports du navigateur</td><td>Un visiteur a reçu une page qui tentait de charger un script ou une connexion non autorisés.</td><td>ntfy (via <code>/securite/rapport</code>)</td></tr>
     <tr><td>Fonction de téléchargement</td><td>Adresse de fichier refusée, réglage de dépôt suspect.</td><td>ntfy</td></tr>
@@ -688,8 +729,8 @@ npm run build && npm run preview</pre>
     <li><b>Double authentification</b> sur GitHub, Cloudflare, Name.com, Umami et Gmail. C'est la protection la plus importante : presque toutes les attaques passent par un compte volé.</li>
     <li><b>Notifications push ntfy</b> : installez l'application ntfy (Android, iOS) et abonnez-vous à un sujet long et secret, par exemple <code>jema-alerte-7f3k9q2m</code>. Ajoutez ensuite son adresse <code>https://ntfy.sh/jema-alerte-7f3k9q2m</code> dans Cloudflare (Workers &amp; Pages → jema → Settings → Variables and Secrets → <code>ALERTE_NTFY</code>, type Secret) et dans GitHub (dépôt → Settings → Secrets and variables → Actions → <code>ALERTE_NTFY</code>).</li>
     <li><b>Notifications Cloudflare</b> : Notifications → Add → <i>Pages</i> → « Deployment status », projet <code>jema</code>, évènements « Failed » et « Success » en production. Un déploiement que vous n'avez pas fait = alerte.</li>
-    <li><b>Après le domaine</b> : Security → WAF → Rate limiting rules → une règle « si le chemin commence par <code>/telecharger/</code>, plus de 20 requêtes en 10 s par IP → bloquer 10 s ». Activez aussi Security → Bots → <i>Bot Fight Mode</i>, et DNS → <i>DNSSEC</i>.</li>
-    <li><b>Chez Name.com</b> : vérifiez que le <i>Transfer Lock</i> du domaine est actif.</li>
+    <li><b>Après le domaine</b> : Security → WAF → Rate limiting rules → une règle « si le chemin commence par <code>/telecharger/</code>, plus de 20 requêtes en 10 s par IP → bloquer 10 s ». <b>N'activez pas</b> <i>Bot Fight Mode</i> : il bloque les serveurs de GitHub, donc la sentinelle (fausses alertes toutes les 6 h), et peut déposer un cookie. La limitation et la protection anti-DDoS de Cloudflare, active d'office, suffisent. DNSSEC est déjà actif.</li>
+    <li><b>Chez Name.com</b> : <i>Transfer Lock</i> actif (vérifié le 21/11/2026) et renouvellement automatique.</li>
     <li><b>Sur GitHub</b> : Settings → Branches → règle sur <code>main</code> : interdire les « force push » et la suppression.</li>
   </ol>
 

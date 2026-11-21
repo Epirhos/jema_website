@@ -25,9 +25,9 @@ permissions:
 env:
   DEPOT_VERSIONS: Epirhos/jema-releases
   EMAIL_CONTACT: editor.jema@gmail.com
-  SITE_URL: https://jema.app
+  SITE_URL: https://jema.software
   UMAMI_SRC: https://cloud.umami.is/script.js
-  SITES_SURVEILLES: https://jema.app https://bulle.jema.pages.dev
+  SITES_SURVEILLES: https://jema.software https://bulle.jema.pages.dev
 
 jobs:
   # ───────── À chaque envoi : qu'est-ce qui a changé ? ─────────

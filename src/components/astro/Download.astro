@@ -1,5 +1,9 @@
 ---
-/** Télécharger : un fichier par système, liens complétés depuis la dernière version GitHub. */
+/**
+ * Télécharger : une carte par système. Aucune adresse de fichier ici : chaque bouton
+ * mène à /telecharger/<système>, seule porte vers les fichiers (sécurité, voir la fonction).
+ * Pendant une pause (admin → Téléchargements), les cartes cèdent la place à l'explication.
+ */
 import site from '../../data/site.json'
 import { url } from '../../lib/url.js'
 import { downloadsOpen, resumeDate, pauseTitle, pauseReason, notifyHref } from '../../lib/downloads.js'

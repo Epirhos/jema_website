@@ -1,3 +1,4 @@
+/** Mise en forme partagée : dates en français et adresses des versions. */
 const long = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'long' })
 export const dateFr = (d) => long.format(d)
 /** Slug d'une version : « 4.0.0 » → « 4-0-0 ». */

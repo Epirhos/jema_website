@@ -1,0 +1,6 @@
+# Signaler une faille de sécurité du site ou de l'application Jema.
+# Merci de ne pas la rendre publique avant notre réponse.
+Contact: mailto:editor.jema@gmail.com
+Expires: 2027-11-01T00:00:00.000Z
+Preferred-Languages: fr, en
+Canonical: https://jema.software/.well-known/security.txt

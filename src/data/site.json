@@ -8,7 +8,7 @@
   "fallbackVersion": "v4.0.0",
   "releasesRepo": "Epirhos/jema-releases",
   "contactEmail": "editor.jema@gmail.com",
-  "siteUrl": "https://jema.app",
+  "siteUrl": "https://jema.software",
   "requirements": {
     "ram": "8 Go de mémoire vive minimum pour l'assistant IA",
     "ramShort": "8 Go de RAM conseillés",

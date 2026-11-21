@@ -31,7 +31,7 @@ import { createHash } from 'node:crypto'
 
 export const ATTENDU = {
   releasesRepo: 'Epirhos/jema-releases',
-  siteUrl: 'https://jema.app',
+  siteUrl: 'https://jema.software',
   contactEmail: 'editor.jema@gmail.com',
   umamiSrc: 'https://cloud.umami.is/script.js',
   sveltia: 'https://unpkg.com/@sveltia/cms@'

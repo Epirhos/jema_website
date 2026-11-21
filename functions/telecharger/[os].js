@@ -1,5 +1,5 @@
 /**
- * Cloudflare Pages Function : jema.app/telecharger/<windows|mac|deb|appimage>
+ * Cloudflare Pages Function : jema.software/telecharger/<windows|mac|deb|appimage>
  *
  * Seule porte d'entrée vers les fichiers d'installation :
  *  - téléchargements ouverts → redirection vers le fichier de la dernière version
@@ -69,6 +69,10 @@ async function track(request, name, data) {
   const url = new URL(request.url)
   // Seul le vrai domaine est mesuré (pas les aperçus *.pages.dev).
   if (url.hostname !== new URL(site.siteUrl).hostname) return
+  // RGPD : on respecte les signaux de refus du visiteur (« Ne pas suivre », Global Privacy Control),
+  // comme le script Umami côté navigateur (data-do-not-track).
+  if (request.headers.get('DNT') === '1' || request.headers.get('Sec-GPC') === '1') return
+  // L'adresse IP du visiteur n'est pas transmise à Umami : la requête part du serveur Cloudflare.
   try {
     await fetch('https://cloud.umami.is/api/send', {
       method: 'POST',

@@ -1,3 +1,8 @@
+/**
+ * Barre de navigation (seul composant React du site, pour le menu mobile).
+ * Le bouton de droite suit l'état des téléchargements (src/lib/downloads.js) :
+ * « Télécharger » quand ils sont ouverts, « Bientôt de retour » pendant une pause.
+ */
 import { useEffect, useState } from 'react'
 import Logo from './Logo.jsx'
 import { url } from '../lib/url.js'

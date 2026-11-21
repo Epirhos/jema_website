@@ -3,7 +3,7 @@
  *
  * Reçoit les rapports de la politique de sécurité du navigateur (CSP, voir
  * scripts/garde.mjs qui écrit dist/_headers) : un navigateur l'appelle quand une
- * page de jema.app tente de charger un script, un formulaire ou une connexion
+ * page de jema.software tente de charger un script, un formulaire ou une connexion
  * non autorisés. C'est le signe d'une tentative d'injection ou d'un site modifié.
  *
  * Le bruit est filtré : extensions de navigateur, traducteurs et outils
@@ -32,7 +32,7 @@ export async function onRequestPost({ request, env, waitUntil }) {
     const page = String(r['document-uri'] || r.documentURL || '')
     const directive = String(r['violated-directive'] || r.effectiveDirective || '')
     if (BRUIT.test(bloque) || BRUIT.test(source)) continue
-    if (!/^https:\/\/(jema\.app|www\.jema\.app|[\w-]+\.jema\.pages\.dev)\//.test(page)) continue
+    if (!/^https:\/\/(jema\.software|www\.jema\.software|[\w-]+\.jema\.pages\.dev)\//.test(page)) continue
     waitUntil(
       alerter(env, 'Contenu bloqué sur le site', `Page : ${page}\nBloqué : ${bloque || '(non précisé)'}\nRègle : ${directive}\nSource : ${source || '(non précisée)'}`)
     )

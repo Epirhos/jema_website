@@ -1,4 +1,4 @@
-# Administration du site Jema (Sveltia CMS) : https://jema.app/admin
+# Administration du site Jema (Sveltia CMS) : https://jema.software/admin
 # Mode d'emploi pour l'éditeur : bouton « Mode d'emploi » dans l'admin (public/admin/aide/).
 # Mode d'emploi technique : docs/manuel (PDF).
 #
@@ -9,9 +9,10 @@
 backend:
   name: github
   repo: Epirhos/jema_website
-  # Branche de test. Passer à `main` au lancement : chaque publication y sera
-  # mise en ligne automatiquement.
-  branch: bulle
+  # Production : chaque publication est mise en ligne sur jema.software en 1 à 2 min
+  # (Cloudflare Pages construit `main`). Pour tester sans risque, mettre `bulle`
+  # puis revenir à `main` (voir le manuel, chapitre « Branches »).
+  branch: main
   commit_messages:
     create: "contenu : ajoute {{collection}} « {{slug}} »"
     update: "contenu : modifie {{collection}} « {{slug}} »"
@@ -22,8 +23,8 @@ backend:
 
 locale: fr
 app_title: Jema · Administration du site
-site_url: https://jema.app
-display_url: https://jema.app
+site_url: https://jema.software
+display_url: https://jema.software
 logo:
   src: /favicon.svg
 
