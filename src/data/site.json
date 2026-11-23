@@ -2,18 +2,18 @@
   "beta": {
     "active": true,
     "label": "Bêta ouverte · gratuite jusqu'au 20 février 2027",
-    "start": "2026-11-20",
+    "start": "2026-11-30",
     "end": "2027-02-20"
   },
-  "fallbackVersion": "v4.0.0",
-  "releasesRepo": "Epirhos/jema-releases",
   "contactEmail": "editor.jema@gmail.com",
-  "siteUrl": "https://jema.software",
   "requirements": {
     "ram": "8 Go de mémoire vive minimum pour l'assistant IA",
     "ramShort": "8 Go de RAM conseillés",
     "os": "Windows 10/11 (64 bits) · macOS (Apple Silicon et Intel) · Linux x86_64"
   },
+  "fallbackVersion": "v4.0.0",
+  "releasesRepo": "Epirhos/jema-releases",
+  "siteUrl": "https://jema.software",
   "analytics": {
     "umamiWebsiteId": "b98343b4-8574-4b68-a029-30f95db7cf88",
     "umamiSrc": "https://cloud.umami.is/script.js"
