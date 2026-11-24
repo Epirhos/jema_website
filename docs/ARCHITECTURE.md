@@ -6,7 +6,7 @@ service tiers (une ligne datée dans le journal ci-dessous). Les procédures pas
 pas sont dans le manuel (`docs/manuel/`), les consignes de l'éditeur dans
 l'admin (`/admin/aide`).
 
-Dernière mise à jour : 24/11/2026 (Astro 7, contenu 4.1, formulaire de contact).
+Dernière mise à jour : 21/11/2026 (lancement en production).
 
 ## 1. Vue d'ensemble
 
@@ -21,8 +21,7 @@ Dernière mise à jour : 24/11/2026 (Astro 7, contenu 4.1, formulaire de contact
                                         Sentinelle (Actions)          jema.software (statique)
                                         à chaque envoi + 6 h            + functions/
                                                                          ├ /telecharger/<os> ─► GitHub Releases
-                                                                         ├ /securite/rapport ─► alerte ntfy
-                                                                         └ /contact ─► Brevo ─► e-mail editor.jema@gmail.com
+                                                                         └ /securite/rapport ─► alerte ntfy
  Visiteur ─► jema.software ─► Umami Cloud (audience, sans cookie)
                           └─► api.github.com (numéro de version affiché)
 ```
@@ -34,8 +33,7 @@ Dernière mise à jour : 24/11/2026 (Astro 7, contenu 4.1, formulaire de contact
 | Tailwind 4 (plugin Vite) + CSS | Mise en forme, identité | `src/styles/global.css` |
 | Sveltia CMS 0.256.1 (unpkg + SRI) | Administration sans code, écrit dans GitHub | `public/admin/` |
 | Cloudflare Pages | Construction, hébergement, HTTPS, aperçus par branche | projet `jema` |
-| Pages Functions | Téléchargements, rapports de sécurité, formulaire de contact | `functions/` |
-| Brevo (France, UE) | Envoi des messages du formulaire de contact (secret `BREVO_API_KEY`, texte `CONTACT_FROM`) | `functions/contact.js` |
+| Pages Functions | Téléchargements, rapports de sécurité | `functions/` |
 | Umami Cloud | Mesure d'audience sans cookie | `src/components/astro/Analytics.astro` |
 | GitHub Releases | Fichiers d'installation, publiés par la CI de l'app | `Epirhos/jema-releases` |
 | Garde de construction | Bloque la publication d'un site détourné, écrit la CSP | `scripts/garde.mjs` |
@@ -48,7 +46,7 @@ Dernière mise à jour : 24/11/2026 (Astro 7, contenu 4.1, formulaire de contact
 |---|---|---|
 | Adresse du site | `src/data/site.json` → `siteUrl` | code (verrouillée dans l'admin) |
 | Dépôt des versions | écrit en dur dans `functions/telecharger/[os].js` (`DEPOT`) | code |
-| E-mail de contact | `site.json` → `contactEmail` ; destinataire du formulaire écrit en dur dans `functions/contact.js` (`DESTINATAIRE`) | code (verrouillée, contrôlée par la garde) |
+| E-mail de contact | `site.json` → `contactEmail` | code (verrouillée) |
 | Ouverture / pause des téléchargements | `src/data/downloads.json` | admin |
 | Bandeau | `src/data/banner.json` | admin |
 | Versions, journal, pages | `src/content/{versions,journal,pages}/` | admin |
@@ -65,7 +63,6 @@ Dernière mise à jour : 24/11/2026 (Astro 7, contenu 4.1, formulaire de contact
 ## 4. Sécurité (résumé, détail : manuel chapitre 21)
 
 - **Téléchargements** : aucune adresse de fichier dans les pages ; seule la fonction redirige, vers `github.com/Epirhos/jema-releases/releases/download/` uniquement.
-- **Formulaire de contact** : destinataire écrit en dur ; envoi accepté seulement depuis les pages du site (Origin) ; champ piège, délai minimal, 5 envois/h par connexion (IP hachée, 1 h en cache) ; règle de débit Cloudflare ; texte brut, tailles bornées ; rien n'est conservé par le site.
 - **Contenus** : la garde refuse scripts, cadres, formulaires, `javascript:`, exécutables externes, e-mails autres que le contact.
 - **Navigateur** : CSP stricte à empreintes (sha256) des scripts intégrés ; seuls le site et Umami peuvent exécuter du code ; HSTS, nosniff, Referrer-Policy, Permissions-Policy, anti-cadre ; rapports vers `/securite/rapport`.
 - **Admin** : script Sveltia avec empreinte SRI ; jeton GitHub limité au droit *Contents* sur ce seul dépôt, qui ne peut pas modifier `.github/workflows` (la sentinelle reste hors d'atteinte).
@@ -78,7 +75,7 @@ Dernière mise à jour : 24/11/2026 (Astro 7, contenu 4.1, formulaire de contact
 Registre des traitements : manuel, chapitre 17. Principes retenus :
 aucun cookie ; mesure d'audience anonyme qui respecte « Ne pas suivre » et Global Privacy Control
 (navigateur **et** fonction de téléchargement) ; aucune adresse IP transmise à Umami par la fonction ;
-polices hébergées sur le site ; formulaire de contact minimal (e-mail, message, nom facultatif), transmis par e-mail via Brevo (UE) et non conservé par le site.
+polices hébergées sur le site ; aucun formulaire qui collecte des données (contact par la messagerie du visiteur).
 Tout nouvel outil tiers impose de mettre à jour : registre, politique de confidentialité, CSP (`garde.mjs`) et ce journal.
 
 ## 6. Journal des décisions
@@ -100,10 +97,10 @@ Tout nouvel outil tiers impose de mettre à jour : registre, politique de confid
 | D-13 | 21/11/2026 | Respect de « Ne pas suivre » / GPC aussi côté serveur ; `security.txt` | Conformité RGPD de bout en bout ; norme de signalement des failles. |
 | D-14 | 24/11/2026 | Migration Astro 7, React 19, Tailwind 4 (clôt D-11) ; `compressHTML: true` ; retrait de `BASE_PATH` et du plugin `rehype-base` ; Node 24 épinglé | `npm audit` : 0 faille. Astro 7 supprime par défaut l'espace entre une ligne de texte et la balise suivante (« corrections.Vous ») : `true` garde le rendu d'Astro 5. Le nouveau moteur Markdown (Sätteri) n'accepte plus les plugins rehype ; ce plugin ne servait qu'à l'hébergement en sous-dossier (GitHub Pages, abandonné en D-03). Vérifié : texte des 37 pages identique, captures identiques au pixel près (hors mascotte animée), aucune violation CSP. |
 | D-15 | 24/11/2026 | Contenu aligné sur l'app 4.1 : captures réelles (`jema-editor_v2/.docs/captures-site`) dans la visite et en tête des fiches du guide ; Nouveautés 4.1.0 en **brouillon** | Les anciennes captures montraient Phi-3.5. Une fiche = une capture (spécification U13 de l'app). La fiche 4.1.0 ne s'affiche qu'une fois la version publiée sur `jema-releases` (passer `brouillon` à faux dans l'admin). Captures écartées : faits établis et incohérences du chat, prises avant la correction de leur affichage (« 01_Chapitre 1.json »). |
-| D-16 | 24/11/2026 | Formulaire de contact : fonction Cloudflare `/contact` → Brevo → e-mail ; destinataire écrit en dur | Choix de l'éditeur : recevoir « un mail simple ». Brevo est européen (France, serveurs UE), gratuit, sans cookie ni script côté visiteur. Anti-robots sans service tiers (pas de CAPTCHA, aucune CSP à ouvrir). Fonctionne sans JavaScript. |
+| D-16 | 24/11/2026 | Contact : on garde le simple e-mail (le formulaire ouvre la messagerie du visiteur vers `editor.jema@gmail.com`). Formulaire envoyé par un service (Brevo) essayé puis retiré | Choix de l'éditeur : pas de compte de plus pour l'instant, et pas encore d'adresse `@jema.software`. Aucune donnée collectée par le site. À reconsidérer avec « Me prévenir ». |
 
 ## 7. Évolutions prévues
 
-- « Me prévenir » : peut réutiliser `functions/contact.js` et Brevo (consentement explicite et désinscription obligatoires).
+- Vrai formulaire de contact et « Me prévenir » (fonction Cloudflare ou service européen) : mettra à jour le registre RGPD.
 - Connexion à l'admin par bouton GitHub (relais `sveltia-cms-auth`).
 - Signature numérique des exécutables Windows et macOS (garantie d'origine pour les utilisateurs).

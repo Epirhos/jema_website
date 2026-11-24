@@ -1,6 +1,5 @@
 User-agent: *
 Allow: /
 Disallow: /admin/
-Disallow: /contact/
 
 Sitemap: https://jema.software/sitemap-index.xml

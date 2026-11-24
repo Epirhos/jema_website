@@ -26,8 +26,7 @@ export default defineConfig({
   // l'espace entre une ligne de texte et la balise suivante (« corrections.Vous »).
   // `true` = compression sans perte, comportement d'Astro 5.
   compressHTML: true,
-  // Les pages de retour du formulaire (/contact/…) n'ont rien à faire dans le sitemap.
-  integrations: [react(), sitemap({ filter: (page) => !page.includes('/contact/') })],
+  integrations: [react(), sitemap()],
   // Tailwind 4 : plugin Vite, configuration dans src/styles/global.css (aucun fichier JS).
   vite: { plugins: [tailwindcss()] }
 })

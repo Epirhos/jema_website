@@ -2,7 +2,7 @@
 title: Politique de confidentialité du site
 description: Ce que le site de Jema collecte (presque rien) et vos droits.
 section: legal
-updated: 2026-11-24
+updated: 2026-11-21
 ---
 
 Cette page concerne le site de présentation de Jema, jema.software. L'application installée sur votre ordinateur a sa propre politique, livrée avec le logiciel : vos manuscrits ne quittent jamais votre machine.
@@ -11,7 +11,7 @@ Cette page concerne le site de présentation de Jema, jema.software. L'applicati
 
 - Ce site ne dépose aucun cookie, ni publicitaire ni de mesure d'audience.
 - Il mesure sa fréquentation de façon anonyme, sans cookie, et respecte votre refus.
-- Il ne vous demande aucun compte. Votre adresse e-mail n'est recueillie que si vous nous écrivez, pour vous répondre.
+- Il ne vous demande aucun compte et ne collecte aucune adresse e-mail.
 - Les polices de caractères sont hébergées sur le site lui-même : aucune requête vers Google.
 
 ## Responsable du traitement
@@ -42,19 +42,13 @@ Base légale : notre intérêt légitime à protéger les visiteurs.
 
 Pour éviter d'interroger GitHub à chaque page, le numéro de la dernière version de Jema est gardé dans votre navigateur le temps de la visite (stockage de session). Il n'est jamais transmis et s'efface à la fermeture de l'onglet. Ce stockage, strictement nécessaire au service, ne demande pas de consentement.
 
-## Contact
+## Nous écrire
 
-Vous pouvez nous écrire avec le formulaire de l'accueil ou par courriel. Nous recevons alors votre adresse e-mail, votre message, le sujet choisi et, si vous l'indiquez, votre nom. Ils servent uniquement à vous répondre et à améliorer Jema.
-
-- **Formulaire** : le message est transmis par une fonction de notre hébergeur (Cloudflare) au service d'envoi **Brevo** (Sendinblue SAS, France, serveurs dans l'Union européenne), qui nous le remet par e-mail. Le site ne le conserve pas. Brevo garde un journal technique de l'envoi pour une durée limitée, en tant que sous-traitant.
-- **Anti-abus** : pour limiter les envois automatiques, votre adresse IP est transformée en une empreinte non réversible, gardée une heure au plus dans le cache de Cloudflare, puis effacée. Aucun cookie n'est utilisé.
-- **Conservation** : messages et adresses sont conservés au plus 3 ans après notre dernier échange, dans la messagerie Gmail (Google).
-
-Base légale : notre intérêt légitime à répondre aux personnes qui nous écrivent (et, pour une demande liée à Jema, des mesures précontractuelles prises à votre demande). Vous n'êtes jamais inscrit à une liste de diffusion.
+Si vous nous écrivez par courriel, nous utilisons votre adresse et votre message uniquement pour vous répondre et améliorer Jema. Ils sont conservés au plus 3 ans après notre dernier échange, dans la messagerie Gmail (Google).
 
 ## Transferts hors de l'Union européenne
 
-Cloudflare, GitHub, Umami et Google sont établis aux États-Unis ; Brevo est établi en France. Les transferts vers Cloudflare, GitHub et Google reposent sur le cadre de protection des données UE–États-Unis (Data Privacy Framework) ; à défaut, sur les clauses contractuelles types de la Commission européenne.
+Cloudflare, GitHub, Umami et Google sont établis aux États-Unis. Les transferts vers Cloudflare, GitHub et Google reposent sur le cadre de protection des données UE–États-Unis (Data Privacy Framework) ; à défaut, sur les clauses contractuelles types de la Commission européenne.
 
 ## Vos droits
 

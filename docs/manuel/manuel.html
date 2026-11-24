@@ -96,7 +96,7 @@
     <p class="lead">Tout ce qu'il faut savoir pour faire vivre le site de Jema sans aide extérieure : comptes, installation, contenus, téléchargements, administration, mesure d'audience, hébergement, dépannage.</p>
   </div>
   <div class="meta">
-    <div><b>Version du manuel</b>1.2 · 24 novembre 2026 (Astro 7, formulaire de contact)</div>
+    <div><b>Version du manuel</b>1.1 · 21 novembre 2026 (lancement)</div>
     <div><b>Dépôt</b>github.com/Epirhos/jema_website</div>
     <div><b>Source</b>docs/manuel/manuel.html</div>
   </div>
@@ -186,8 +186,7 @@
     <tr><td>Cloudflare</td><td>Héberger et construire le site ; DNS de jema.software</td><td>Projet Pages <code>jema</code> ; zone DNS <code>jema.software</code> une fois le domaine relié.</td></tr>
     <tr><td>Name.com</td><td>Location du nom <code>jema.software</code></td><td>Enregistré le 19/11/2026, <b>expire le 19/11/2027</b>. Offert un an via le GitHub Student Pack, <b>payant ensuite</b> : activez le renouvellement automatique. Un domaine expiré peut être racheté par n'importe qui, qui servirait alors ses propres fichiers à vos utilisateurs.</td></tr>
     <tr><td>Umami Cloud</td><td>Statistiques</td><td>Site <code>jema.software</code>, identifiant <code>b98343b4-…-30f95db7cf88</code> (copié dans <code>site.json</code>).</td></tr>
-    <tr><td>Gmail · editor.jema@gmail.com</td><td>Contact public</td><td>Reçoit les messages du formulaire de contact et les demandes « Me prévenir ».</td></tr>
-    <tr><td>Brevo (brevo.com)</td><td>Envoi des messages du formulaire de contact</td><td>Compte gratuit (300 e-mails par jour), domaine <code>jema.software</code> authentifié, expéditeur <code>contact@jema.software</code>, clé API <code>BREVO_API_KEY</code> (chapitre 14).</td></tr>
+    <tr><td>Gmail · editor.jema@gmail.com</td><td>Contact public</td><td>Reçoit les messages et les demandes « Me prévenir ».</td></tr>
     <tr><td>ntfy (application)</td><td>Alertes de sécurité sur téléphone</td><td>Sujet secret ; son adresse est le secret <code>ALERTE_NTFY</code> (chapitre 21).</td></tr>
   </table>
 
@@ -196,7 +195,6 @@
     <tr><th>Secret</th><th>Où il vit</th><th>Durée</th><th>Si perdu ou fuité</th></tr>
     <tr><td>Jeton de l'admin</td><td>Votre navigateur (après la première connexion)</td><td>90 jours</td><td>GitHub → Settings → Developer settings → Fine-grained tokens → Revoke, puis en créer un nouveau (droit <i>Contents : Read and write</i> sur <code>jema_website</code> seulement).</td></tr>
     <tr><td><code>ALERTE_NTFY</code></td><td>Cloudflare (Settings → Variables and Secrets, type Secret) et GitHub (Settings → Secrets → Actions)</td><td>Illimitée</td><td>Créer un nouveau sujet dans l'appli ntfy et remplacer l'adresse aux deux endroits. Qui connaît le sujet peut lire et envoyer des alertes.</td></tr>
-    <tr><td><code>BREVO_API_KEY</code></td><td>Cloudflare (Settings → Variables and Secrets, type Secret)</td><td>Illimitée</td><td>Brevo → SMTP &amp; API → API Keys : supprimer la clé, en générer une nouvelle, la remplacer dans Cloudflare. Qui la détient peut envoyer des e-mails au nom de <code>jema.software</code>.</td></tr>
     <tr><td><code>GH_RELEASE_TOKEN</code></td><td>Secret du dépôt <code>jema-editor_v2</code> (Settings → Secrets → Actions)</td><td>Selon sa création</td><td>Recréer un jeton avec écriture sur <code>jema-releases</code> et remplacer le secret. Sans lui, la publication des versions échoue.</td></tr>
   </table>
   <div class="note warn"><b>Règle d'or</b>Aucun secret dans le dépôt du site : il est public. <code>site.json</code> ne contient que des valeurs publiques (l'identifiant Umami n'est pas un secret, il est visible dans chaque page).</div>
@@ -246,7 +244,6 @@ npm run dev                   <span class="c"># site de travail : http://localho
 ├─ .github/workflows/sentinelle.yml  <span class="c">surveillance du dépôt et du site (chapitre 21)</span>
 ├─ functions/telecharger/[os].js  <span class="c">Cloudflare : /telecharger/windows|mac|deb|appimage</span>
 ├─ functions/securite/rapport.js  <span class="c">Cloudflare : reçoit les rapports de sécurité des navigateurs</span>
-├─ functions/contact.js     <span class="c">Cloudflare : formulaire de contact → e-mail (Brevo)</span>
 ├─ public/                   <span class="c">copié tel quel dans le site</span>
 │  ├─ admin/                 <span class="c">l'administration (chapitre 12)</span>
 │  │  ├─ index.html          <span class="c">charge Sveltia + bouton « Mode d'emploi »</span>
@@ -355,7 +352,7 @@ brouillon: false
     <tr><td>Visite de l'atelier</td><td><code>astro/Tour.astro</code></td><td>Captures × thèmes (chapitre 09).</td></tr>
     <tr><td>Fonctions</td><td><code>astro/Atelier.astro</code></td><td>Les 6 fonctions présentées.</td></tr>
     <tr><td>Télécharger</td><td><code>astro/Download.astro</code></td><td>Cartes par système, encart de pause, aide à l'installation.</td></tr>
-    <tr><td>Contact</td><td><code>astro/Contact.astro</code></td><td>Formulaire envoyé à <code>functions/contact.js</code> (Brevo), pages de retour <code>/contact/merci</code> et <code>/contact/echec</code> sans JavaScript.</td></tr>
+    <tr><td>Contact</td><td><code>astro/Contact.astro</code></td><td>Formulaire (ouvre un e-mail prérempli).</td></tr>
     <tr><td>Pied de page</td><td><code>astro/Footer.astro</code></td><td>Liens <code>PRODUCT</code> et légaux.</td></tr>
     <tr><td>Titre de l'onglet, partage</td><td><code>src/layouts/Base.astro</code></td><td>Titre et description par défaut, balises Open Graph.</td></tr>
   </table>
@@ -527,7 +524,7 @@ npm run sync:guide -- "C:\chemin\vers\jema-editor_v2"   <span class="c"># sinon<
     <tr><td>Dépôt</td><td><code>Epirhos/jema_website</code></td></tr>
     <tr><td>Production branch</td><td><code>main</code></td></tr>
     <tr><td>Framework · Build command · Output</td><td>Astro · <code>npm run build</code> · <code>dist</code></td></tr>
-    <tr><td>Variables</td><td><code>NODE_VERSION=24</code> (ou supprimée : <code>.node-version</code> suffit) ; secrets <code>ALERTE_NTFY</code> et <code>BREVO_API_KEY</code> ; texte <code>CONTACT_FROM=contact@jema.software</code>. Une ancienne variable <code>SITE_URL</code> peut être supprimée : elle est ignorée.</td></tr>
+    <tr><td>Variables</td><td><code>NODE_VERSION=24</code> (ou supprimée : <code>.node-version</code> suffit) ; secret <code>ALERTE_NTFY</code>. Une ancienne variable <code>SITE_URL</code> peut être supprimée : elle est ignorée.</td></tr>
     <tr><td>Build watch paths (inclure)</td><td><code>src/*</code>, <code>public/*</code>, <code>functions/*</code>, <code>package.json</code>, <code>package-lock.json</code>, <code>astro.config.mjs</code>, <code>.node-version</code></td></tr>
   </table>
   <ul>
@@ -544,18 +541,6 @@ npm run sync:guide -- "C:\chemin\vers\jema-editor_v2"   <span class="c"># sinon<
     <li><b>Une seule adresse</b> : Rules → Redirect Rules → modèle <i>Redirect from WWW to root</i> (301). Sans cela, <code>www.jema.software</code> sert une copie du site, non mesurée par Umami.</li>
     <li>DNS → Settings → <i>DNSSEC</i> activé, et enregistrement DS recopié chez Name.com (actif depuis le 20/11/2026). <i>Transfer Lock</i> actif chez Name.com.</li>
   </ol>
-  <h3>Formulaire de contact (Brevo)</h3>
-  <p>Le formulaire de l'accueil envoie à la fonction <code>functions/contact.js</code>, qui transmet le message par e-mail à <code>editor.jema@gmail.com</code> via Brevo (entreprise française, serveurs dans l'UE). « Répondre » écrit directement au visiteur. Le destinataire est écrit en dur dans la fonction et contrôlé par la garde. Mise en place, une seule fois :</p>
-  <ol>
-    <li>Créez un compte gratuit sur brevo.com avec <code>editor.jema@gmail.com</code>.</li>
-    <li>Brevo → Senders, Domains &amp; Dedicated IPs → <i>Domains</i> → <i>Add a domain</i> : <code>jema.software</code>. Brevo affiche 3 ou 4 enregistrements (code Brevo, DKIM, DMARC). Ajoutez-les dans Cloudflare → DNS, en mode <i>DNS only</i> (nuage gris), puis <i>Authenticate</i> dans Brevo.</li>
-    <li>Brevo → <i>Senders</i> → ajoutez <code>contact@jema.software</code>, nom « Site Jema ». Si Brevo demande de confirmer l'adresse par un code, activez d'abord Cloudflare → Email → <i>Email Routing</i> avec la règle <code>contact@jema.software</code> → <code>editor.jema@gmail.com</code> : le code arrivera dans Gmail.</li>
-    <li>Brevo → SMTP &amp; API → <i>API Keys</i> → <i>Generate a new API key</i>, nom « site jema ». Copiez-la (elle ne se réaffiche pas).</li>
-    <li>Cloudflare → Workers &amp; Pages → <code>jema</code> → Settings → Variables and Secrets, pour <i>Production</i> et <i>Preview</i> : <code>BREVO_API_KEY</code> (type Secret) et <code>CONTACT_FROM</code> = <code>contact@jema.software</code> (type Text). Redéployez (ou envoyez un commit).</li>
-    <li>Limite de débit : Security → WAF → <i>Rate limiting rules</i>. L'offre gratuite n'a qu'une règle : modifiez celle de <code>/telecharger/</code> pour qu'elle couvre aussi <code>/contact</code> (expression : chemin commence par <code>/telecharger/</code> <b>ou</b> chemin égal à <code>/contact</code>).</li>
-    <li>Testez sur l'aperçu <code>bulle.jema.pages.dev/#contact</code> : le message doit arriver dans Gmail en moins d'une minute, et « Répondre » doit viser l'adresse saisie.</li>
-  </ol>
-  <div class="note">Sans <code>BREVO_API_KEY</code> ni <code>CONTACT_FROM</code>, le formulaire affiche « momentanément indisponible » avec l'adresse e-mail, et une alerte ntfy part. Protection anti-robots sans cookie ni service tiers : champ piège invisible, délai minimal de 3 s, 5 envois par heure et par connexion.</div>
   <div class="note"><b>Une adresse e-mail @jema.software plus tard ?</b>Les réglages DNS se font alors chez Cloudflare (enregistrements MX), plus chez Name.com. Cloudflare Email Routing peut rediriger gratuitement vers Gmail.</div>
 </section>
 
@@ -618,7 +603,7 @@ npm run build && npm run preview</pre>
     <tr><td>Mesure d'audience</td><td>Pages, provenance, pays, appareil, boutons utilisés ; sans cookie ni IP conservée</td><td>Intérêt légitime ; refus respecté (« Ne pas suivre », Global Privacy Control)</td><td>25 mois au plus</td><td>Umami Cloud (Umami Software, États-Unis)</td></tr>
     <tr><td>Téléchargement</td><td>Adresse IP, navigateur</td><td>Exécution de la demande du visiteur</td><td>Selon GitHub</td><td>GitHub (États-Unis, Data Privacy Framework)</td></tr>
     <tr><td>Rapports de sécurité</td><td>Adresse de la page et ressource bloquée, sans IP ni identifiant</td><td>Intérêt légitime (détecter les attaques)</td><td>Alerte non conservée par le site</td><td>ntfy.sh (sujet privé)</td></tr>
-    <tr><td>Contact (formulaire et courriel)</td><td>Adresse e-mail, message, sujet, nom facultatif ; empreinte de l'adresse IP (anti-abus, 1 h)</td><td>Intérêt légitime (répondre)</td><td>3 ans après le dernier échange ; journal d'envoi Brevo, durée limitée ; empreinte IP 1 h</td><td>Brevo (Sendinblue SAS, France, UE) ; Google (Gmail) ; Cloudflare (fonction)</td></tr>
+    <tr><td>Échanges par courriel</td><td>Adresse, message</td><td>Intérêt légitime (répondre)</td><td>3 ans après le dernier échange</td><td>Google (Gmail)</td></tr>
   </table>
   <ul>
     <li><b>Demande d'exercice de droits</b> : répondre sous un mois. Pour l'audience, Umami ne conserve rien qui permette de retrouver une personne : répondre que rien n'est détenu à son nom.</li>
@@ -707,7 +692,7 @@ npm run build && npm run preview</pre>
     <li><s>Sécurité : double authentification, notifications Cloudflare, sujet ntfy, protection de <code>main</code>.</s> Vérifier la règle de limitation sur <code>/telecharger/*</code> (chapitre 21).</li>
     <li>Avant le 19/11/2027 : renouveler le domaine ; avant le 01/11/2027 : nouvelle date <code>Expires</code> dans <code>security.txt</code>.</li>
     <li>Migration Astro 7 (chapitre 16).</li>
-    <li>Plus tard : « Me prévenir » (peut réutiliser la fonction de contact et Brevo), connexion à l'admin par bouton GitHub, courtes vidéos de l'app.</li>
+    <li>Plus tard : vrai formulaire de contact et « Me prévenir » (Web3Forms ou fonction Cloudflare), connexion à l'admin par bouton GitHub, courtes vidéos de l'app.</li>
   </ul>
 </section>
 
@@ -719,7 +704,7 @@ npm run build && npm run preview</pre>
   <table>
     <tr><th>Menace</th><th>Protection</th><th>Où</th></tr>
     <tr><td>Remplacer le fichier téléchargé</td><td>Le navigateur ne connaît aucune adresse de fichier : tout passe par <code>/telecharger/…</code>. La fonction a le dépôt <code>Epirhos/jema-releases</code> écrit en dur et refuse toute adresse hors de <code>github.com/Epirhos/jema-releases/releases/download/</code> (alerte si cela arrive).</td><td><code>functions/telecharger/[os].js</code></td></tr>
-    <tr><td>Détourner les e-mails des visiteurs</td><td>Le formulaire envoie toujours à <code>editor.jema@gmail.com</code>, écrit en dur dans <code>functions/contact.js</code> (constante <code>DESTINATAIRE</code>) : un accès à l'admin ne peut pas le changer. L'adresse est aussi verrouillée dans l'admin, et la garde bloque la publication si la fonction ou une adresse <code>mailto:</code> vise une autre adresse. Le site ne conserve aucun message.</td><td><code>scripts/garde.mjs</code>, <code>functions/contact.js</code></td></tr>
+    <tr><td>Détourner les e-mails des visiteurs</td><td>Le site ne collecte aucune adresse : le contact ouvre la messagerie du visiteur vers <code>editor.jema@gmail.com</code>. Cette adresse est verrouillée dans l'admin et contrôlée à chaque construction ; toute autre adresse <code>mailto:</code> bloque la publication.</td><td><code>scripts/garde.mjs</code></td></tr>
     <tr><td>Injecter un script, un faux formulaire, un lien piégé</td><td>Les contenus ne peuvent contenir ni script, ni cadre, ni formulaire, ni lien <code>javascript:</code>, ni lien vers un exécutable hébergé ailleurs : la construction échoue et rien n'est publié. Dans le navigateur, une politique de sécurité (CSP) n'autorise que les scripts présents à la construction et la mesure d'audience.</td><td><code>scripts/garde.mjs</code>, <code>dist/_headers</code></td></tr>
     <tr><td>Script de l'admin modifié chez unpkg</td><td>Empreinte <code>integrity</code> : le navigateur refuse un fichier différent.</td><td><code>public/admin/index.html</code></td></tr>
     <tr><td>Signaler une faille</td><td>Fichier <code>/.well-known/security.txt</code> (norme RFC 9116) : indique aux chercheurs en sécurité où écrire.</td><td><code>public/.well-known/</code></td></tr>
@@ -755,7 +740,7 @@ npm run build && npm run preview</pre>
     <li>Annulez le commit fautif (GitHub → le commit → <i>Revert</i>), puis recréez un jeton.</li>
   </ol>
   <h3>Changer légitimement une valeur verrouillée</h3>
-  <p>Par exemple une nouvelle adresse de contact : modifiez-la dans <code>src/data/site.json</code>, dans <code>ATTENDU</code> de <code>scripts/garde.mjs</code> et dans <code>env</code> de <code>.github/workflows/sentinelle.yml</code> (et dans la fonction de téléchargement s'il s'agit du dépôt des versions, ou dans <code>DESTINATAIRE</code> de <code>functions/contact.js</code> s'il s'agit de l'adresse de contact). La sentinelle ouvrira un ticket : normal, fermez-le.</p>
+  <p>Par exemple une nouvelle adresse de contact : modifiez-la dans <code>src/data/site.json</code>, dans <code>ATTENDU</code> de <code>scripts/garde.mjs</code> et dans <code>env</code> de <code>.github/workflows/sentinelle.yml</code> (et dans la fonction de téléchargement s'il s'agit du dépôt des versions). La sentinelle ouvrira un ticket : normal, fermez-le.</p>
   <div class="note warn"><b>Limite honnête</b>Rien ne protège contre quelqu'un qui contrôle à la fois votre compte GitHub <i>et</i> votre compte Cloudflare : d'où la double authentification. La meilleure garantie pour les utilisateurs reste la <b>signature numérique</b> de l'application (Windows et macOS), à prévoir pour la version stable : un fichier modifié ne serait alors plus reconnu comme venant de vous.</div>
 </section>
 
