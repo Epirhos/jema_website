@@ -1,11 +1,11 @@
 ---
 title: Licence d'utilisation de la bêta
-description: Conditions d'utilisation de la version bêta de Jema (20 novembre 2026 – 20 février 2027).
+description: Conditions d'utilisation de la version bêta de Jema (24 novembre 2026 – 20 février 2027).
 section: legal
-updated: 2026-11-10
+updated: 2026-11-24
 ---
 
-Version du 10 novembre 2026, applicable à la phase de test du 20 novembre 2026 au 20 février 2027.  
+Version du 24 novembre 2026, applicable à la phase de test du 24 novembre 2026 au 20 février 2027.  
 Éditeur : Dahirou Nounsi, dit Epirhos, personne physique. Contact : editor.jema@gmail.com
 
 Merci de lire attentivement ce texte. En installant ou en utilisant Jema, vous l'acceptez. Si vous ne l'acceptez pas, n'installez pas le logiciel.
@@ -18,7 +18,8 @@ Certaines fonctions annoncées ou prévues ne sont pas encore disponibles, sont 
 - la sauvegarde en ligne et l'écriture à plusieurs n'existent pas encore ;
 - l'intelligence artificielle est désactivée sur les projets protégés par mot de passe ;
 - l'intelligence artificielle peut être lente, interrompre une réponse, mal comprendre le sous-entendu ou se tromper sur les personnages, les lieux, leurs relations et la chronologie ;
-- l'intelligence artificielle demande un ordinateur récent, avec beaucoup de mémoire.
+- l'intelligence artificielle demande un ordinateur récent, avec beaucoup de mémoire ;
+- pendant le test, vous pouvez avoir au plus 3 univers modifiables. Un univers copié hors de Jema, ou modifié par un autre logiciel, s'ouvre en lecture seule : il reste lisible et exportable, et ne compte pas dans cette limite.
 
 Les réponses et suggestions de l'intelligence artificielle peuvent être fausses. Vérifiez-les toujours. Vous restez seul juge de ce que vous écrivez.
 

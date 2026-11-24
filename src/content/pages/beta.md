@@ -1,11 +1,11 @@
 ---
 title: La bêta de Jema
-description: Dates, conditions et limites de la phase de test de Jema, du 20 novembre 2026 au 20 février 2027.
+description: Dates, conditions et limites de la phase de test de Jema, du 24 novembre 2026 au 20 février 2027.
 section: info
 updated: 2026-11-24
 ---
 
-Jema est en **bêta ouverte du 20 novembre 2026 au 20 février 2027**. Pendant cette période, l'application est gratuite et complète.
+Jema est en **bêta ouverte du 24 novembre 2026 au 20 février 2027**. Pendant cette période, l'application est gratuite et complète.
 
 ## Ce que vous obtenez
 

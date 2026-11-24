@@ -1,7 +1,7 @@
 ---
 titre: La bêta de Jema est ouverte
-date: 2026-11-20
-resume: Du 20 novembre 2026 au 20 février 2027, Jema est gratuite pour tous les auteurs qui veulent l'essayer. Voici ce qui vous attend, et ce que nous attendons de vous.
+date: 2026-11-24
+resume: Du 24 novembre 2026 au 20 février 2027, Jema est gratuite pour tous les auteurs qui veulent l'essayer. Voici ce qui vous attend, et ce que nous attendons de vous.
 categorie: Annonce
 ---
 
@@ -9,7 +9,7 @@ Jema est un logiciel d'écriture pour les romans, les mémoires et les thèses. 
 
 ## Trois mois pour l'essayer, gratuitement
 
-La bêta dure du **20 novembre 2026 au 20 février 2027**. Pendant cette période, Jema est gratuite et complète. À la fin du test, l'application vous permettra toujours d'exporter vos manuscrits : vos textes ne sont jamais pris en otage.
+La bêta dure du **24 novembre 2026 au 20 février 2027**. Pendant cette période, Jema est gratuite et complète. À la fin du test, l'application vous permettra toujours d'exporter vos manuscrits : vos textes ne sont jamais pris en otage.
 
 ## Ce qu'une bêta veut dire
 
