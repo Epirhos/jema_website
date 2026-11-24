@@ -11,7 +11,7 @@
     "ramShort": "8 Go de RAM conseillés",
     "os": "Windows 10/11 (64 bits) · macOS (Apple Silicon et Intel) · Linux x86_64"
   },
-  "fallbackVersion": "v4.0.0",
+  "fallbackVersion": "v4.1.2",
   "releasesRepo": "Epirhos/jema-releases",
   "siteUrl": "https://jema.software",
   "analytics": {
