@@ -151,9 +151,9 @@
   <h3>Les briques</h3>
   <table>
     <tr><th>Brique</th><th>Rôle</th><th>Où</th></tr>
-    <tr><td>Astro 5</td><td>Fabrique le site : pages, contenus Markdown, images optimisées (WebP).</td><td><code>src/</code>, <code>astro.config.mjs</code></td></tr>
-    <tr><td>React 18</td><td>Seulement pour la barre de navigation (menu mobile).</td><td><code>src/components/Navbar.jsx</code></td></tr>
-    <tr><td>Tailwind 3 + CSS</td><td>Mise en forme. L'identité est surtout dans <code>global.css</code>.</td><td><code>src/styles/global.css</code></td></tr>
+    <tr><td>Astro 7</td><td>Fabrique le site : pages, contenus Markdown, images optimisées (WebP).</td><td><code>src/</code>, <code>astro.config.mjs</code></td></tr>
+    <tr><td>React 19</td><td>Seulement pour la barre de navigation (menu mobile).</td><td><code>src/components/Navbar.jsx</code></td></tr>
+    <tr><td>Tailwind 4 + CSS</td><td>Mise en forme. L'identité est surtout dans <code>global.css</code> ; Tailwind n'y est qu'importé (aucun fichier de configuration).</td><td><code>src/styles/global.css</code></td></tr>
     <tr><td>Sveltia CMS</td><td>L'administration sans code, qui écrit dans le dépôt GitHub.</td><td><code>public/admin/</code></td></tr>
     <tr><td>Cloudflare Pages</td><td>Hébergement, construction automatique, aperçus par branche, HTTPS.</td><td>tableau de bord Cloudflare</td></tr>
     <tr><td>Pages Function</td><td>Les adresses <code>/telecharger/&lt;système&gt;</code> : redirection vers le bon fichier, ou vers la pause.</td><td><code>functions/telecharger/[os].js</code></td></tr>
@@ -207,7 +207,7 @@
   <h3>Prérequis</h3>
   <ul>
     <li><b>Git</b> : git-scm.com. Sous Windows, il fournit aussi « Git Bash ».</li>
-    <li><b>Node.js 22 LTS</b> (minimum 20.3) : nodejs.org. Vérifiez avec <code>node -v</code>.</li>
+    <li><b>Node.js 24 LTS</b> (minimum 22.23, exigé par Astro 7) : nodejs.org. Vérifiez avec <code>node -v</code>.</li>
     <li>Un éditeur de code (VS Code conseillé).</li>
   </ul>
   <h3>Première installation</h3>
@@ -231,17 +231,16 @@ npm run dev                   <span class="c"># site de travail : http://localho
   <table>
     <tr><th>Variable</th><th>Rôle</th><th>Valeur</th></tr>
     <tr><td><code>siteUrl</code> (dans <code>src/data/site.json</code>)</td><td>Adresse publique : liens canoniques, sitemap, mesure d'audience</td><td><code>https://jema.software</code>. Source unique depuis le 21/11/2026 : l'ancienne variable <code>SITE_URL</code> est ignorée.</td></tr>
-    <tr><td><code>BASE_PATH</code></td><td>Sous-dossier de publication</td><td><code>/</code> (par défaut). Ne servait qu'à l'ancien hébergement GitHub Pages.</td></tr>
   </table>
-  <div class="note warn"><b>Windows et Git Bash</b>Git Bash transforme les chemins commençant par <code>/</code>. Pour tester <code>BASE_PATH</code>, préfixez : <code>MSYS_NO_PATHCONV=1 BASE_PATH=/x/ npm run build</code>.</div>
+  <div class="note">Le site est toujours servi à la racine du domaine. L'ancienne variable <code>BASE_PATH</code> (sous-dossier GitHub Pages) a été retirée avec la migration Astro 7 (décision D-14).</div>
 </section>
 
 <!-- ═════════════════════ 04 ═════════════════════ -->
 <section class="chapter">
   <div class="chap-head"><span class="kicker">Chapitre 04</span><h2>Comment le site est construit</h2></div>
 <pre>jema_website/
-├─ astro.config.mjs          <span class="c">adresse du site, intégrations (React, Tailwind, sitemap)</span>
-├─ tailwind.config.js        <span class="c">configuration Tailwind (peu utilisée)</span>
+├─ astro.config.mjs          <span class="c">adresse du site, intégrations (React, sitemap), Tailwind (plugin Vite)</span>
+├─ .node-version            <span class="c">version de Node utilisée par Cloudflare (24)</span>
 ├─ .github/workflows/sentinelle.yml  <span class="c">surveillance du dépôt et du site (chapitre 21)</span>
 ├─ functions/telecharger/[os].js  <span class="c">Cloudflare : /telecharger/windows|mac|deb|appimage</span>
 ├─ functions/securite/rapport.js  <span class="c">Cloudflare : reçoit les rapports de sécurité des navigateurs</span>
@@ -267,7 +266,7 @@ npm run dev                   <span class="c"># site de travail : http://localho
    ├─ content.config.ts      <span class="c">schéma de chaque type de contenu</span>
    ├─ data/                  <span class="c">site.json, downloads.json, banner.json, guide-parcours.json</span>
    ├─ assets/captures/       <span class="c">captures de l'app (converties en WebP au build)</span>
-   ├─ lib/                   <span class="c">releases.js, downloads.js, url.js, format.js, rehype-base.mjs</span>
+   ├─ lib/                   <span class="c">releases.js, downloads.js, url.js, format.js</span>
    ├─ server/alerte.js       <span class="c">envoi des alertes (fonctions Cloudflare uniquement)</span>
    └─ styles/global.css      <span class="c">identité visuelle</span></pre>
   <h3>Principes à respecter</h3>
@@ -525,8 +524,8 @@ npm run sync:guide -- "C:\chemin\vers\jema-editor_v2"   <span class="c"># sinon<
     <tr><td>Dépôt</td><td><code>Epirhos/jema_website</code></td></tr>
     <tr><td>Production branch</td><td><code>main</code></td></tr>
     <tr><td>Framework · Build command · Output</td><td>Astro · <code>npm run build</code> · <code>dist</code></td></tr>
-    <tr><td>Variables</td><td><code>NODE_VERSION=22</code> ; secret <code>ALERTE_NTFY</code>. Une ancienne variable <code>SITE_URL</code> peut être supprimée : elle est ignorée.</td></tr>
-    <tr><td>Build watch paths (inclure)</td><td><code>src/*</code>, <code>public/*</code>, <code>functions/*</code>, <code>package.json</code>, <code>package-lock.json</code>, <code>astro.config.mjs</code>, <code>tailwind.config.js</code></td></tr>
+    <tr><td>Variables</td><td><code>NODE_VERSION=24</code> (ou supprimée : <code>.node-version</code> suffit) ; secret <code>ALERTE_NTFY</code>. Une ancienne variable <code>SITE_URL</code> peut être supprimée : elle est ignorée.</td></tr>
+    <tr><td>Build watch paths (inclure)</td><td><code>src/*</code>, <code>public/*</code>, <code>functions/*</code>, <code>package.json</code>, <code>package-lock.json</code>, <code>astro.config.mjs</code>, <code>.node-version</code></td></tr>
   </table>
   <ul>
     <li><b>Aperçus</b> : chaque branche a son adresse, <code>https://&lt;branche&gt;.jema.pages.dev</code> (ici <code>bulle.jema.pages.dev</code>). Les adresses à chiffres (<code>73840432.jema.pages.dev</code>) sont des versions figées.</li>
@@ -578,8 +577,8 @@ npm run build && npm run preview</pre>
     <li>Pages : nouveautés, journal, guide, FAQ, légales, 404.</li>
     <li>Aperçu Cloudflare : <code>/telecharger/windows</code> redirige, <code>/admin</code> s'ouvre et enregistre.</li>
   </ul>
-  <div class="note warn"><b>Audit de sécurité des dépendances</b><code>npm audit --omit=dev</code> à chaque mise à jour. Au 21/11/2026, il reste des alertes sur Astro 5 et ses outils de construction (esbuild, sharp, zod), corrigées seulement par Astro 7 (deux versions majeures). Elles concernent le serveur de développement et des fonctions serveur qu'un site statique n'utilise pas : le site publié n'est pas exposé. La migration vers Astro 7 est à faire comme un petit projet sur <code>bulle</code> (voir <code>docs/ARCHITECTURE.md</code>, décision D-11).</div>
-  <div class="note"><b>Changements majeurs à prévoir</b>Tailwind 4 et React 19 demandent des adaptations : à faire comme un petit projet, pas comme une mise à jour de routine. Les polices <code>@fontsource</code> copiées pour l'admin (<code>public/admin/fonts</code>) ne se mettent pas à jour seules ; ce n'est pas nécessaire.</div>
+  <div class="note warn"><b>Audit de sécurité des dépendances</b><code>npm audit --omit=dev</code> à chaque mise à jour. Au 24/11/2026, après la migration vers Astro 7 : aucune faille (décision D-14). Une prochaine version majeure se traite comme un petit projet sur <code>bulle</code> : comparer le texte et des captures des pages avant / après, puis vérifier la CSP.</div>
+  <div class="note"><b>Espaces dans les pages</b>Astro 7 supprimerait par défaut l'espace entre une ligne de texte et la balise suivante ; <code>compressHTML: true</code> dans <code>astro.config.mjs</code> l'empêche. Ne pas retirer ce réglage. Les polices <code>@fontsource</code> copiées pour l'admin (<code>public/admin/fonts</code>) ne se mettent pas à jour seules ; ce n'est pas nécessaire.</div>
 </section>
 
 <!-- ═════════════════════ 17 ═════════════════════ -->

@@ -28,9 +28,9 @@ Dernière mise à jour : 21/11/2026 (lancement en production).
 
 | Brique | Rôle | Emplacement |
 |---|---|---|
-| Astro 5, sortie statique | Pages, contenus Markdown, images WebP | `src/`, `astro.config.mjs` |
-| React 18 | Barre de navigation uniquement | `src/components/Navbar.jsx` |
-| Tailwind 3 + CSS | Mise en forme, identité | `src/styles/global.css` |
+| Astro 7, sortie statique (Node 24, `.node-version`) | Pages, contenus Markdown, images WebP | `src/`, `astro.config.mjs` |
+| React 19 | Barre de navigation uniquement | `src/components/Navbar.jsx` |
+| Tailwind 4 (plugin Vite) + CSS | Mise en forme, identité | `src/styles/global.css` |
 | Sveltia CMS 0.256.1 (unpkg + SRI) | Administration sans code, écrit dans GitHub | `public/admin/` |
 | Cloudflare Pages | Construction, hébergement, HTTPS, aperçus par branche | projet `jema` |
 | Pages Functions | Téléchargements, rapports de sécurité | `functions/` |
@@ -95,10 +95,10 @@ Tout nouvel outil tiers impose de mettre à jour : registre, politique de confid
 | D-11 | 21/11/2026 | Rester sur Astro 5 au lancement, migration Astro 7 planifiée | `npm audit` signale des failles corrigées seulement en Astro 7 (2 versions majeures) ; elles visent le serveur de développement et des fonctions serveur (server islands) inutilisées par un site statique. Risque accepté jusqu'à la migration, à faire sur `bulle`. |
 | D-12 | 21/11/2026 | Bot Fight Mode désactivé ; limitation de débit sur `/telecharger/*` | Bot Fight Mode bloquerait la sentinelle et peut déposer un cookie ; Cloudflare absorbe déjà les attaques par saturation. |
 | D-13 | 21/11/2026 | Respect de « Ne pas suivre » / GPC aussi côté serveur ; `security.txt` | Conformité RGPD de bout en bout ; norme de signalement des failles. |
+| D-14 | 24/11/2026 | Migration Astro 7, React 19, Tailwind 4 (clôt D-11) ; `compressHTML: true` ; retrait de `BASE_PATH` et du plugin `rehype-base` ; Node 24 épinglé | `npm audit` : 0 faille. Astro 7 supprime par défaut l'espace entre une ligne de texte et la balise suivante (« corrections.Vous ») : `true` garde le rendu d'Astro 5. Le nouveau moteur Markdown (Sätteri) n'accepte plus les plugins rehype ; ce plugin ne servait qu'à l'hébergement en sous-dossier (GitHub Pages, abandonné en D-03). Vérifié : texte des 37 pages identique, captures identiques au pixel près (hors mascotte animée), aucune violation CSP. |
 
 ## 7. Évolutions prévues
 
-- Migration Astro 7 (et Tailwind 4, React 19) — voir D-11.
 - Vrai formulaire de contact et « Me prévenir » (fonction Cloudflare ou service européen) : mettra à jour le registre RGPD.
 - Connexion à l'admin par bouton GitHub (relais `sveltia-cms-auth`).
 - Signature numérique des exécutables Windows et macOS (garantie d'origine pour les utilisateurs).

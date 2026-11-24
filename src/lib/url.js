@@ -1,7 +1,7 @@
 /**
- * Préfixe un chemin interne avec la base du site (BASE_PATH), pour que les
- * liens marchent aussi bien à la racine (Cloudflare) que sous /jema_website/
- * (GitHub Pages). `url('/telecharger')`, `url('/#features')`.
+ * Construit un lien interne à partir de la base du site (BASE_URL d'Astro,
+ * « / » sur Cloudflare). `url('/telecharger')`, `url('/#features')`.
+ * Garder ce passage obligé : changer d'hébergement ne touche qu'ici.
  */
 export function url(path = '/') {
   const base = import.meta.env.BASE_URL.replace(/\/$/, '')

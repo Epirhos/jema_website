@@ -1,7 +1,6 @@
 /* Polices auto-hébergées (@fontsource, importées dans Base.astro) : aucune requête vers Google. */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Tailwind 4 : seulement quelques utilitaires (barre de navigation) ; l'identité visuelle est ci-dessous. */
+@import "tailwindcss";
 
 /* ============================================================
    DIRECTION B · « le manuscrit, avec Jema dans la marge »

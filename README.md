@@ -20,7 +20,7 @@ npm run sync:guide # recopie le mode d'emploi depuis jema-editor_v2
 npm run manuel     # régénère le PDF du manuel depuis docs/manuel/manuel.html
 ```
 
-Stack : Astro 5 (statique) · React (barre de navigation) · Tailwind 3 + `src/styles/global.css` ·
+Stack : Astro 7 (statique) · React 19 (barre de navigation) · Tailwind 4 + `src/styles/global.css` ·
 Sveltia CMS (`public/admin`) · Cloudflare Pages + Functions (`functions/`) · Umami (sans cookie).
 
 Branches : `main` = production (jema.software, l'admin y publie), `bulle` = test (bulle.jema.pages.dev).
