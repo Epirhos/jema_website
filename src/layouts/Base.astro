@@ -19,13 +19,15 @@ import Navbar from '../components/Navbar.jsx'
 import Footer from '../components/astro/Footer.astro'
 import Banner from '../components/astro/Banner.astro'
 import Analytics from '../components/astro/Analytics.astro'
+import site from '../data/site.json'
 
 interface Props {
   title?: string
   description?: string
 }
 
-const DEFAULT_TITLE = "Jema — Racontez, Jema s'occupe du reste."
+// Le nom et ce qu'est Jema d'abord : c'est ce que lisent les moteurs de recherche.
+const DEFAULT_TITLE = "Jema, logiciel d'écriture avec IA · Racontez, Jema s'occupe du reste"
 const DEFAULT_DESC =
   "Logiciel d'écriture avec IA pour romans, mémoires et thèses. Jema relit dans la marge, suit vos personnages et repère vos incohérences. Tout reste sur votre ordinateur. Bêta gratuite."
 
@@ -33,6 +35,29 @@ const { title, description = DEFAULT_DESC } = Astro.props
 const fullTitle = title ? `${title} · Jema` : DEFAULT_TITLE
 const canonical = new URL(Astro.url.pathname, Astro.site)
 const favicon = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/favicon.svg`
+const ogImage = new URL('/og.png', Astro.site).href
+const accueil = Astro.url.pathname === '/'
+
+// Données structurées (schema.org), sur l'accueil seulement : disent aux moteurs de
+// recherche que « Jema » est un logiciel, son site officiel et son éditeur.
+// Pas de note ni d'avis : on n'en publie que s'ils sont réels (règles de Google).
+const siteUrl = new URL('/', Astro.site).href
+const jsonLd = accueil && JSON.stringify({
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'WebSite', '@id': `${siteUrl}#site`, url: siteUrl, name: 'Jema', alternateName: ['Jema Software', 'Jema Editor'], inLanguage: 'fr-FR', publisher: { '@id': `${siteUrl}#editeur` } },
+    { '@type': 'Person', '@id': `${siteUrl}#editeur`, name: 'Dahirou Nounsi', alternateName: 'Epirhos', email: site.contactEmail },
+    {
+      '@type': 'SoftwareApplication', '@id': `${siteUrl}#logiciel`, name: 'Jema', alternateName: 'Jema Software',
+      url: siteUrl, description: DEFAULT_DESC, inLanguage: 'fr-FR',
+      applicationCategory: 'UtilitiesApplication', applicationSubCategory: "Logiciel d'écriture",
+      operatingSystem: 'Windows 10, Windows 11, macOS, Linux', softwareVersion: site.fallbackVersion.replace(/^v/, ''),
+      downloadUrl: `${siteUrl}#telecharger`, image: `${siteUrl}icon-512.png`, screenshot: ogImage,
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+      publisher: { '@id': `${siteUrl}#editeur` }
+    }
+  ]
+}).replace(/</g, '\\u003c') // aucun « < » ne peut fermer la balise script
 ---
 
 <!doctype html>
@@ -41,6 +66,8 @@ const favicon = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/favicon.svg`
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href={favicon} />
+    <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
+    <link rel="apple-touch-icon" href="/icon-512.png" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
@@ -51,7 +78,12 @@ const favicon = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/favicon.svg`
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Jema, logiciel d'écriture avec IA : l'écran d'écriture et la réponse de Jema." />
+    <meta name="twitter:card" content="summary_large_image" />
+    {jsonLd && <script type="application/ld+json" set:html={jsonLd} />}
     <!-- Marqueur JS : sans lui, les blocs [data-reveal] restent visibles. -->
     <script is:inline>document.documentElement.classList.add('js')</script>
     <Analytics />
