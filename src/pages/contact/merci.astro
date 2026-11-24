@@ -1,0 +1,10 @@
+---
+/** Après l'envoi du formulaire de contact sans JavaScript (functions/contact.js). Non indexée. */
+import Prose from '../../layouts/Prose.astro'
+import { url } from '../../lib/url.js'
+---
+
+<Prose title="Message envoyé" description="Votre message a bien été envoyé à l'équipe de Jema.">
+  <p>Merci, votre message est parti. Nous vous répondons à l'adresse que vous avez indiquée, dès que possible.</p>
+  <p><a href={url('/')}>Retour à l'accueil</a></p>
+</Prose>

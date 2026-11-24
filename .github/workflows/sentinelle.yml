@@ -72,6 +72,7 @@ jobs:
           done
           if [ "$(jq -r '.analytics.umamiSrc' src/data/site.json)" != "$UMAMI_SRC" ]; then echo "- Script de mesure d'audience modifié" >> rapport.md; fi
           if ! grep -q "const DEPOT = '$DEPOT_VERSIONS'" 'functions/telecharger/[os].js'; then echo "- Le dépôt écrit en dur dans la fonction de téléchargement a changé" >> rapport.md; fi
+          if ! grep -q "const DESTINATAIRE = '$EMAIL_CONTACT'" 'functions/contact.js'; then echo "- Le destinataire écrit en dur dans le formulaire de contact a changé" >> rapport.md; fi
 
           if [ -s rapport.md ]; then
             {

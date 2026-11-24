@@ -98,6 +98,11 @@ function source() {
   if (!fn.includes(`const DEPOT = '${ATTENDU.releasesRepo}'`)) faute('functions/telecharger/[os].js', 'le dépôt des versions écrit en dur a changé')
   if (!fn.includes('if (!estSure(target))')) faute('functions/telecharger/[os].js', 'le contrôle des adresses de fichier a été retiré')
 
+  // Formulaire de contact : le destinataire est écrit en dur, comme le dépôt des versions.
+  const contact = lire('functions/contact.js')
+  if (!contact.includes(`const DESTINATAIRE = '${ATTENDU.contactEmail}'`)) faute('functions/contact.js', 'le destinataire des messages écrit en dur a changé')
+  if (!contact.includes('to: [{ email: DESTINATAIRE')) faute('functions/contact.js', 'les messages ne partent plus vers le destinataire écrit en dur')
+
   for (const f of fichiers('src/content', ['.md', '.mdx'])) controlerTexte(f, lire(f))
 }
 
