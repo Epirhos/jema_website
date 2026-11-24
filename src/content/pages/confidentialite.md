@@ -40,7 +40,7 @@ Base légale : notre intérêt légitime à protéger les visiteurs.
 
 ## Stockage local
 
-Pour éviter d'interroger GitHub à chaque page, le numéro de la dernière version de Jema est gardé dans votre navigateur le temps de la visite (stockage de session). Il n'est jamais transmis et s'efface à la fermeture de l'onglet. Ce stockage, strictement nécessaire au service, ne demande pas de consentement.
+Pour éviter d'interroger GitHub à chaque page, le numéro de la dernière version de Jema est gardé dans votre navigateur 10 minutes au plus, le temps de la visite (stockage de session). Il n'est jamais transmis et s'efface à la fermeture de l'onglet. Ce stockage, strictement nécessaire au service, ne demande pas de consentement.
 
 ## Nous écrire
 
