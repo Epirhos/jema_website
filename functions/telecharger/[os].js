@@ -1,5 +1,9 @@
 /**
- * Cloudflare Pages Function : jema.software/telecharger/<windows|mac|deb|appimage>
+ * Cloudflare Pages Function : jema.software/telecharger/<windows|mac|mac-intel|deb|appimage>
+ *
+ * macOS : depuis la 4.1.2, un .dmg par processeur (« -arm64.dmg » Apple Silicon,
+ * « -x64.dmg » Intel). « mac » = Apple Silicon, « mac-intel » = Intel. Une version
+ * plus ancienne n'a qu'un .dmg (universel) : les deux adresses y mènent.
  *
  * Seule porte d'entrée vers les fichiers d'installation :
  *  - téléchargements ouverts → redirection vers le fichier de la dernière version
@@ -21,16 +25,26 @@ import { alerter } from '../../src/server/alerte.js'
 
 const DEPOT = 'Epirhos/jema-releases'
 const PREFIXE = `https://github.com/${DEPOT}/releases/download/`
-const EXT = { windows: '.exe', mac: '.dmg', deb: '.deb', appimage: '.appimage' }
+const EXT = { windows: '.exe', mac: '.dmg', 'mac-intel': '.dmg', deb: '.deb', appimage: '.appimage' }
+// Suffixe propre au processeur, cherché en premier (un .dmg sans suffixe sert de repli).
+const ARCH = { mac: '-arm64.dmg', 'mac-intel': '-x64.dmg' }
 const CACHE_SECONDS = 600
 const VERSION_SURE = /^v\d+\.\d+\.\d+$/
+
+/** Vrai si la version (« v4.1.2 ») publie un .dmg par processeur. */
+function dmgParProcesseur(tag) {
+  const [a, b, c] = tag.slice(1).split('.').map(Number)
+  return a > 4 || (a === 4 && (b > 1 || (b === 1 && c >= 2)))
+}
 
 function fallbackUrl(os, tag) {
   const t = VERSION_SURE.test(tag) ? tag : 'v4.0.0'
   const n = t.slice(1)
+  const dmg = (arch) => (dmgParProcesseur(t) ? `${t}/jema-editor-${n}-${arch}.dmg` : `${t}/jema-editor-${n}.dmg`)
   return PREFIXE + {
     windows: `${t}/jema-editor-${n}-setup.exe`,
-    mac: `${t}/jema-editor-${n}.dmg`,
+    mac: dmg('arm64'),
+    'mac-intel': dmg('x64'),
     appimage: `${t}/jema-editor-${n}.AppImage`,
     deb: `${t}/jema-editor_${n}_amd64.deb`
   }[os]
@@ -46,7 +60,12 @@ async function latestAssetUrl(os) {
     })
     if (!res.ok) throw new Error(String(res.status))
     const data = await res.json()
-    const asset = (data.assets || []).find((a) => (a.name || '').toLowerCase().endsWith(EXT[os]))
+    const noms = (data.assets || []).filter((a) => a.name && a.browser_download_url)
+    const fin = (suffixe) => noms.find((a) => a.name.toLowerCase().endsWith(suffixe))
+    // macOS : le fichier du bon processeur, sinon un .dmg universel (sans -arm64 / -x64).
+    const asset = ARCH[os]
+      ? fin(ARCH[os]) || noms.find((a) => /\.dmg$/i.test(a.name) && !/-(arm64|x64)\.dmg$/i.test(a.name))
+      : fin(EXT[os])
     return asset?.browser_download_url || fallbackUrl(os, data.tag_name || site.fallbackVersion)
   } catch {
     return fallbackUrl(os, site.fallbackVersion)

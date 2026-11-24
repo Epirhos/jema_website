@@ -176,7 +176,11 @@ const latest = (await getCollection('versions', (v) => !v.data.brouillon))
       }
       dl.href = url(`/telecharger/${os}`)
       dl.dataset.umamiEventOs = os
-      if (meta) meta.textContent = `pour ${OS_LABEL[os]} · ${version} · bêta jusqu'au 20 février 2027`
+      // Le navigateur ne dit pas si un Mac est à puce Apple ou Intel : on propose la puce Apple
+      // (la plupart des Mac récents) et on renvoie les Mac Intel vers la section Télécharger.
+      if (meta) meta.textContent = os === 'mac'
+        ? `pour Mac à puce Apple · ${version} · Mac Intel : voir autres systèmes`
+        : `pour ${OS_LABEL[os]} · ${version} · bêta jusqu'au 20 février 2027`
     })
   }
 

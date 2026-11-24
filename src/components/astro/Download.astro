@@ -12,7 +12,11 @@ import { downloadsOpen, resumeDate, pauseTitle, pauseReason, notifyHref } from '
 // qui redirige vers le fichier de la dernière version, ou ici-même en cas de pause.
 const PLATFORMS = [
   { os: 'windows', name: 'Windows', meta: 'Windows 10 et 11, 64 bits', files: [{ key: 'windows', label: 'Télécharger le .exe' }] },
-  { os: 'mac', name: 'macOS', meta: 'Apple Silicon et Intel', files: [{ key: 'mac', label: 'Télécharger le .dmg' }] },
+  // Un .dmg par processeur : menu Pomme › « À propos de ce Mac » indique « Puce Apple M… » ou « Processeur Intel ».
+  { os: 'mac', name: 'macOS', meta: 'Puce Apple (M1 et suivantes) ou Intel : menu Pomme › À propos de ce Mac', files: [
+    { key: 'mac', label: 'Mac à puce Apple' },
+    { key: 'mac-intel', label: 'Mac Intel' }
+  ] },
   { os: 'linux', name: 'Linux', meta: 'x86_64', files: [
     { key: 'deb', label: '.deb (Ubuntu, Mint)' },
     { key: 'appimage', label: 'AppImage (portable)' }

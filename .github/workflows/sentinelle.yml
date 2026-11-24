@@ -110,7 +110,7 @@ jobs:
               continue
             fi
             # Téléchargements : uniquement le dépôt officiel, ou la pause.
-            for os in windows mac deb appimage; do
+            for os in windows mac mac-intel deb appimage; do
               cible=$(curl -s -o /dev/null -w '%{redirect_url}' --max-time 20 "$SITE/telecharger/$os")
               case "$cible" in
                 "https://github.com/$DEPOT_VERSIONS/releases/download/"*|"$SITE/#telecharger") ;;
