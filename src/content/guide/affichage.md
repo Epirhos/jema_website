@@ -12,7 +12,7 @@ Choisir comment vous voyez la page, sans jamais toucher au texte : relire, écri
 Barre d'outils › onglet « Affichage », en quatre familles : immersion, aides à l'écriture, page, texte. Le thème se change avec le bouton en haut à droite de la barre.
 
 ## Pas à pas
-1. « Lecture » efface les barres d'outils pour vous relire ; « Concentration » efface le rail, les chapitres et le panneau de Jema (Échap en sort) ; « Plein écran » donne tout l'écran à la fenêtre.
+1. « Lecture » efface les barres d'outils pour vous relire ; « Concentration » efface la barre de gauche, les chapitres et le panneau de Jema (Échap en sort) ; « Plein écran » donne tout l'écran à la fenêtre.
 2. « Machine à écrire » garde la ligne où vous écrivez au milieu de l'écran ; « Focus paragraphe » estompe tout sauf le paragraphe en cours.
 3. Les loupes règlent le zoom ; un clic sur le pourcentage revient à 100 % ; « Ajuster » fait tenir la page dans la largeur disponible.
 4. « Caractères invisibles » affiche les fins de paragraphe (¶) et marque les espaces insécables ; « Repères de marges » trace la bande de texte de chaque page en pointillés.
@@ -24,6 +24,6 @@ Barre d'outils › onglet « Affichage », en quatre familles : immersion, aides
 - Machine à écrire, focus paragraphe, caractères invisibles et repères de marges restent actifs d'une session à l'autre, jusqu'à ce que vous les désactiviez.
 
 ## Si ça ne marche pas
-- Vous ne trouvez plus le rail : vous êtes en mode Concentration. Appuyez sur Échap.
+- Vous ne trouvez plus la barre de gauche : vous êtes en mode Concentration. Appuyez sur Échap.
 - La barre des tâches a disparu : vous êtes en plein écran. Appuyez de nouveau sur <kbd>F11</kbd>.
 - « Ajuster » ne change rien : la page tient déjà dans la largeur disponible au zoom actuel.

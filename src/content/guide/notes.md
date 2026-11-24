@@ -1,7 +1,7 @@
 ---
 id: "notes"
 titre: "Notes"
-ou: "Rail › Notes"
+ou: "Barre de gauche › Notes"
 raccourci: "annotate"
 vue: "NOTES"
 resume: "Vos notes de travail : idées, recherches, brouillons. Elles vivent à côté du manuscrit, pas dedans, et ne partent jamais à l'export."
@@ -11,12 +11,12 @@ mots: "note, annotation, idée, brouillon, tag, étiquette, ancrer"
 Garder vos réflexions à côté du texte, sans le salir.
 
 ## Où le trouver
-Rail › Notes pour toutes les notes ; la barre flottante (bouton « Note ») pour annoter un passage sélectionné.
+Barre de gauche › Notes pour toutes les notes ; la barre flottante (bouton « Note ») pour annoter un passage sélectionné.
 
 ## Pas à pas
 1. Sélectionnez un passage dans l'éditeur et cliquez sur « Note » dans la barre flottante.
 2. Attachez une note existante ou écrivez-en une nouvelle.
-3. Retrouvez toutes vos notes dans Rail › Notes : titre, étiquettes, texte ; filtrez la liste par étiquette.
+3. Retrouvez toutes vos notes dans la vue Notes de la barre de gauche : titre, étiquettes, texte ; filtrez la liste par étiquette.
 4. Depuis une note ancrée, revenez au passage d'un clic.
 
 ## Bon à savoir

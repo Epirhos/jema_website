@@ -1,7 +1,7 @@
 ---
 id: "aide"
 titre: "Aide"
-ou: "Rail › Aide"
+ou: "Barre de gauche › Aide"
 raccourci: "help"
 vue: "MANUAL"
 resume: "Ce mode d'emploi : recherche, sommaire « Je veux… » et une fiche par fonction. F1 ouvre la liste des commandes et raccourcis."
@@ -11,7 +11,7 @@ mots: "aide, mode d'emploi, guide, visite, raccourcis, commandes"
 Trouver comment faire quelque chose dans Jema, sans quitter l'application.
 
 ## Où le trouver
-Rail › Aide. Dans Univers, Notes, Statistiques, Exporter et Paramètres, le bouton « ? » ouvre directement la fiche de la vue.
+Barre de gauche › Aide. Dans Univers, Notes, Statistiques, Exporter et Paramètres, le bouton « ? » ouvre directement la fiche de la vue.
 
 ## Pas à pas
 1. Tapez un mot dans la recherche (« export », « chapitre », « correction »).

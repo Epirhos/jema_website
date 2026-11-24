@@ -1,14 +1,14 @@
 ---
 id: "chapitres"
 titre: "Chapitres"
-ou: "Rail › Chapitres (colonne de gauche de l'écran Écrire)"
+ou: "Barre de gauche › Chapitres (colonne de gauche de l'écran Écrire)"
 mots: "chapitre, ordre, réorganiser, glisser, importer, archiver, renommer, objectif, statut, table des matières"
 ---
 ## À quoi ça sert
 Créer, ordonner, importer et régler les chapitres de votre manuscrit.
 
 ## Où le trouver
-Rail › Chapitres affiche ou réduit la colonne de gauche de l'écran Écrire.
+Barre de gauche › Chapitres affiche ou réduit la colonne de gauche de l'écran Écrire.
 
 ## Pas à pas
 1. « Nouveau chapitre » en crée un. La petite flèche à sa droite propose « Importer un fichier… » : DOCX, Markdown, PDF, HTML, RTF ou texte.

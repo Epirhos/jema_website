@@ -1,14 +1,14 @@
 ---
 id: "proteger"
 titre: "Protéger et sauvegarder"
-ou: "Rail › Paramètres › Sécurité"
+ou: "Barre de gauche › Paramètres › Sécurité"
 mots: "mot de passe, chiffrement, verrouiller, clé de récupération, sauvegarde, dossier, version, archive, zip, changer d'ordinateur"
 ---
 ## À quoi ça sert
 Protéger votre manuscrit par un mot de passe, et savoir comment il est sauvegardé.
 
 ## Où le trouver
-Rail › Paramètres › Sécurité › Verrouillage.
+Barre de gauche › Paramètres › Sécurité › Verrouillage.
 
 ## Pas à pas
 1. Ouvrez Paramètres › Sécurité.

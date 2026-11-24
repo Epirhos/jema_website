@@ -1,14 +1,14 @@
 ---
 id: "etiquettes"
 titre: "Étiquettes des notes"
-ou: "Rail › Notes › une note › ligne « Ajouter une étiquette »"
+ou: "Barre de gauche › Notes › une note › ligne « Ajouter une étiquette »"
 mots: "étiquette, tag, classer, trier, filtrer, notes, recherche, catégorie"
 ---
 ## À quoi ça sert
 Classer vos notes de travail pour les retrouver d'un clic : par personnage, par intrigue, par type de recherche, par chapitre à reprendre.
 
 ## Où le trouver
-Rail › Notes. Dans une note ouverte, la ligne marquée d'une étiquette, sous le titre ; dans la liste, les étiquettes du projet sous la recherche.
+Barre de gauche › Notes. Dans une note ouverte, la ligne marquée d'une étiquette, sous le titre ; dans la liste, les étiquettes du projet sous la recherche.
 
 ## Pas à pas
 1. Ouvrez une note et tapez une étiquette dans « Ajouter une étiquette… », puis Entrée (ou une virgule).

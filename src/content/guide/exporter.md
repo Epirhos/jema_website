@@ -1,7 +1,7 @@
 ---
 id: "exporter"
 titre: "Exporter"
-ou: "Rail › Exporter"
+ou: "Barre de gauche › Exporter"
 vue: "EXPORT"
 resume: "Sortir le manuscrit en PDF, DOCX, EPUB, HTML ou Markdown. Tout le manuscrit par défaut, aperçu paginé, et un contrôle qui vérifie que rien ne manque."
 mots: "export, pdf, docx, word, epub, html, markdown, imprimer, éditeur, liseuse"
@@ -10,7 +10,7 @@ mots: "export, pdf, docx, word, epub, html, markdown, imprimer, éditeur, liseus
 Produire un fichier de votre manuscrit pour l'imprimer, l'envoyer à un éditeur ou le lire sur une liseuse.
 
 ## Où le trouver
-Rail › Exporter.
+Barre de gauche › Exporter.
 
 ## Pas à pas
 1. Vérifiez le contenu : le manuscrit entier est choisi par défaut, avec son nombre de chapitres, de mots et de pages.

@@ -69,7 +69,8 @@
     "tache": "Protéger et sauvegarder mon projet",
     "fiches": [
       "proteger",
-      "references"
+      "references",
+      "lecture-seule"
     ]
   }
 ]

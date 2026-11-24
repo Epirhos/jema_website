@@ -1,25 +1,36 @@
 ---
 /**
- * Visite de l'atelier : VRAIES captures de l'application (projet fictif
- * « L'Atelier de reliure »), régénérées à chaque version. Vues × thèmes.
+ * Visite de l'atelier : VRAIES captures de l'application, sur des projets
+ * fictifs (« Le Gardien du phare », « L'Atelier de reliure »). Source :
+ * jema-editor_v2/.docs/captures-site, à reprendre à chaque version.
+ * Fichiers : src/assets/captures/<vue>-<thème>.png (thème : light, dark, editorial).
+ * Le choix du thème n'apparaît que pour les vues capturées dans plusieurs thèmes.
  * Les images sont converties en WebP au build ; seules les vues affichées se chargent.
+ * Chaînes contenant une apostrophe : guillemets doubles (le compilateur
+ * d'Astro 7 refuse \' dans le frontmatter).
  */
 import { Image } from 'astro:assets'
-import site from '../../data/site.json'
 
 const files = import.meta.glob<{ default: ImageMetadata }>('../../assets/captures/*.png', { eager: true })
 const img = (name: string) => files[`../../assets/captures/${name}.png`]?.default
 
-const VIEWS = [
-  { id: 'ecrire', label: 'Écrire', caption: 'Les chapitres à gauche, la page au centre, Jema à droite, prête à répondre.' },
-  { id: 'univers', label: 'Univers', caption: 'Les fiches de personnages et de lieux, tenues à jour pendant que vous écrivez.' },
-  { id: 'constellation', label: 'Constellation', caption: 'Les relations entre vos personnages, en un regard.' }
-].filter((v) => img(`${v.id}-light`))
 const THEMES = [
   { id: 'light', label: 'Clair' },
   { id: 'dark', label: 'Sombre' },
   { id: 'editorial', label: 'Éditorial' }
 ]
+const VIEWS = [
+  { id: 'jema', label: 'Demander à Jema', caption: "Jema répond en citant votre texte. « Voir la preuve » montre le passage exact, et l'analyse en cours se met en pause pendant qu'elle vous répond." },
+  { id: 'correction', label: 'Correction', caption: "Trois niveaux, de l'orthographe au style. Chaque proposition attend votre accord." },
+  { id: 'univers', label: 'Fiches', caption: 'Les fiches de vos personnages, remplies au fil des chapitres. Vous gardez la main sur chaque trait.' },
+  { id: 'recommandations', label: "Regard d'éditeur", caption: 'Passages lents, chapitres hors norme, promesses sans suite, répétitions : chaque remarque cite le passage et se mesure à votre propre livre.' },
+  { id: 'constellation', label: 'Constellation', caption: 'Les relations entre vos personnages, en un regard.' },
+  { id: 'statistiques', label: 'Statistiques', caption: 'Objectifs, séries, équilibre des chapitres et tics de langage.' },
+  { id: 'export', label: 'Export', caption: 'Tout le manuscrit, vérifié, en PDF, Word, EPUB, HTML ou Markdown, avec le compte de signes attendu par les éditeurs.' },
+  { id: 'bibliotheque', label: 'Bibliothèque', caption: "Vos univers côte à côte. Chaque livre s'épaissit à mesure que vous écrivez." }
+]
+  .map((v) => ({ ...v, themes: THEMES.filter((t) => img(`${v.id}-${t.id}`)).map((t) => t.id) }))
+  .filter((v) => v.themes.includes('light'))
 ---
 
 <section id="visite" class="tour">
@@ -27,16 +38,16 @@ const THEMES = [
     <div class="head" data-reveal>
       <span class="kicker">Visite de l'atelier</span>
       <h2 class="h2">Voici Jema, telle que vous l'installerez.</h2>
-      <p class="lead">Captures réelles de la version {site.fallbackVersion}, sur un manuscrit d'exemple.</p>
+      <p class="lead">Captures réelles de l'application, sur des manuscrits d'exemple.</p>
     </div>
 
     <div class="controls" data-reveal>
       <div class="tabs" role="tablist" aria-label="Écran de l'application">
         {VIEWS.map((v, i) => (
-          <button type="button" role="tab" aria-selected={i === 0 ? 'true' : 'false'} data-view={v.id} data-umami-event="visite-vue" data-umami-event-vue={v.id}>{v.label}</button>
+          <button type="button" role="tab" aria-selected={i === 0 ? 'true' : 'false'} data-view={v.id} data-themes={v.themes.join(' ')} data-umami-event="visite-vue" data-umami-event-vue={v.id}>{v.label}</button>
         ))}
       </div>
-      <div class="themes" role="radiogroup" aria-label="Thème de l'application">
+      <div class="themes" role="radiogroup" aria-label="Thème de l'application" hidden={VIEWS[0].themes.length < 2}>
         {THEMES.map((t, i) => (
           <button type="button" role="radio" aria-checked={i === 0 ? 'true' : 'false'} data-theme-pick={t.id} data-umami-event="visite-theme" data-umami-event-theme={t.id}>
             <span class={`dot dot--${t.id}`} aria-hidden="true"></span>{t.label}
@@ -47,6 +58,7 @@ const THEMES = [
 
     <figure class="frame" data-reveal>
       {VIEWS.map((v, vi) => THEMES.map((t, ti) => {
+        // Captures en 1800 × 1125 ou 1440 × 900 : même rapport 16:10.
         const src = img(`${v.id}-${t.id}`)
         return src && (
           <Image src={src} alt={`Jema, écran ${v.label}, thème ${t.label} : ${v.caption}`} widths={[720, 1440]} sizes="(max-width: 1180px) 100vw, 1148px"
@@ -63,8 +75,9 @@ const THEMES = [
 <style>
   .tour { padding: clamp(56px, 8vw, 96px) 0; background: var(--desk-2); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
   .head { display: grid; gap: 10px; max-width: 760px; margin-bottom: 24px; }
-  .controls { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+  .controls { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
   .tabs, .themes { display: flex; flex-wrap: wrap; gap: 6px; }
+  .themes[hidden] { display: none; }
   button { font: 600 14px var(--f-ui); border-radius: 999px; padding: 8px 16px; cursor: pointer; border: 0; background: transparent; color: var(--mute); box-shadow: inset 0 0 0 1px var(--rule); display: inline-flex; align-items: center; gap: 8px; }
   [aria-selected='true'], [aria-checked='true'] { background: var(--ink); color: var(--paper); box-shadow: none; }
   .dot { width: 12px; height: 12px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2); }
@@ -72,7 +85,7 @@ const THEMES = [
   .dot--dark { background: #0c0c18; }
   .dot--editorial { background: #e8d9bf; }
   .frame { margin: 0; border-radius: 14px; overflow: hidden; background: var(--paper); box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05), 0 26px 60px rgba(60, 40, 20, 0.18); }
-  .frame :global(img) { display: block; width: 100%; height: auto; aspect-ratio: 1440 / 900; }
+  .frame :global(img) { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; }
   .frame :global(img[hidden]) { display: none; }
   figcaption { padding: 12px 16px; font-size: 14px; color: var(--mute); border-top: 1px solid var(--rule); }
   figcaption b { color: var(--ink); }
@@ -81,9 +94,14 @@ const THEMES = [
 <script>
   const root = document.getElementById('visite')
   if (root) {
-    let view = root.querySelector<HTMLElement>('[data-view][aria-selected="true"]')?.dataset.view ?? 'ecrire'
+    let view = root.querySelector<HTMLElement>('[data-view][aria-selected="true"]')?.dataset.view ?? 'jema'
     let theme = 'light'
+    const picker = root.querySelector<HTMLElement>('.themes')
     const show = () => {
+      // Une vue capturée dans un seul thème masque le choix du thème et revient au thème clair.
+      const themes = (root.querySelector<HTMLElement>(`[data-view="${view}"]`)?.dataset.themes ?? 'light').split(' ')
+      if (picker) picker.hidden = themes.length < 2
+      if (!themes.includes(theme)) theme = 'light'
       root.querySelectorAll<HTMLElement>('[data-shot]').forEach((el) => (el.hidden = el.dataset.shot !== `${view}-${theme}`))
       root.querySelectorAll<HTMLElement>('[data-caption]').forEach((el) => (el.hidden = el.dataset.caption !== view))
       root.querySelectorAll<HTMLElement>('[data-view]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.view === view)))

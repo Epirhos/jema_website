@@ -1,7 +1,7 @@
 ---
 id: "parametres"
 titre: "Paramètres"
-ou: "Rail › Paramètres"
+ou: "Barre de gauche › Paramètres"
 vue: "SETTINGS"
 resume: "Les réglages du projet (couverture, nom, synopsis, objectif, sécurité), de l'assistant Jema et de l'application (mises à jour)."
 mots: "réglages, paramètres, couverture, synopsis, objectif, supprimer, mises à jour, archive, zip"
@@ -10,7 +10,7 @@ mots: "réglages, paramètres, couverture, synopsis, objectif, supprimer, mises 
 Régler votre projet, l'assistant Jema et l'application.
 
 ## Où le trouver
-Rail › Paramètres, en trois groupes : Projet, Assistant Jema, Application.
+Barre de gauche › Paramètres, en trois groupes : Projet, Assistant Jema, Application.
 
 ## Pas à pas
 1. Projet › Général : couverture, nom du projet, synopsis, objectif de mots, puis « Sauvegarder ». « Exporter (.zip) » y crée une archive complète du projet.

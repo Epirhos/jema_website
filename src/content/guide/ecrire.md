@@ -1,7 +1,7 @@
 ---
 id: "ecrire"
 titre: "Écrire"
-ou: "Rail › Écrire"
+ou: "Barre de gauche › Écrire"
 raccourci: "save"
 vue: "EDITOR"
 resume: "La page d'écriture. Vous tapez, elle se pagine toute seule et s'enregistre une seconde et demie après votre dernière frappe."
@@ -11,7 +11,7 @@ mots: "éditeur, page, sauvegarde, enregistrer, texte, mise en forme, gras, ital
 Écrire votre manuscrit sur une page qui se comporte comme une feuille.
 
 ## Où le trouver
-Rail › Écrire. La barre du haut regroupe la mise en forme ; celle du bas indique le chapitre ouvert, l'état de la sauvegarde et le nombre de mots.
+Barre de gauche › Écrire. La barre du haut regroupe la mise en forme ; celle du bas indique le chapitre ouvert, l'état de la sauvegarde et le nombre de mots.
 
 ## Pas à pas
 1. Ouvrez un chapitre dans la colonne de gauche.

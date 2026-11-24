@@ -1,7 +1,7 @@
 ---
 id: "statistiques"
 titre: "Statistiques"
-ou: "Rail › Statistiques"
+ou: "Barre de gauche › Statistiques"
 vue: "ANALYTICS"
 resume: "Des mesures de votre manuscrit : volume par chapitre, vocabulaire, répétitions, rythme, vélocité d'écriture. Des chiffres, que vous interprétez."
 mots: "statistiques, mots, progression, répétition, tic, vocabulaire, rythme, objectif"
@@ -10,7 +10,7 @@ mots: "statistiques, mots, progression, répétition, tic, vocabulaire, rythme, 
 Suivre votre progression et prendre du recul sur la forme du texte.
 
 ## Où le trouver
-Rail › Statistiques.
+Barre de gauche › Statistiques.
 
 ## Pas à pas
 1. Lisez les indicateurs du haut : série actuelle, meilleure série, vélocité moyenne, avancement.

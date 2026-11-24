@@ -2,7 +2,7 @@
 title: La bêta de Jema
 description: Dates, conditions et limites de la phase de test de Jema, du 20 novembre 2026 au 20 février 2027.
 section: info
-updated: 2026-11-16
+updated: 2026-11-24
 ---
 
 Jema est en **bêta ouverte du 20 novembre 2026 au 20 février 2027**. Pendant cette période, l'application est gratuite et complète.
@@ -10,11 +10,12 @@ Jema est en **bêta ouverte du 20 novembre 2026 au 20 février 2027**. Pendant c
 ## Ce que vous obtenez
 
 - L'éditeur paginé, les chapitres, les fiches de personnages et de lieux, la constellation.
-- L'IA de Jema : questions sur votre manuscrit, correction, continuité. Elle tourne sur votre ordinateur.
-- L'import de vos manuscrits (Word, PDF, texte) et l'export en PDF, EPUB, Word et HTML.
+- L'IA de Jema : questions sur votre manuscrit (avec le passage cité), correction, continuité, regard d'éditeur. Elle tourne sur votre ordinateur.
+- L'import de vos manuscrits (Word, PDF, texte) et l'export en PDF, EPUB, Word, HTML et Markdown.
 
 ## Ce qui n'est pas encore prêt
 
+- Vous pouvez avoir 3 univers modifiables. Les univers en lecture seule ne comptent pas dans cette limite.
 - La sauvegarde en ligne et l'écriture à plusieurs n'existent pas encore.
 - L'IA est désactivée sur les projets protégés par mot de passe.
 - L'IA peut être lente, interrompre une réponse ou se tromper. Vérifiez toujours ses propositions.

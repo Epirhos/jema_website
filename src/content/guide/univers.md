@@ -1,7 +1,7 @@
 ---
 id: "univers"
 titre: "Univers"
-ou: "Rail › Univers"
+ou: "Barre de gauche › Univers"
 vue: "DATABASE"
 resume: "Les fiches de votre monde : personnages, lieux, constellation des liens et glossaire. Jema les complète à partir du texte ; ce que vous écrivez vous-même est protégé."
 mots: "personnage, lieu, fiche, base, constellation, glossaire, relations"
@@ -10,7 +10,7 @@ mots: "personnage, lieu, fiche, base, constellation, glossaire, relations"
 Rassembler et corriger ce que vous et Jema savez de vos personnages, de vos lieux et du vocabulaire de votre monde.
 
 ## Où le trouver
-Rail › Univers, avec quatre onglets : Personnages, Lieux, Constellation, Glossaire.
+Barre de gauche › Univers, avec quatre onglets : Personnages, Lieux, Constellation, Glossaire.
 
 ## Pas à pas
 1. Ouvrez l'onglet Personnages ou Lieux et choisissez une fiche.

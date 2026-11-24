@@ -1,14 +1,14 @@
 ---
 id: "assistant-jema"
 titre: "Assistant Jema (réglages)"
-ou: "Rail › Paramètres › Assistant Jema"
+ou: "Barre de gauche › Paramètres › Assistant Jema"
 mots: "dialogue, faits, faits établis, cohésion, cohésion éditoriale, règles, style, divergence, contradiction"
 ---
 ## À quoi ça sert
 Régler comment Jema dialogue avec vous, et contrôler ce qu'elle tient pour vrai dans votre récit.
 
 ## Où le trouver
-Rail › Paramètres › Assistant Jema, en trois pages : Dialogue, Faits établis, Cohésion éditoriale.
+Barre de gauche › Paramètres › Assistant Jema, en trois pages : Dialogue, Faits établis, Cohésion éditoriale.
 
 ## Pas à pas
 1. Dialogue : choisissez le tutoiement ou le vouvoiement, la longueur et la franchise des réponses, et l'accord pour l'analyse des thèmes adultes.
