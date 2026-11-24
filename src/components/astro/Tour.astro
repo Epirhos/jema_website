@@ -44,7 +44,7 @@ const VIEWS = [
     <div class="controls" data-reveal>
       <div class="tabs" role="tablist" aria-label="Écran de l'application">
         {VIEWS.map((v, i) => (
-          <button type="button" role="tab" aria-selected={i === 0 ? 'true' : 'false'} data-view={v.id} data-themes={v.themes.join(' ')} data-umami-event="visite-vue" data-umami-event-vue={v.id}>{v.label}</button>
+          <button type="button" role="tab" aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-view={v.id} data-themes={v.themes.join(' ')} data-umami-event="visite-vue" data-umami-event-vue={v.id}>{v.label}</button>
         ))}
       </div>
       <div class="themes" role="radiogroup" aria-label="Thème de l'application" hidden={VIEWS[0].themes.length < 2}>
@@ -104,10 +104,19 @@ const VIEWS = [
       if (!themes.includes(theme)) theme = 'light'
       root.querySelectorAll<HTMLElement>('[data-shot]').forEach((el) => (el.hidden = el.dataset.shot !== `${view}-${theme}`))
       root.querySelectorAll<HTMLElement>('[data-caption]').forEach((el) => (el.hidden = el.dataset.caption !== view))
-      root.querySelectorAll<HTMLElement>('[data-view]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.view === view)))
+      root.querySelectorAll<HTMLElement>('[data-view]').forEach((b) => { b.setAttribute('aria-selected', String(b.dataset.view === view)); b.tabIndex = b.dataset.view === view ? 0 : -1 })
       root.querySelectorAll<HTMLElement>('[data-theme-pick]').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.themePick === theme)))
     }
-    root.querySelectorAll<HTMLElement>('[data-view]').forEach((b) => b.addEventListener('click', () => { view = b.dataset.view!; show() }))
+    const onglets = [...root.querySelectorAll<HTMLElement>('[data-view]')]
+    onglets.forEach((b) => b.addEventListener('click', () => { view = b.dataset.view!; show() }))
+    // Clavier (motif ARIA des onglets) : flèches gauche/droite, Début, Fin.
+    root.querySelector('[role="tablist"]')?.addEventListener('keydown', (e) => {
+      const k = (e as KeyboardEvent).key
+      const i = onglets.findIndex((b) => b.dataset.view === view)
+      const j = k === 'ArrowRight' ? (i + 1) % onglets.length : k === 'ArrowLeft' ? (i - 1 + onglets.length) % onglets.length : k === 'Home' ? 0 : k === 'End' ? onglets.length - 1 : -1
+      if (j < 0) return
+      e.preventDefault(); view = onglets[j].dataset.view!; show(); onglets[j].focus()
+    })
     root.querySelectorAll<HTMLElement>('[data-theme-pick]').forEach((b) => b.addEventListener('click', () => { theme = b.dataset.themePick!; show() }))
   }
 </script>
